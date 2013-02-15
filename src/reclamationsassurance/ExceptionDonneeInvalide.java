@@ -7,6 +7,7 @@ package reclamationsassurance;
 /**
  *
  * @author JP 
+ * @author PN
  */
 public class ExceptionDonneeInvalide extends Exception {
 
