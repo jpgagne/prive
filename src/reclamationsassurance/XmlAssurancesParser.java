@@ -3,250 +3,333 @@ package reclamationsassurance;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+
+
+
 
 public class XmlAssurancesParser {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
-    File fichierImput;
-    Document docImput;
-    DocumentBuilderFactory docBuilderFactoryImput;
-    DocumentBuilder docBuilderImput;
+    File fichierInput;
+    Document docInput;
+    DocumentBuilderFactory docBuilderFactoryInput;
+    DocumentBuilder docBuilderInput;
+    
     File fichierOutput;
     DocumentBuilderFactory docFactoryOutput;
     DocumentBuilder docBuilderOutput;
     Document docOutput;
+    Element rootElement;
 //</editor-fold>
 
+    
+    private char typeContrat;
+    private Integer noClient;
+    private Contrat contrat = null;
+    
+    
 /*
 * Constructeur
 */
-public XmlAssurancesParser(String nomFichierImput, String nomFichierOutput)
+public XmlAssurancesParser(String nomFichierInput, String nomFichierOutput) throws ExceptionFinProgramme
     {
     System.out.println("Objet parseur créé");
-    ouvrirFichierEntree(nomFichierImput);
+    ouvrirFichierEntree(nomFichierInput);
     ouvrirFichierSortie(nomFichierOutput);
     execution();
+    produireFichier();
     }
 
 //<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
-    private void ouvrirFichierEntree(String nomFichierImput) {
+/* Ouvre le fichier d'entree et cree l'objet documentImput, 
+ * ExceptionFinProgramme détaillé si problème*/
+private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionFinProgramme 
+    {
 
-        fichierImput = new File(nomFichierImput);
-        System.out.println("Ouverture du fichier entrée " + fichierImput.getName());
+    fichierInput = new File(nomFichierInput);
+    System.out.println("Ouverture du fichier entrée " + fichierInput.getName());
 
-        docBuilderFactoryImput = DocumentBuilderFactory.newInstance();
+    docBuilderFactoryInput = DocumentBuilderFactory.newInstance();
 
-        boolean succes = false;
-        try {
-            docBuilderImput = docBuilderFactoryImput.newDocumentBuilder();
-            docImput = docBuilderImput.parse(fichierImput);
-            succes = true;
-        } catch (SAXException | IOException | ParserConfigurationException ex) {
-            Logger.getLogger(XmlAssurancesParser.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            System.out.println("Document " + fichierImput.getName() + " : " + Boolean.toString(succes));
+    boolean succes = false;
+    try {
+        docBuilderInput = docBuilderFactoryInput.newDocumentBuilder();
+        docInput = docBuilderInput.parse(fichierInput);
+        docInput.getDocumentElement().normalize();     //Répare les balises XML mal formées
+        succes = true;
+        } 
+    catch (java.io.FileNotFoundException fnfExc)
+        {
+        System.out.println("Fichier: "+fichierInput.getAbsolutePath()+" non trouvé");
+        throw new ExceptionFinProgramme(fnfExc.getMessage());
+        }
+    catch (SAXException | IOException | ParserConfigurationException ex)
+        {
+        System.out.println("ERREUR - "+ex.getMessage());
+        throw new ExceptionFinProgramme(ex.getMessage());
+        } 
+    finally 
+        {
+        System.out.println("Document " + fichierInput.getName() + " : " + Boolean.toString(succes));
         }
     }
 
-    private void ouvrirFichierSortie(String nomFichierOutput) {
-        fichierOutput = new File(nomFichierOutput);
-        System.out.println("Ouverture du fichier sortie " + fichierOutput.getName());
+    
+/* Prépare (ouvre ou crée) le fichier de sortie (vide) 
+ ExceptionFinProgramme détailé si problème I/O  */
+private void ouvrirFichierSortie(String nomFichierOutput) throws ExceptionFinProgramme
+    {
+    fichierOutput = new File(nomFichierOutput);
+    System.out.println("Ouverture du fichier sortie " + fichierOutput.getName());
 
-        boolean succes = false;
-        try {
-            docFactoryOutput = DocumentBuilderFactory.newInstance();
-            docBuilderOutput = docFactoryOutput.newDocumentBuilder();
-            docOutput = docBuilderOutput.newDocument();
-            succes = true;
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(XmlAssurancesParser.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            System.out.println("Document " + fichierOutput.getName() + " : " + Boolean.toString(succes));
+    boolean succes = false;
+    try {
+        docFactoryOutput = DocumentBuilderFactory.newInstance();
+        docBuilderOutput = docFactoryOutput.newDocumentBuilder();
+        docOutput = docBuilderOutput.newDocument();
+        succes = true;
+        } 
+    catch (ParserConfigurationException ex)
+        {
+        throw new ExceptionFinProgramme(ex.getMessage());
+        }
+    finally
+        {
+        System.out.println("Document " + fichierOutput.getName() + " : " + Boolean.toString(succes));
         }
     }
 //</editor-fold>
 
-private void execution()
+private void execution() throws ExceptionFinProgramme
 {
-List<Item> listeReclamations = lireReclamations();
-for (Item item : listeReclamations) 
+    
+    rootElement = docOutput.createElement("remboursements");
+    docOutput.appendChild(rootElement);
+    
+  
+    System.out.println("Element noeud :" + docInput.getDocumentElement().getNodeName());
+    
+        // Valider le numéro de client
+        NodeList nodeList = docInput.getElementsByTagName("client");
+        Element elementClient = (Element)nodeList.item(0);
+        String strNoClient = ((Text)elementClient.getFirstChild()).getData();
+        Integer intNoClient = 0;
+        try
+        {
+        intNoClient = Integer.valueOf(strNoClient);
+        }
+        catch (NumberFormatException nfexc)
+        {
+            throw new ExceptionFinProgramme(" Format numero de client invalide: "+ strNoClient);
+        }
+        if ((intNoClient > 999999) || (intNoClient < 100000))
+        {
+             throw new ExceptionFinProgramme(" Numero de client hors bornes: "+ intNoClient);
+        }
+        this.noClient = intNoClient;
+        System.out.println("No Client: "+this.noClient);
+    
+        
+        
+        
+        // Valider le type de contrat
+        nodeList = docInput.getElementsByTagName("contrat");
+        Element elementContrat = (Element)nodeList.item(0);
+        String strContrat = ((Text)elementContrat.getFirstChild()).getData();
+        char charTypeContrat;
+        if (strContrat.length() != 1)
+            {
+            throw new ExceptionFinProgramme("Type de contrat format invalide");
+            }
+        charTypeContrat = strContrat.charAt(0);
+        charTypeContrat = Character.toUpperCase(charTypeContrat);
+        
+        if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')))
+         {
+            throw new ExceptionFinProgramme("Type de contrat inconnu: "+charTypeContrat);
+         }   
+            this.typeContrat = charTypeContrat;
+            this.contrat = new Contrat(charTypeContrat);
+            System.out.println("Type de contrat: "+ this.typeContrat);
+            
+     
+    NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
+
+    int intNbReclamations = listeNoeudsReclamation.getLength();
+    System.out.println("Nombre de réclamations lues: "+intNbReclamations);
+
+    for(int compteur=0; compteur < listeNoeudsReclamation.getLength() ; compteur++)
     {
-    System.out.println(item);
+
+        Node noeudReclamation = listeNoeudsReclamation.item(compteur);
+        if(noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
+        {
+            Integer intNoSoin = -1;
+            Element elementReclamation = (Element)noeudReclamation;
+
+
+            // tag 'soin'
+
+            NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
+            if (listeNoeudSoin.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'soin' = "+listeNoeudSoin.getLength());
+            }
+            Element elementSoin = (Element)listeNoeudSoin.item(0);
+
+
+            NodeList sousListe = elementSoin.getChildNodes();
+            if (sousListe.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'soin' = "+sousListe.getLength());
+            }
+
+            String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
+            
+            try
+            {
+            intNoSoin = Integer.parseInt(strSoin);
+            }
+            catch (NumberFormatException excNF)
+            {
+                throw new ExceptionFinProgramme("No de soin format non numerique = "+strSoin);
+            }
+            
+            
+            
+            
+            // tag 'date'
+
+
+            NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
+            if (listeNoeudDate.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'date' = "+listeNoeudDate.getLength());
+            }
+            Element elementDate = (Element)listeNoeudDate.item(0);
+
+            sousListe = elementDate.getChildNodes();
+            if (sousListe.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'date' = "+sousListe.getLength());
+            }
+            String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
+
+            // tag 'montant'
+
+            NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
+            if (listeNoeudDate.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'montant' = "+listeNoeudMontant.getLength());
+            }
+            Element elementMontant = (Element)listeNoeudMontant.item(0);
+
+            sousListe = elementMontant.getChildNodes();
+            if (sousListe.getLength() != 1)
+            {
+                throw new ExceptionFinProgramme("nb d'éléments 'montant' = "+sousListe.getLength());
+            }
+            String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
+
+               System.out.println( strSoin+ " - "+ strDate + " - "+ strMontant);
+               
+               Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
+               ;
+               nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
+               ecrireRemboursement(nouvelleReclamation);
+        }//end if
+
+
     }
+
+
+
 }
+    
+    
+    
+    
 
     
-public List<Item> lireReclamations() 
+    private void ecrireRemboursement(Reclamation reclamation) throws ExceptionFinProgramme
+    {
         
-{
-List<Item> items = new ArrayList<>();
-try 
-{
-    
-    
-    
-}
-catch (Exception exc)
-        {
-            System.out.println("Erreur: "+exc.getMessage());
-        }
-finally
-{
-    return items;
-}
-    
-}
-    
-    private void ecrireRemboursement(Element elementRemboursement) {
+       Double montantRembourse = reclamation.getdMontantRemboursable();
+        
+        System.out.println("Montant remboursé = "+ montantRembourse);
+        
+        Element remboursement = this.docOutput.createElement("remboursement");
+        
+        Element soin = docOutput.createElement("soin");
+        soin.appendChild(docOutput.createTextNode(reclamation.getIntNoSoin().toString()));
+        remboursement.appendChild(soin);
+        
+           
+        Element date = docOutput.createElement("date");
+        date.appendChild(docOutput.createTextNode(reclamation.getStrDate()));
+        remboursement.appendChild(date);
+                
+        
+        
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
+        String strMontantRembourse = currencyFormatter.format(montantRembourse);
+        Element montant = docOutput.createElement("montant");
+        montant.appendChild(docOutput.createTextNode(strMontantRembourse));
+        remboursement.appendChild(montant);
+        
+        rootElement.appendChild(remboursement);
+        
+        
         
         
         
         
         
     }
+
+
+private void produireFichier() throws ExceptionFinProgramme
+{
+
+
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer;
+        try {
+            transformer = transformerFactory.newTransformer();
+        } catch (TransformerConfigurationException ex) 
+        {
+            throw new ExceptionFinProgramme(ex.getMessage());
+        }
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+		DOMSource source = new DOMSource(docOutput);
+		StreamResult result = new StreamResult(fichierOutput);
+        try {
+            // Output to console for testing
+            // StreamResult result = new StreamResult(System.out);
+
+            transformer.transform(source, result);
+        } catch (TransformerException ex) {
+            throw new ExceptionFinProgramme(ex.getMessage());
+        }
+ 
+		System.out.println("File saved!");
 }
-//        try {
-//
-//
-//
-//// root elements
-//            Document doc = docBuilder.newDocument();
-//            Element rootElement = doc.createElement("company");
-//            doc.appendChild(rootElement);
-//
-//// staff elements
-//            Element staff = doc.createElement("Staff");
-//            rootElement.appendChild(staff);
-//
-//// set attribute to staff element
-//            Attr attr = doc.createAttribute("id");
-//            attr.setValue("1");
-//            staff.setAttributeNode(attr);
-//
-//// shorten way
-//// staff.setAttribute("id", "1");
-//
-//// firstname elements
-//            Element firstname = doc.createElement("firstname");
-//            firstname.appendChild(doc.createTextNode("yong"));
-//            staff.appendChild(firstname);
-//
-//// lastname elements
-//            Element lastname = doc.createElement("lastname");
-//            lastname.appendChild(doc.createTextNode("mook kim"));
-//            staff.appendChild(lastname);
-//
-//// nickname elements
-//            Element nickname = doc.createElement("nickname");
-//            nickname.appendChild(doc.createTextNode("mkyong"));
-//            staff.appendChild(nickname);
-//
-//// salary elements
-//            Element salary = doc.createElement("salary");
-//            salary.appendChild(doc.createTextNode("100000"));
-//            staff.appendChild(salary);
-//
-//// write the content into xml file
-//            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//            Transformer transformer = transformerFactory.newTransformer();
-//            DOMSource source = new DOMSource(doc);
-//            StreamResult result = new StreamResult(new File("C:\\file.xml"));
-//
-//// Output to console for testing
-//// StreamResult result = new StreamResult(System.out);
-//
-//            transformer.transform(source, result);
-//
-//            System.out.println("File saved!");
-//
-//        } catch (ParserConfigurationException pce) {
-//            pce.printStackTrace();
-//        } catch (TransformerException tfe) {
-//            tfe.printStackTrace();
-//        }
-//    }
-//}
-//public List<Item> readConfig(String configFile) {
-//List<Item> items = new ArrayList<Item>();
-//try {
-//// First create a new XMLInputFactory
-//XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-//// Setup a new eventReader
-//InputStream in = new FileInputStream(configFile);
-//XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
-//// Read the XML document
-//Item item = null;
-//
-//while (eventReader.hasNext()) {
-//XMLEvent event = eventReader.nextEvent();
-//
-//if (event.isStartElement()) {
-//StartElement startElement = event.asStartElement();
-//// If we have a item element we create a new item
-//if (startElement.getName().getLocalPart() == (ITEM)) {
-//item = new Item();
-//// We read the attributes from this tag and add the date
-//// attribute to our object
-//Iterator<Attribute> attributes = startElement.getAttributes();
-//while (attributes.hasNext()) {
-//Attribute attribute = attributes.next();
-//if (attribute.getName().toString().equals(DATE)) {
-//item.setDate(attribute.getValue());
-//}
-//
-//}
-//}
-//
-//if (event.isStartElement()) {
-//if (event.asStartElement().getName().getLocalPart().equals(MODE)) {
-//event = eventReader.nextEvent();
-//item.setMode(event.asCharacters().getData());
-//continue;
-//}
-//}
-//if (event.asStartElement().getName().getLocalPart().equals(UNIT)) {
-//event = eventReader.nextEvent();
-//item.setUnit(event.asCharacters().getData());
-//continue;
-//}
-//
-//if (event.asStartElement().getName().getLocalPart().equals(CURRENT)) {
-//event = eventReader.nextEvent();
-//item.setCurrent(event.asCharacters().getData());
-//continue;
-//}
-//
-//if (event.asStartElement().getName().getLocalPart().equals(INTERACTIVE)) {
-//event = eventReader.nextEvent();
-//item.setInteractive(event.asCharacters().getData());
-//continue;
-//}
-//}
-//// If we reach the end of an item element we add it to the list
-//if (event.isEndElement()) {
-//EndElement endElement = event.asEndElement();
-//if (endElement.getName().getLocalPart() == (ITEM)) {
-//items.add(item);
-//}
-//}
-//
-//}
-//} catch (FileNotFoundException e) {
-//e.printStackTrace();
-//} catch (XMLStreamException e) {
-//e.printStackTrace();
-//}
-//return items;
-//}
-//}
+
+
+
+}

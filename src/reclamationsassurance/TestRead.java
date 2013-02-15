@@ -4,21 +4,36 @@
  */
 package reclamationsassurance;
 
-import java.util.List;
-
 
 
 public class TestRead {
   public static void main(String args[]) {
       System.out.println("Start run");
-      //int count = args.length;
+      int intNbArgs = args.length;
       System.out.println("Nb d'Arguments: "+ args.length);
+      
+      try
+      {
+      if (intNbArgs == 2)
+        {
+        XmlAssurancesParser parser = new XmlAssurancesParser( (String) args[0], (String) args[1]);
 
-      XmlAssurancesParser parser = new XmlAssurancesParser( (String) args[0], (String) args[1]);
-  
-
-
-        
-        System.out.println("End Run");
+        }
+      else 
+        {
+            throw new ExceptionFinProgramme("NB arguments = "+intNbArgs+" / doit être =2");
+        }
+       System.out.println("Exécution terminée avec succès");
+       
+      }
+      catch (ExceptionFinProgramme excFP)
+      {
+           System.out.println("ERREUR - L'exécution se termine avec échec");
+        if (excFP.getMessage().length() > 0)
+        {
+            System.out.println(excFP.getMessage()+"/n");
+        }
+      }
+     
   }
 } 
