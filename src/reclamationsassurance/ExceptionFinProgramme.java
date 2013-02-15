@@ -8,6 +8,7 @@ package reclamationsassurance;
 /**
  *
  * @author JP
+ * @author PN
  */
 public class ExceptionFinProgramme extends Exception {
 
