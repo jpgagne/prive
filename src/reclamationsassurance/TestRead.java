@@ -20,7 +20,7 @@ public class TestRead {
         } catch (ExceptionFinProgramme excFP) {
             System.out.println("ERREUR - L'exécution se termine avec échec");
             if (excFP.getMessage().length() > 0) {
-                System.out.println(excFP.getMessage() + "/n");
+                System.out.println(excFP.getMessage() + "\n");
             }
         }
     }
