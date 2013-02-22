@@ -13,6 +13,16 @@ public class Contrat {
     private int soin1Taux;
     private int soin1Max = -1;
     
+    // Ajouté
+    private String soin150Nom = "Kinésithérapie";
+    private int soin150Taux;
+    private int soin150Max = -1;
+    
+    // Ajouté
+    private String soin175Nom = "Médecin généraliste privé";
+    private int soin175Taux;
+    private int soin175Max = -1;
+    
     private String soin2Nom = "Psychologie individuelle";
     private int soin2Taux;
     private int soin2Max = -1;
@@ -55,7 +65,7 @@ public class Contrat {
                 soin0Taux = 25;
                 soin0Max = -1;
                 
-                soin1Taux = 25;
+                soin1Taux = 35;
                 soin1Max = -1;
                 
                 soin2Taux = 25;
@@ -75,6 +85,12 @@ public class Contrat {
                 
                 soin7Taux = 0;
                 soin7Max = -1;
+                
+                soin150Taux = 0;
+                soin150Max = -1;
+                
+                soin175Taux = 50;
+                soin175Max = -1;
 
                 break;
 
@@ -87,7 +103,7 @@ public class Contrat {
                 soin1Max = 50;
                 
                 soin2Taux = 100;
-                soin2Max = 70;
+                soin2Max = -1;
                 
                 soin3Taux = 50;
                 soin3Max = -1;
@@ -103,6 +119,12 @@ public class Contrat {
                 
                 soin7Taux = 70;
                 soin7Max = -1;
+                
+                soin150Taux = 0;
+                soin150Max = -1;
+                
+                soin175Taux = 75;
+                soin175Max = -1;
 
                 break;
 
@@ -111,7 +133,7 @@ public class Contrat {
                 soin0Taux = 90;
                 soin0Max = -1;
                 
-                soin1Taux = 90;
+                soin1Taux = 95;
                 soin1Max = -1;
                 
                 soin2Taux = 90;
@@ -126,11 +148,17 @@ public class Contrat {
                 soin5Taux = 90;
                 soin4Max = -1;
                 
-                soin6Taux = 90;
+                soin6Taux = 75;
                 soin6Max = -1;
                 
                 soin7Taux = 90;
                 soin7Max = -1;
+                
+                soin150Taux = 85;
+                soin150Max = -1;
+                
+                soin175Taux = 90;
+                soin175Max = -1;
 
                 break;
 
@@ -152,13 +180,19 @@ public class Contrat {
                 soin4Max = 65;
                 
                 soin5Taux = 100;
-                soin4Max = 75;
+                soin5Max = -1;
                 
                 soin6Taux = 100;
                 soin6Max = 100;
                 
                 soin7Taux = 100;
                 soin7Max = 90;
+                
+                soin150Taux = 100;
+                soin150Max = 150;
+                
+                soin175Taux = 95;
+                soin175Max = -1;
 
                 break;
             }            
@@ -188,6 +222,12 @@ public class Contrat {
                 
                 soin7Taux = 22;
                 soin7Max = -1;
+                
+                soin150Taux = 15;
+                soin150Max = -1;
+                
+                soin175Taux = 25;
+                soin175Max = 20;
 
                 break;
             }
