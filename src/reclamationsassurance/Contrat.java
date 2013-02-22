@@ -137,7 +137,6 @@ public class Contrat {
                 
                 
             case 'E': {
-                
                 soin0Taux = 15;
                 soin0Max = -1;
                 soin1Taux = 25;
