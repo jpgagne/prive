@@ -1,15 +1,5 @@
 package reclamationsassurance;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author JP
- * @author PN
- */
 public class ExceptionFinProgramme extends Exception {
 
     /**
