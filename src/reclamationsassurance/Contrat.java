@@ -1,4 +1,4 @@
-
+//partie modifiable par chakib tchantchane
 package reclamationsassurance;
 
 
