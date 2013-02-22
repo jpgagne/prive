@@ -248,7 +248,7 @@ private void execution() throws ExceptionFinProgramme
                System.out.println( strSoin+ " - "+ strDate + " - "+ strMontant);
                
                Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
-               ;
+               
                nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
                ecrireRemboursement(nouvelleReclamation);
         }//end if
@@ -284,7 +284,6 @@ private void execution() throws ExceptionFinProgramme
         remboursement.appendChild(date);
                 
         
-        
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
         String strMontantRembourse = currencyFormatter.format(montantRembourse);
         Element montant = docOutput.createElement("montant");
@@ -294,18 +293,11 @@ private void execution() throws ExceptionFinProgramme
         rootElement.appendChild(remboursement);
         
         
-        
-        
-        
-        
-        
     }
 
 
 private void produireFichier() throws ExceptionFinProgramme
 {
-
-
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer;
@@ -327,7 +319,7 @@ private void produireFichier() throws ExceptionFinProgramme
             throw new ExceptionFinProgramme(ex.getMessage());
         }
  
-		System.out.println("File saved!");
+        System.out.println("File saved!");
 }
 
 
