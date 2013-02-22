@@ -3,8 +3,9 @@ package reclamationsassurance;
 public class TestRead {
 
     public static void main(String args[]) {
-        System.out.println("Start run");
         int intNbArgs = args.length;
+        
+        System.out.println("Start run");
         System.out.println("Nb d'Arguments: " + args.length);
 
         try {
@@ -22,6 +23,5 @@ public class TestRead {
                 System.out.println(excFP.getMessage() + "/n");
             }
         }
-        
     }
 }
