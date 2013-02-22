@@ -14,6 +14,7 @@ public class TestRead {
 
             } else {
                 throw new ExceptionFinProgramme("NB arguments = " + intNbArgs + " / doit être =2");
+                
             }
             System.out.println("Exécution terminée avec succès");
 
@@ -21,7 +22,9 @@ public class TestRead {
             System.out.println("ERREUR - L'exécution se termine avec échec");
             if (excFP.getMessage().length() > 0) {
                 System.out.println(excFP.getMessage() + "\n");
+                
             }
         }
+        
     }
 }
