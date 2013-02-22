@@ -1,3 +1,4 @@
+//partie modifiable par chakib tchantchane
 package reclamationsassurance;
 
 public class Contrat {
