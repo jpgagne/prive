@@ -204,8 +204,8 @@ public class Contrat {
         Integer pourcentageCouvert = 0;
         Integer seuilMax = 0;
 
-
         System.out.println("Calcul du remboursement: NoSoin:" + noSoin + " demandé:" + dReclamation);
+        
         switch (noSoin) {
             case 0: {
                 pourcentageCouvert = this.soin0Taux;
@@ -267,12 +267,10 @@ public class Contrat {
             if (montant > seuilMax) {
                 montant = seuilMax;
             }
-
         }
         System.out.println("Accordé:" + montant);
 
         return montant;
-
     }
 
     protected char getTypeContrat() {
