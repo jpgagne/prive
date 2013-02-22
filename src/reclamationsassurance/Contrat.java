@@ -285,17 +285,12 @@ public class Contrat {
                 break;
             }
             default: {
-                others:
-                {
-                    if (noSoin < 400 & noSoin >= 300) {
-                        pourcentageCouvert = this.soin3Taux;
-                        seuilMax = this.soin3Max;
-                    } else {
-                        throw new ExceptionFinProgramme("No de soin inconnu= " + noSoin);
-                    }
-
+                if (noSoin < 400 & noSoin >= 300) {
+                    pourcentageCouvert = this.soin3Taux;
+                    seuilMax = this.soin3Max;
+                } else {
+                    throw new ExceptionFinProgramme("No de soin inconnu= " + noSoin);
                 }
-
             }
         } //end switch
         
