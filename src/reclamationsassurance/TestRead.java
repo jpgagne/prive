@@ -5,7 +5,7 @@ public class TestRead {
     public static void main(String args[]) {
         System.out.println("Start run");
         int intNbArgs = args.length;
-        System.out.println("Nb d'Arguments: " + args.length);
+        System.out.println("Nb d'Arguments: " + args.length );
 
         try {
             if (intNbArgs == 2) {
