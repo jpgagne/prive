@@ -78,7 +78,7 @@ public class Contrat {
                 soin4Max = -1;
                 
                 soin5Taux = 25;
-                soin4Max = -1;
+                soin5Max = -1;
                 
                 soin6Taux = 40;
                 soin6Max = -1;
@@ -112,7 +112,7 @@ public class Contrat {
                 soin4Max = -1;
                 
                 soin5Taux = 50;
-                soin4Max = 50;
+                soin5Max = 50;
                 
                 soin6Taux = 100;
                 soin6Max = -1;
@@ -146,7 +146,7 @@ public class Contrat {
                 soin4Max = -1;
                 
                 soin5Taux = 90;
-                soin4Max = -1;
+                soin5Max = -1;
                 
                 soin6Taux = 75;
                 soin6Max = -1;
@@ -215,7 +215,7 @@ public class Contrat {
                 soin4Max = 15;
                 
                 soin5Taux = 30;
-                soin4Max = 20;
+                soin5Max = 20;
                 
                 soin6Taux = 15;
                 soin6Max = -1;
