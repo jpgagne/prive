@@ -18,14 +18,14 @@ public class XmlAssurancesParser {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
     File fichierInput;
-    static Document docInput;
+    Document docInput;
     DocumentBuilderFactory docBuilderFactoryInput;
     DocumentBuilder docBuilderInput;
     
     File fichierOutput;
     DocumentBuilderFactory docFactoryOutput;
     DocumentBuilder docBuilderOutput;
-    static Document docOutput;
+    Document docOutput;
     Element rootElement;
 //</editor-fold>
 
