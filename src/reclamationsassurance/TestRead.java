@@ -13,7 +13,7 @@ public class TestRead {
                 XmlAssurancesParser parser = new XmlAssurancesParser((String) args[0], (String) args[1]);
 
             } else {
-                throw new ExceptionFinProgramme("NB arguments = " + intNbArgs + " / doit être =2");  
+                throw new ExceptionFinProgramme("NB arguments = " + intNbArgs + " / doit être =2");
             }
             
             System.out.println("Exécution terminée avec succès");
