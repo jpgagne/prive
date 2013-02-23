@@ -18,14 +18,14 @@ public class XmlAssurancesParser {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
     File fichierInput;
-    Document docInput;
+    static Document docInput;
     DocumentBuilderFactory docBuilderFactoryInput;
     DocumentBuilder docBuilderInput;
     
     File fichierOutput;
     DocumentBuilderFactory docFactoryOutput;
     DocumentBuilder docBuilderOutput;
-    Document docOutput;
+    static Document docOutput;
     Element rootElement;
 //</editor-fold>
 
@@ -307,4 +307,44 @@ private void produireFichier() throws ExceptionFinProgramme
 }
 
 
+/*
+ * Nouvelle Partie: Message d'erreur dans XML resultat (A effacer si ca bogue)
+ * EffaceTout() efface tout ce qui est dans <reclamations></reclamations>
+ * MessageErreur() genere le message <remboursements><message>Donnees invalides</message></remboursements>
+ */
+
+/*
+    public static void EffaceTout() {
+        Node rc = docInput.getElementsByTagName("reclamations").item(0);
+        NodeList list = rc.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node node = list.item(i);
+            if ("contrat".equals(node.getNodeName()) 
+                    || "client".equals(node.getNodeName()) 
+                    || "mois".equals(node.getNodeName())
+                    || "reclamation".equals(node.getNodeName())) {
+                rc.removeChild(node);
+            }
+        }
+    }
+
+    public static void MessageErreur() {
+        NodeList reclamationsBalise = docInput.getElementsByTagName("reclamations");
+        
+        for (int i = 0; i < reclamationsBalise.getLength(); i++) {
+            docInput.renameNode(reclamationsBalise.item(i), null, "remboursements");
+        }
+        
+        Element rembourse = docOutput.createElement("message"); // <message>
+        rembourse.setTextContent("Donnees invalides");
+        docOutput.getDocumentElement().appendChild(rembourse); // </message>
+    }
+    
+    public static void lanceMessageErreur() throws Exception {
+        EffaceTout();
+        MessageErreur();
+        System.exit(0);
+    }
+    */
 }
