@@ -3,7 +3,8 @@ package reclamationsassurance;
 public class Contrat {
     /* A,B,C ou D, auto converti à uppercase sinon exceptionDonneeInvalide //desactive, fait plus haut*/
 
-    private char typeContrat;
+    private char typeContrat; 
+    
     //<editor-fold defaultstate="collapsed" desc="attributs du contrat">
     private String soin0Nom = "Massothérapie";
     private int soin0Taux;
