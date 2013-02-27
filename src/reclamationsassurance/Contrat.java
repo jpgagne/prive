@@ -1,7 +1,7 @@
 package reclamationsassurance;
 
 public class Contrat {
-    /* A,B,C ou D, auto converti à uppercase sinon exceptionDonneeInvalide //desactive, fait plus haut*/
+    /* A,B,C,D ou E, auto converti à uppercase sinon exceptionDonneeInvalide //desactive, fait plus haut*/
 
     private char typeContrat;
     //<editor-fold defaultstate="collapsed" desc="attributs du contrat">
