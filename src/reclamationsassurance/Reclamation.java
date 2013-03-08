@@ -1,13 +1,7 @@
 package reclamationsassurance;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 public class Reclamation {
     
@@ -108,44 +102,27 @@ private void validerDate(String strDate) throws ExceptionFinProgramme
     {
         return this.intNoSoin;
     }
-    /**
-     * @return the dateValide
-     */
+
     public Date getDateValide() {
         return dateValide;
     }
 
-    /**
-     * @return the strMontantFormate
-     */
     public String getStrMontantFormate() {
         return strMontantFormate;
     }
 
-    /**
-     * @return the doubleMontantFormate
-     */
     public Double getDoubleMontantFormate() {
         return doubleMontantFormate;
     }
 
-    /**
-     * @return the strDate
-     */
     public String getStrDate() {
         return strDate;
     }
 
-    /**
-     * @return the dMontantRemboursable
-     */
     public Double getdMontantRemboursable() {
         return dMontantRemboursable;
     }
 
-    /**
-     * @param dMontantRemboursable the dMontantRemboursable to set
-     */
     public void setdMontantRemboursable(Double dMontantRemboursable) {
         this.dMontantRemboursable = dMontantRemboursable;
     }
