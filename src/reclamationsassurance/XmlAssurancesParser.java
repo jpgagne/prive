@@ -29,9 +29,7 @@ public class XmlAssurancesParser {
     private String strMontantRembourse;
     private Double sommeTotal = 0.00;
 
-    /*
-     * Constructeur
-     */
+    
     public XmlAssurancesParser(String nomFichierInput, String nomFichierOutput) throws ExceptionFinProgramme {
         System.out.println("Objet parseur créé");
         ouvrirFichierEntree(nomFichierInput);
@@ -42,7 +40,7 @@ public class XmlAssurancesParser {
 
 //<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
 /* Ouvre le fichier d'entree et cree l'objet documentImput, 
- * ExceptionFinProgramme détaillé si problème*/
+     * ExceptionFinProgramme détaillé si problème*/
     private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionFinProgramme {
         fichierInput = new File(nomFichierInput);
         System.out.println("Ouverture du fichier entrée " + fichierInput.getName());
