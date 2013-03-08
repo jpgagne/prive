@@ -1,7 +1,5 @@
 package reclamationsassurance;
 
-
-
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -9,9 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
-
 
 
 public class Reclamation {
@@ -28,9 +23,9 @@ private Double dMontantRemboursable = 0.0;
 //private Contrat contrat;
 
 // Constructeur
-Reclamation( Integer intNoSoin, String strDate, String strMontantReclame) throws ExceptionFinProgramme
-
-{   this.intNoSoin = intNoSoin;
+Reclamation(Integer intNoSoin, String strDate, String strMontantReclame) throws ExceptionFinProgramme {  
+    
+    this.intNoSoin = intNoSoin;
     validerDate(strDate);
     validerMontantReclame(strMontantReclame);
     
