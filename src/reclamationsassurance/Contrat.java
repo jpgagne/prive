@@ -43,7 +43,7 @@ public class Contrat {
     //</editor-fold>
 
     /*
-     * constructeur
+     *  constructeur
      */
     Contrat(char typeContrat) throws ExceptionFinProgramme//throws ExceptionDonneeInvalide
     {
