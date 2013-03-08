@@ -2,6 +2,7 @@ package reclamationsassurance;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
@@ -29,6 +30,8 @@ public class XmlAssurancesParser {
     private char typeContrat;
     private Integer noClient;
     private Contrat contrat = null;
+    private String strMontantRembourse;
+    private Double sommeTotal = 0.00;
 
     /*
      * Constructeur
@@ -92,7 +95,6 @@ public class XmlAssurancesParser {
 //</editor-fold>
 
     private void execution() throws ExceptionFinProgramme {
-        Integer sommeTotal = 0;
         rootElement = docOutput.createElement("remboursements");
         docOutput.appendChild(rootElement);
 
@@ -194,30 +196,33 @@ public class XmlAssurancesParser {
                 
                 Element elementMontant = (Element) listeNoeudMontant.item(0);
                 sousListe = elementMontant.getChildNodes();
+               
                 if (sousListe.getLength() != 1) {
                     throw new ExceptionFinProgramme("nb d'éléments 'montant' = " + sousListe.getLength());
                 }  
+                
                 String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
                 
-                System.out.println(strSoin + " - " + strDate + " - " + strMontant);
-
+                System.out.println(strSoin + " - " + strDate + " - " + strMontant  + " [-] " );
+                
                 Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
 
                 nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
                 ecrireRemboursement(nouvelleReclamation);
             } //end if
 
-        }
+        } // end for
          
-        // Le total
-        Element total = docOutput.createElement("total"); // <message>
-        total.setTextContent("valeur total ici");
-        docOutput.getDocumentElement().appendChild(total); // </message>
-        System.out.println("Total (TEST): ");
+        // tag <total>
+        DecimalFormat df = new DecimalFormat("0.00");
+        Element total = docOutput.createElement("total"); // <total>
+        total.setTextContent(df.format(sommeTotal).toString() + "$");
+        docOutput.getDocumentElement().appendChild(total); // </total>
+        System.out.println("Total (TEST): " + df.format(sommeTotal));
     }
 
     private void ecrireRemboursement(Reclamation reclamation) throws ExceptionFinProgramme {
-
+        
         Double montantRembourse = reclamation.getdMontantRemboursable();
 
         System.out.println("Montant remboursé = " + montantRembourse);
@@ -228,18 +233,19 @@ public class XmlAssurancesParser {
         soin.appendChild(docOutput.createTextNode(reclamation.getIntNoSoin().toString()));
         remboursement.appendChild(soin);
 
-
         Element date = docOutput.createElement("date");
         date.appendChild(docOutput.createTextNode(reclamation.getStrDate()));
         remboursement.appendChild(date);
 
-
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
-        String strMontantRembourse = currencyFormatter.format(montantRembourse);
+        strMontantRembourse = currencyFormatter.format(montantRembourse);
         Element montant = docOutput.createElement("montant");
         montant.appendChild(docOutput.createTextNode(strMontantRembourse));
         remboursement.appendChild(montant);
-
+        
+        Double montantRembourseTotal = Double.parseDouble(strMontantRembourse.replaceAll("[$ ]", "").replace(",", "."));
+        sommeTotal = sommeTotal + montantRembourseTotal;
+        
         rootElement.appendChild(remboursement);
 
     }
@@ -260,8 +266,8 @@ public class XmlAssurancesParser {
         try {
             // Output to console for testing
             // StreamResult result = new StreamResult(System.out);
-
             transformer.transform(source, result);
+            
         } catch (TransformerException ex) {
             throw new ExceptionFinProgramme(ex.getMessage());
         }
