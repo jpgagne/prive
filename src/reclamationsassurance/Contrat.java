@@ -18,7 +18,7 @@ public class Contrat {
     private String soin150Nom = "Kinésithérapie";
     private int soin150Taux;
     private int soin150Max = -1;
-    // Ajoute
+    // Ajouté
     private String soin175Nom = "Médecin généraliste privé";
     private int soin175Taux;
     private int soin175Max = -1;
