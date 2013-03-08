@@ -1,10 +1,6 @@
 
 package reclamationsassurance;
 
-/**
- *
- * @author JP
- */
 public class Soin 
 {
 private Integer noSoin;    
