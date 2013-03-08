@@ -203,7 +203,7 @@ public class XmlAssurancesParser {
                 
                 String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
                 
-                System.out.println(strSoin + " - " + strDate + " - " + strMontant  + " [-] " );
+                System.out.println(strSoin + " - " + strDate + " - " + strMontant);
                 
                 Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
 
