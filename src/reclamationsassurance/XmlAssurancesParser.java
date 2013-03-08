@@ -92,6 +92,7 @@ public class XmlAssurancesParser {
 //</editor-fold>
 
     private void execution() throws ExceptionFinProgramme {
+        Integer sommeTotal = 0;
         rootElement = docOutput.createElement("remboursements");
         docOutput.appendChild(rootElement);
 
@@ -170,6 +171,7 @@ public class XmlAssurancesParser {
                     throw new ExceptionFinProgramme("No de soin format non numerique = " + strSoin);
                 }
 
+                
                 // tag <date>
                 NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
                 if (listeNoeudDate.getLength() != 1) {
@@ -183,6 +185,7 @@ public class XmlAssurancesParser {
                 }
                 String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
 
+                
                 // tag <montant>
                 NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
                 if (listeNoeudDate.getLength() != 1) {
@@ -210,6 +213,7 @@ public class XmlAssurancesParser {
         Element total = docOutput.createElement("total"); // <message>
         total.setTextContent("valeur total ici");
         docOutput.getDocumentElement().appendChild(total); // </message>
+        System.out.println("Total (TEST): ");
     }
 
     private void ecrireRemboursement(Reclamation reclamation) throws ExceptionFinProgramme {
