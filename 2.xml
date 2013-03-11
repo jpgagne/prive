@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+    <client>100323</client>
+    <contrat>C</contrat>
+    <mois>2013-01</mois>
+    <reclamation>
+        <soin>100</soin>
+        <date>2013-01-11</date>
+        <montant>100.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>315</soin>
+        <date>2013-01-22</date>
+        <montant>200.00$</montant>
+    </reclamation>
+</reclamations>
