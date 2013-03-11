@@ -7,6 +7,8 @@ public class ExceptionDonneeInvalide extends Exception {
      * <code>ExceptionDonneeInvalide</code> without detail message.
      */
     public ExceptionDonneeInvalide() {
+        System.out.println("Constructeur ExceptionDonneeInvalide");
+        
     }
 
     /**
