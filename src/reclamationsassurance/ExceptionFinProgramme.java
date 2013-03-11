@@ -17,6 +17,7 @@ public class ExceptionFinProgramme extends Exception {
      */
     public ExceptionFinProgramme(String msg) {
         super(msg);
+        System.out.println("Constructeur ExceptionFinProgramme");
        
     }
 }
