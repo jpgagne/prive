@@ -284,6 +284,15 @@ public class Contrat {
                 if (noSoin < 400 & noSoin >= 300) {
                     pourcentageCouvert = this.soin3Taux;
                     seuilMax = this.soin3Max;
+                    
+                } else if (noSoin == 150) {
+                    pourcentageCouvert = this.soin150Taux;
+                    seuilMax = this.soin150Max;
+                    
+                }else if (noSoin == 175) {
+                    pourcentageCouvert = this.soin175Taux;
+                    seuilMax = this.soin175Max;
+                    
                 } else {
                     throw new ExceptionFinProgramme("No de soin inconnu= " + noSoin);
                 }
