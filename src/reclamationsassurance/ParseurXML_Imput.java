@@ -2,6 +2,7 @@ package reclamationsassurance;
 
 import java.io.*;
 import java.text.*;
+import java.util.Date;
 import java.util.Locale;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -30,7 +31,7 @@ public class ParseurXML_Imput {
     private Double sommeTotal = 0.00;
 
     
-    public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput) throws ExceptionFinProgramme {
+    public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput)  {
         System.out.println("Objet parseur créé");
         ouvrirFichierEntree(nomFichierInput);
         ouvrirFichierSortie(nomFichierOutput);
@@ -88,14 +89,40 @@ public class ParseurXML_Imput {
     }
 //</editor-fold>
 
-    private void execution() throws ExceptionFinProgramme {
+    private void execution() throws ExceptionDonneeInvalide {
         rootElement = docOutput.createElement("remboursements");
         docOutput.appendChild(rootElement);
 
         System.out.println("Element noeud :" + docInput.getDocumentElement().getNodeName());
         
-        // Valider le numéro de client
         NodeList nodeList = docInput.getElementsByTagName("client");
+        this.noClient = parse_Valide_NoClient(nodeList);
+        System.out.println("No Client: " + this.noClient);
+        
+
+        typeContrat = parse_Valide_TypeContrat(nodeList);
+        this.contrat = new Contrat(typeContrat);
+        
+        System.out.println("Type de contrat: " + this.typeContrat);
+        NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
+        
+        parser_Valider_Liste_Reclamations(listeNoeudsReclamation); //Traitement
+   
+            
+            
+            
+        // tag <total>
+        DecimalFormat df = new DecimalFormat("0.00");
+        Element total = docOutput.createElement("total"); // <total>
+        total.setTextContent(df.format(sommeTotal).toString() + "$");
+        docOutput.getDocumentElement().appendChild(total); // </total>
+        System.out.println("Total (TEST): " + df.format(sommeTotal));
+    }
+
+    
+    
+      private Integer parse_Valide_NoClient(NodeList nodeList) throws ExceptionDonneeInvalide
+      {
         Element elementClient = (Element) nodeList.item(0);
         String strNoClient = ((Text) elementClient.getFirstChild()).getData();
         Integer intNoClient = 0;
@@ -110,12 +137,15 @@ public class ParseurXML_Imput {
         if ((intNoClient > 999999) || (intNoClient < 100000)) {
             throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, intNoClient.toString());        }
 
-        this.noClient = intNoClient;
-        System.out.println("No Client: " + this.noClient);
-
-
-        // Valider le type de contrat
-        nodeList = docInput.getElementsByTagName("contrat");
+        return intNoClient;  
+      }   
+         
+      
+      
+      
+private char parse_Valide_TypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
+{
+        
         Element elementContrat = (Element) nodeList.item(0);
         String strContrat = ((Text) elementContrat.getFirstChild()).getData();
         char charTypeContrat;
@@ -125,94 +155,175 @@ public class ParseurXML_Imput {
         }
 
         charTypeContrat = strContrat.charAt(0);
-        charTypeContrat = Character.toUpperCase(charTypeContrat);
         
+
+        return charTypeContrat;
+     //   this.contrat = new Contrat(charTypeContrat);
+        
+}
+
+private char valider_Code_Contrat(char charTypeContrat) throws ExceptionDonneeInvalide  // todo
+{        
         if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')|| (charTypeContrat == 'E'))) {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, strContrat);
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, Character.toString(charTypeContrat));
         }
+        return charTypeContrat;
+}
+      
 
-        this.typeContrat = charTypeContrat;
-        this.contrat = new Contrat(charTypeContrat);
-        System.out.println("Type de contrat: " + this.typeContrat);
+private void parser_Valider_Liste_Reclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide
+{ 
 
-        NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
 
         int intNbReclamations = listeNoeudsReclamation.getLength();
         System.out.println("Nombre de réclamations lues: " + intNbReclamations);
 
-        for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++) {
+        for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
+        {
             Node noeudReclamation = listeNoeudsReclamation.item(compteur);
-            if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE) {
-                Integer intNoSoin = -1;
-                Element elementReclamation = (Element) noeudReclamation;
+            if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
+                 {
+                     parser_Valider_Reclamation(noeudReclamation);
+                 }
+            
+            }
+}
 
-                // tag <soin>
-                NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
-                if (listeNoeudSoin.getLength() != 1) {
-                    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + listeNoeudSoin.getLength());
-                }
+private Reclamation parser_Valider_Reclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
+    {
+    Element elementReclamation = (Element) noeudReclamation;
+    Integer intNoSoin = parser_Valider_Numero_Soin(elementReclamation);
+    Date dateSoin = parser_Valider_Date_Soin(elementReclamation);
+    Double montantReclame = parser_Valider_Montant_Reclame(elementReclamation);
                 
-                Element elementSoin = (Element) listeNoeudSoin.item(0);
-                NodeList sousListe = elementSoin.getChildNodes();
-                if (sousListe.getLength() != 1) {
-                    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + sousListe.getLength());
-                }
+                  
+        Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
 
-                String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
+        nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
 
-                try {
-                    intNoSoin = Integer.parseInt(strSoin);
-                } catch (NumberFormatException excNF) {
-                    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
-                }
+        
+             ecrireRemboursement(nouvelleReclamation);
+            } 
 
-                
-                // tag <date>
+
+
+
+
+private Integer parser_Valider_Numero_Soin(Element elementReclamation) throws ExceptionDonneeInvalide
+{
+Integer intNoSoin = -1;
+
+
+NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
+if (listeNoeudSoin.getLength() != 1) {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + listeNoeudSoin.getLength());
+}
+
+Element elementSoin = (Element) listeNoeudSoin.item(0);
+NodeList sousListe = elementSoin.getChildNodes();
+if (sousListe.getLength() != 1) {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + sousListe.getLength());
+}
+
+String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
+
+try {
+    intNoSoin = Integer.parseInt(strSoin);
+    return intNoSoin;
+} catch (NumberFormatException excNF) {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
+}
+}
+
+ private Date parser_Valider_Date_Soin(Element elementReclamation) throws ExceptionDonneeInvalide 
+         {
                 NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
                 if (listeNoeudDate.getLength() != 1) {
-                    throw new ExceptionFinProgramme("nb d'éléments 'date' = " + listeNoeudDate.getLength());
+                    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
+                                        "nb d'éléments 'date' = " + listeNoeudDate.getLength());
                 }
                 
                 Element elementDate = (Element) listeNoeudDate.item(0);
-                sousListe = elementDate.getChildNodes();
+                NodeList sousListe = elementDate.getChildNodes();
                 if (sousListe.getLength() != 1) {
-                    throw new ExceptionFinProgramme("nb d'éléments 'date' = " + sousListe.getLength());
+                    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
+                            "nb d'éléments 'date' = " + sousListe.getLength());
                 }
                 String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
+                return validerDate(strDate);
+                
+         }
+ 
+private Date validerDate(String strDate) throws ExceptionDonneeInvalide 
+{
+ try 
+    {  
+    DateFormat formatter ; 
+    Date date;
+    formatter = new SimpleDateFormat("yyyy-MM-dd");
+    date = (Date)formatter.parse(strDate);  
+    return date;
+    } 
+ catch (ParseException exceptionParsingDate)
+    {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strDate);
+    } 
 
-                
-                // tag <montant>
-                NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
-                if (listeNoeudDate.getLength() != 1) {
-                    throw new ExceptionFinProgramme("nb d'éléments 'montant' = " + listeNoeudMontant.getLength());
-                }
-                
-                Element elementMontant = (Element) listeNoeudMontant.item(0);
-                sousListe = elementMontant.getChildNodes();
-               
-                if (sousListe.getLength() != 1) {
-                    throw new ExceptionFinProgramme("nb d'éléments 'montant' = " + sousListe.getLength());
-                }  
-                
-                String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
-                
-                System.out.println(strSoin + " - " + strDate + " - " + strMontant);
-                
-                Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
+ 
+ // *** A faire = date dans mois en cours
+ // *** A faire = mois français
+}
+ 
+private Double parser_Valider_Montant_Reclame(Element elementReclamation) throws ExceptionDonneeInvalide
+{
+        NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
+        if (listeNoeudMontant.getLength() != 1) {
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_ABSENT, 
+                    "nb d'éléments 'montant' = " + listeNoeudMontant.getLength());
+        }
 
-                nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
-                ecrireRemboursement(nouvelleReclamation);
-            } //end if
+        Element elementMontant = (Element) listeNoeudMontant.item(0);
+        NodeList sousListe = elementMontant.getChildNodes();
 
-        } // end for
-         
-        // tag <total>
-        DecimalFormat df = new DecimalFormat("0.00");
-        Element total = docOutput.createElement("total"); // <total>
-        total.setTextContent(df.format(sommeTotal).toString() + "$");
-        docOutput.getDocumentElement().appendChild(total); // </total>
-        System.out.println("Total (TEST): " + df.format(sommeTotal));
+        if (sousListe.getLength() != 1) {
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_ABSENT,
+                    "nb d'éléments 'montant' = " + sousListe.getLength());
+        }  
+
+        String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
+        return validerMontant(strMontant);
+
+}   
+
+private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
+
+{
+    if (strMontant.length() == 0)
+    {     
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE, "champ vide");
+    }     
+    if (strMontant.charAt(strMontant.length()-1) != '$')
+    {     
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_SIGNEDEPIASSE, strMontant);
     }
+    
+    strMontant = strMontant.substring(0,strMontant.length()-1);
+    
+    
+    try
+    {
+        return Double.parseDouble(strMontant);
+    
+    }
+    catch (NumberFormatException excNF)
+    {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE,strMontant);
+    }
+   
+       
+ 
+}
+
 
     private void ecrireRemboursement(Reclamation reclamation) throws ExceptionFinProgramme {
         
