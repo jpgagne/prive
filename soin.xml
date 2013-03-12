@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<groupeSoin>
+    <soin>
+        <numeroSoin>0</numeroSoin>
+        <textSoin>Massotherapie</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>100</numeroSoin>
+        <textSoin>Osteopathie</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>150</numeroSoin>
+        <textSoin>Kinesitherapie</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>175</numeroSoin>
+        <textSoin>Medecin generaliste prive</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>200</numeroSoin>
+        <textSoin>Psychologie individuelle</textSoin>
+    </soin>
+    <soin>
+        <numeroSoinIntervalleDebut>300</numeroSoinIntervalleDebut>
+        <numeroSoinIntervalleFin>399</numeroSoinIntervalleFin>
+        <textSoin>Soins dentaires</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>400</numeroSoin>
+        <textSoin>Naturopathie, acuponcture</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>500</numeroSoin>
+        <textSoin>Chiropratie</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>600</numeroSoin>
+        <textSoin>Physiotherapie</textSoin>
+    </soin>
+    <soin>
+        <numeroSoin>700</numeroSoin>
+        <textSoin>Orthophonie, ergotherapie</textSoin>
+    </soin>
+</groupeSoin>
