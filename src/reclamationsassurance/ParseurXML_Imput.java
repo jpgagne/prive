@@ -24,18 +24,27 @@ public class ParseurXML_Imput {
     Document docOutput;
     Element rootElement;
 //</editor-fold>
+    private Evaluateur evaluateur;
+    
+    
     private char typeContrat;
     private Integer noClient;
-    private Contrat contrat = null;
     private String strMontantRembourse;
     private Double sommeTotal = 0.00;
 
     
     public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput)  {
-        System.out.println("Objet parseur créé");
+
         ouvrirFichierEntree(nomFichierInput);
         ouvrirFichierSortie(nomFichierOutput);
-        execution();
+        
+        try {
+            execution();
+        } catch (ExceptionDonneeInvalide ex) {
+            WWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH!
+        }
+        
+        
         produireFichier();
     }
 
@@ -93,17 +102,16 @@ public class ParseurXML_Imput {
         rootElement = docOutput.createElement("remboursements");
         docOutput.appendChild(rootElement);
 
-        System.out.println("Element noeud :" + docInput.getDocumentElement().getNodeName());
-        
-        NodeList nodeList = docInput.getElementsByTagName("client");
-        this.noClient = parse_Valide_NoClient(nodeList);
+        NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
+        this.noClient = parse_Valide_NoClient(nodeListDossier);
         System.out.println("No Client: " + this.noClient);
         
-
-        typeContrat = parse_Valide_TypeContrat(nodeList);
-        this.contrat = new Contrat(typeContrat);
-        
+        typeContrat = parse_Valide_TypeContrat(nodeListDossier);
         System.out.println("Type de contrat: " + this.typeContrat);
+
+        evaluateur = new Evaluateur(noClient, typeContrat);
+        
+        
         NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
         
         parser_Valider_Liste_Reclamations(listeNoeudsReclamation); //Traitement
@@ -119,91 +127,83 @@ public class ParseurXML_Imput {
         System.out.println("Total (TEST): " + df.format(sommeTotal));
     }
 
-    
-    
-      private Integer parse_Valide_NoClient(NodeList nodeList) throws ExceptionDonneeInvalide
-      {
-        Element elementClient = (Element) nodeList.item(0);
-        String strNoClient = ((Text) elementClient.getFirstChild()).getData();
-        Integer intNoClient = 0;
 
-        try {
-            intNoClient = Integer.valueOf(strNoClient);
 
-        } catch (NumberFormatException nfexc) {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, strNoClient);
+private Integer parse_Valide_NoClient(NodeList nodeList) throws ExceptionDonneeInvalide
+{
+Element elementClient = (Element) nodeList.item(0);
+String strDossier = ((Text) elementClient.getFirstChild()).getData();
+String strNoClient = strDossier.substring(1);   // Retrait du premier caractere, en principe la lettre du contrat
+Integer intNoClient = 0;
+
+try {
+    intNoClient = Integer.valueOf(strNoClient);
+    } catch (NumberFormatException nfexc)
+        {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, strNoClient);
         }
 
-        if ((intNoClient > 999999) || (intNoClient < 100000)) {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, intNoClient.toString());        }
+if ((intNoClient > 999999) || (intNoClient < 100000))
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, intNoClient.toString());
+    }
 
-        return intNoClient;  
-      }   
+return intNoClient;  
+}   
          
       
       
       
 private char parse_Valide_TypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
-{
-        
-        Element elementContrat = (Element) nodeList.item(0);
-        String strContrat = ((Text) elementContrat.getFirstChild()).getData();
-        char charTypeContrat;
+{    
+Element elementContrat = (Element) nodeList.item(0);
+String strDossier = ((Text) elementContrat.getFirstChild()).getData();
 
-        if (strContrat.length() != 1) {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, strContrat);
-        }
+char charTypeContrat;
 
-        charTypeContrat = strContrat.charAt(0);
-        
+if (strDossier.length() < 1) {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, strDossier);
+}
+charTypeContrat = strDossier.charAt(0);
 
-        return charTypeContrat;
-     //   this.contrat = new Contrat(charTypeContrat);
-        
+return valider_Code_Contrat(charTypeContrat);  
 }
 
-private char valider_Code_Contrat(char charTypeContrat) throws ExceptionDonneeInvalide  // todo
+private char valider_Code_Contrat(char charTypeContrat) throws ExceptionDonneeInvalide  // todo -> à intégrer avec chargement dynamique
 {        
-        if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')|| (charTypeContrat == 'E'))) {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, Character.toString(charTypeContrat));
-        }
-        return charTypeContrat;
+if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')|| (charTypeContrat == 'E')))
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, Character.toString(charTypeContrat));
+    }
+return charTypeContrat;
 }
       
 
 private void parser_Valider_Liste_Reclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide
 { 
+int intNbReclamations = listeNoeudsReclamation.getLength();
 
-
-        int intNbReclamations = listeNoeudsReclamation.getLength();
-        System.out.println("Nombre de réclamations lues: " + intNbReclamations);
-
-        for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
-        {
-            Node noeudReclamation = listeNoeudsReclamation.item(compteur);
-            if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
-                 {
-                     parser_Valider_Reclamation(noeudReclamation);
-                 }
-            
+for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
+{
+    Node noeudReclamation = listeNoeudsReclamation.item(compteur);
+    if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
+            {
+                parser_Valider_Reclamation(noeudReclamation);
             }
+
+    }
 }
 
 private Reclamation parser_Valider_Reclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
-    {
-    Element elementReclamation = (Element) noeudReclamation;
-    Integer intNoSoin = parser_Valider_Numero_Soin(elementReclamation);
-    Date dateSoin = parser_Valider_Date_Soin(elementReclamation);
-    Double montantReclame = parser_Valider_Montant_Reclame(elementReclamation);
-                
-                  
-        Reclamation nouvelleReclamation = new Reclamation(intNoSoin, strDate, strMontant);
+{
+Element elementReclamation = (Element) noeudReclamation;
+Integer intNoSoin = parser_Valider_Numero_Soin(elementReclamation);
+Date dateSoin = parser_Valider_Date_Soin(elementReclamation);
+Double montantReclame = parser_Valider_Montant_Reclame(elementReclamation);
 
-        nouvelleReclamation.setdMontantRemboursable(contrat.calculerRemboursement(intNoSoin, nouvelleReclamation.getDoubleMontantFormate()));
+return new Reclamation(intNoSoin, dateSoin, montantReclame, 'Y');
 
-        
-             ecrireRemboursement(nouvelleReclamation);
-            } 
+} 
 
 
 
@@ -236,23 +236,25 @@ try {
 }
 
  private Date parser_Valider_Date_Soin(Element elementReclamation) throws ExceptionDonneeInvalide 
-         {
-                NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
-                if (listeNoeudDate.getLength() != 1) {
-                    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
-                                        "nb d'éléments 'date' = " + listeNoeudDate.getLength());
-                }
-                
-                Element elementDate = (Element) listeNoeudDate.item(0);
-                NodeList sousListe = elementDate.getChildNodes();
-                if (sousListe.getLength() != 1) {
-                    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
-                            "nb d'éléments 'date' = " + sousListe.getLength());
-                }
-                String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
-                return validerDate(strDate);
-                
-         }
+{
+NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
+if (listeNoeudDate.getLength() != 1)
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
+                        "nb d'éléments 'date' = " + listeNoeudDate.getLength());
+    }
+
+Element elementDate = (Element) listeNoeudDate.item(0);
+NodeList sousListe = elementDate.getChildNodes();
+if (sousListe.getLength() != 1)
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_ABSENT,
+            "nb d'éléments 'date' = " + sousListe.getLength());
+    }
+String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
+return validerDate(strDate);
+
+}
  
 private Date validerDate(String strDate) throws ExceptionDonneeInvalide 
 {
@@ -270,10 +272,15 @@ private Date validerDate(String strDate) throws ExceptionDonneeInvalide
     } 
 
  
- // *** A faire = date dans mois en cours
- // *** A faire = mois français
+ // *** To do = date dans mois en cours
+
 }
  
+private boolean dateDansMoisEnCours(Date date)
+{
+    
+}
+
 private Double parser_Valider_Montant_Reclame(Element elementReclamation) throws ExceptionDonneeInvalide
 {
         NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
@@ -325,7 +332,7 @@ private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
 }
 
 
-    private void ecrireRemboursement(Reclamation reclamation) throws ExceptionFinProgramme {
+    private void ecrireRemboursement(Reclamation reclamation) {
         
         Double montantRembourse = reclamation.getdMontantRemboursable();
 
@@ -354,7 +361,7 @@ private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
 
     }
 
-    private void produireFichier() throws ExceptionFinProgramme {
+    private void produireFichier()  {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer;
         try {

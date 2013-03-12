@@ -1,132 +1,61 @@
 package reclamationsassurance;
 
-import java.text.*;
+
 import java.util.Date;
 
 public class Reclamation {
     
-private Integer intNoSoin;
-private String strSoin;
-private String strDate;
-private Date dateValide;
-private String strMontantReclame;
-private String strMontantFormate;
-private Double doubleMontantFormate = 0.0;
-private Double dMontantRemboursable = 0.0;
-//private char charTypeContrat;
-//private Contrat contrat;
+private EnumCategorieSoin catSoin;
+private Date dateSoin;
+private Double montantReclame;
+private char typeContrat;
 
-// Constructeur
-Reclamation(Integer intNoSoin, String strDate, String strMontantReclame) throws ExceptionFinProgramme {  
-    
-    this.intNoSoin = intNoSoin;
-    validerDate(strDate);
-    validerMontantReclame(strMontantReclame);
-    
-//    this.charTypeContrat = typeContrat; //Deja validé - pcq une seule fois par document
-//   this.strSoin = strSoin; // pas encore validé à ce point - dans objet 'Contrat'
-//        try 
-//            {
-//          contrat = new Contrat(charTypeContrat);
-//           } 
-//        catch (ExceptionDonneeInvalide ex) 
-//            {
-//            throw new ExceptionFinProgramme(ex.getMessage());
-//            }
+
+
+
+Reclamation(EnumCategorieSoin catSoin, Date dateSoin, Double montantReclame, char typeContrat) 
+{  
+this.catSoin = catSoin;
+this.dateSoin = dateSoin;
+this.montantReclame = montantReclame;
+this.typeContrat = typeContrat;
 }
 
 
-private void validerMontantReclame(String strMontantReclame) throws ExceptionFinProgramme
-{
-
-    
-    if (strMontantReclame.length() == 0)
-    {     
-        throw new ExceptionFinProgramme("Montant reclame - champ vide");
-    }     
-    if (strMontantReclame.charAt(strMontantReclame.length()-1) != '$')
-    {     
-        throw new ExceptionFinProgramme("Montant non suivi de '$': "+ strMontantReclame);
-    }
-    
-    strMontantReclame = strMontantReclame.substring(0,strMontantReclame.length()-1);
-    
-    
-    try
-    {
-        this.doubleMontantFormate = Double.parseDouble(strMontantReclame);
-    
-    }
-    catch (NumberFormatException excNF)
-    {
-        throw new ExceptionFinProgramme("Montant invalide: "+ strMontantReclame);
-    }
-    NumberFormat nombreFormat = NumberFormat.getCurrencyInstance( java.util.Locale.CANADA );
-       this.strMontantFormate = nombreFormat.format(this.getDoubleMontantFormate());
-       
-       
-}
-
-private void validerDate(String strDate) throws ExceptionFinProgramme
-{
- try 
-    {  
-    DateFormat formatter ; 
-    Date date;
-    formatter = new SimpleDateFormat("yyyy-MM-dd");
-    
-    date = (Date)formatter.parse(strDate);  
-    this.strDate = strDate;
-    this.dateValide = date;
-    } 
- catch (ParseException exceptionParsingDate)
-    {
-      //throw new ExceptionFinProgramme("Format de date invalide: "+strDate); 
-        System.out.println(" Erreur de parsing date: "+ strDate);
-    } 
-
- 
- // *** A faire = date dans mois en cours
- // *** A faire = mois français
-}
 
     /**
-     * @return the strSoin
+     * @return the dateSoin
      */
-//    public String getStrSoin() {
-//        return strSoin;
-//    }
-
-
-    public Integer getIntNoSoin()
-    {
-        return this.intNoSoin;
+    public Date getDateSoin() {
+        return dateSoin;
     }
 
-    public Date getDateValide() {
-        return dateValide;
+    /**
+     * @return the montantReclame
+     */
+    public Double getMontantReclame() {
+        return montantReclame;
     }
 
-    public String getStrMontantFormate() {
-        return strMontantFormate;
+    /**
+     * @return the typeContrat
+     */
+    public char getTypeContrat() {
+        return typeContrat;
     }
 
-    public Double getDoubleMontantFormate() {
-        return doubleMontantFormate;
-    }
-
-    public String getStrDate() {
-        return strDate;
-    }
-
-    public Double getdMontantRemboursable() {
-        return dMontantRemboursable;
-    }
-
-    public void setdMontantRemboursable(Double dMontantRemboursable) {
-        this.dMontantRemboursable = dMontantRemboursable;
+    /**
+     * @return the catSoin
+     */
+    public EnumCategorieSoin getCatSoin() {
+        return catSoin;
     }
 
     
     
+
+
+
+
+
 }
