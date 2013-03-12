@@ -26,6 +26,27 @@ private Double montant;
      this.catSoin = catSoin;
      this.date = date;
  }
+
+    /**
+     * @return the catSoin
+     */
+    public EnumCategorieSoin getCatSoin() {
+        return catSoin;
+    }
+
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @return the montant
+     */
+    public Double getMontant() {
+        return montant;
+    }
     
     
     

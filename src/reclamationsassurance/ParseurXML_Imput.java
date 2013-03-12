@@ -1,13 +1,15 @@
 package reclamationsassurance;
-
-import java.io.*;
-import java.text.*;
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import java.util.GregorianCalendar;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -29,29 +31,33 @@ public class ParseurXML_Imput {
     
     private char typeContrat;
     private Integer noClient;
-    private String strMontantRembourse;
-    private Double sommeTotal = 0.00;
+    private Date moisTraite;
+    
+    //private String strMontantRembourse;
+    //private Double sommeTotal = 0.00;
 
     
-    public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput)  {
+public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput) 
+{
+try {
+    ouvrirFichierEntree(nomFichierInput);
+    ouvrirFichierSortie(nomFichierOutput);
 
-        ouvrirFichierEntree(nomFichierInput);
-        ouvrirFichierSortie(nomFichierOutput);
-        
-        try {
-            execution();
-        } catch (ExceptionDonneeInvalide ex) {
-            WWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH!
-        }
-        
-        
-        produireFichier();
+    parserFichierReclamations();
+    }
+catch (ExceptionUsage | ExceptionDonneeInvalide ex)
+    {
+    //WWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH!
+    }
+
+
+       // produireFichier();
     }
 
 //<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
 /* Ouvre le fichier d'entree et cree l'objet documentImput, 
-     * ExceptionFinProgramme détaillé si problème*/
-    private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionFinProgramme {
+     * ExceptionUsage détaillé si problème*/
+    private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionUsage {
         fichierInput = new File(nomFichierInput);
         System.out.println("Ouverture du fichier entrée " + fichierInput.getName());
 
@@ -65,11 +71,11 @@ public class ParseurXML_Imput {
             
         } catch (java.io.FileNotFoundException fnfExc) {
             System.out.println("Fichier: " + fichierInput.getAbsolutePath() + " non trouvé");
-            throw new ExceptionFinProgramme(fnfExc.getMessage());
+            throw new ExceptionUsage(fnfExc.getMessage());
             
         } catch (SAXException | IOException | ParserConfigurationException ex) {
             System.out.println("ERREUR - " + ex.getMessage());
-            throw new ExceptionFinProgramme(ex.getMessage());
+            throw new ExceptionUsage(ex.getMessage());
             
         } finally {
             System.out.println("Document " + fichierInput.getName() + " : " + Boolean.toString(succes));
@@ -77,8 +83,8 @@ public class ParseurXML_Imput {
     }
 
     /* Prépare (ouvre ou crée) le fichier de sortie (vide) 
-     ExceptionFinProgramme détailé si problème I/O  */
-    private void ouvrirFichierSortie(String nomFichierOutput) throws ExceptionFinProgramme {
+     ExceptionUsage détailé si problème I/O  */
+    private void ouvrirFichierSortie(String nomFichierOutput) throws ExceptionUsage {
         fichierOutput = new File(nomFichierOutput);
         System.out.println("Ouverture du fichier sortie " + fichierOutput.getName());
 
@@ -90,7 +96,7 @@ public class ParseurXML_Imput {
             succes = true;
             
         } catch (ParserConfigurationException ex) {
-            throw new ExceptionFinProgramme(ex.getMessage());
+            throw new ExceptionUsage(ex.getMessage());
             
         } finally {
             System.out.println("Document " + fichierOutput.getName() + " : " + Boolean.toString(succes));
@@ -98,38 +104,24 @@ public class ParseurXML_Imput {
     }
 //</editor-fold>
 
-    private void execution() throws ExceptionDonneeInvalide {
-        rootElement = docOutput.createElement("remboursements");
-        docOutput.appendChild(rootElement);
+private void parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage
+{
+rootElement = docOutput.createElement("remboursements");
+docOutput.appendChild(rootElement);
 
-        NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
-        this.noClient = parse_Valide_NoClient(nodeListDossier);
-        System.out.println("No Client: " + this.noClient);
-        
-        typeContrat = parse_Valide_TypeContrat(nodeListDossier);
-        System.out.println("Type de contrat: " + this.typeContrat);
+NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
+this.noClient = parseValideNoClient(nodeListDossier);
+this.typeContrat = parseValideTypeContrat(nodeListDossier);
+evaluateur = new Evaluateur(noClient, typeContrat);
 
-        evaluateur = new Evaluateur(noClient, typeContrat);
-        
-        
-        NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
-        
-        parser_Valider_Liste_Reclamations(listeNoeudsReclamation); //Traitement
-   
-            
-            
-            
-        // tag <total>
-        DecimalFormat df = new DecimalFormat("0.00");
-        Element total = docOutput.createElement("total"); // <total>
-        total.setTextContent(df.format(sommeTotal).toString() + "$");
-        docOutput.getDocumentElement().appendChild(total); // </total>
-        System.out.println("Total (TEST): " + df.format(sommeTotal));
-    }
+NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
+parserValiderListeReclamations(listeNoeudsReclamation);
+
+}
 
 
 
-private Integer parse_Valide_NoClient(NodeList nodeList) throws ExceptionDonneeInvalide
+private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInvalide
 {
 Element elementClient = (Element) nodeList.item(0);
 String strDossier = ((Text) elementClient.getFirstChild()).getData();
@@ -154,7 +146,7 @@ return intNoClient;
       
       
       
-private char parse_Valide_TypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
+private char parseValideTypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
 {    
 Element elementContrat = (Element) nodeList.item(0);
 String strDossier = ((Text) elementContrat.getFirstChild()).getData();
@@ -179,39 +171,60 @@ return charTypeContrat;
 }
       
 
-private void parser_Valider_Liste_Reclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide
+private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide, ExceptionUsage
 { 
-int intNbReclamations = listeNoeudsReclamation.getLength();
+
+System.out.println("Nb objets Reclamation lus= "+ listeNoeudsReclamation.getLength());
 
 for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
-{
+    {
     Node noeudReclamation = listeNoeudsReclamation.item(compteur);
     if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
             {
-                parser_Valider_Reclamation(noeudReclamation);
+            parserValiderReclamation(noeudReclamation);
             }
-
+    else throw new ExceptionUsage("Structure XML non conforme sous balise <reclamation> no "+compteur);
     }
 }
 
-private Reclamation parser_Valider_Reclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
+private Reclamation parserValiderReclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
 {
 Element elementReclamation = (Element) noeudReclamation;
-Integer intNoSoin = parser_Valider_Numero_Soin(elementReclamation);
-Date dateSoin = parser_Valider_Date_Soin(elementReclamation);
-Double montantReclame = parser_Valider_Montant_Reclame(elementReclamation);
 
-return new Reclamation(intNoSoin, dateSoin, montantReclame, 'Y');
+Integer intNoSoin = parserNumeroSoin(elementReclamation);
+EnumCategorieSoin catSoin;
+try {
+    catSoin = validerCategorieSoin(intNoSoin);
+    }
+    catch (ExceptionValeurInexistante excValIn)
+        {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INEXISTANT, intNoSoin.toString());
+        }
 
+Date dateSoin = parserValiderDateSoin(elementReclamation);
+dateDansMoisEnCours(dateSoin);
+
+Double montantReclame = parserValiderMontantReclame(elementReclamation);
+
+return new Reclamation(catSoin, dateSoin, montantReclame, typeContrat);
 } 
 
 
 
-
-
-private Integer parser_Valider_Numero_Soin(Element elementReclamation) throws ExceptionDonneeInvalide
+private EnumCategorieSoin validerCategorieSoin( Integer intNoSoin) throws ExceptionValeurInexistante
 {
-Integer intNoSoin = -1;
+EnumCategorieSoin catSoinValide;
+EnumMapConversion<EnumCategorieSoin> enumSoinConversion = new EnumMapConversion(EnumCategorieSoin.class);
+catSoinValide = enumSoinConversion.get(intNoSoin);
+
+return catSoinValide;
+}
+
+
+
+private Integer parserNumeroSoin(Element elementReclamation) throws ExceptionDonneeInvalide
+{
+Integer intNoSoin;
 
 
 NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
@@ -235,7 +248,7 @@ try {
 }
 }
 
- private Date parser_Valider_Date_Soin(Element elementReclamation) throws ExceptionDonneeInvalide 
+ private Date parserValiderDateSoin(Element elementReclamation) throws ExceptionDonneeInvalide 
 {
 NodeList listeNoeudDate = elementReclamation.getElementsByTagName("date");
 if (listeNoeudDate.getLength() != 1)
@@ -252,14 +265,22 @@ if (sousListe.getLength() != 1)
             "nb d'éléments 'date' = " + sousListe.getLength());
     }
 String strDate = ((Node) sousListe.item(0)).getNodeValue().trim();
-return validerDate(strDate);
-
+Date date = validerFormatDate(strDate);
+if (dateDansMoisEnCours(date))
+   {
+   return date;
+   }
+else
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAISMOIS, strDate);
+    }
 }
  
-private Date validerDate(String strDate) throws ExceptionDonneeInvalide 
+ 
+private Date validerFormatDate(String strDate) throws ExceptionDonneeInvalide 
 {
  try 
-    {  
+    { 
     DateFormat formatter ; 
     Date date;
     formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -271,17 +292,21 @@ private Date validerDate(String strDate) throws ExceptionDonneeInvalide
         throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strDate);
     } 
 
- 
- // *** To do = date dans mois en cours
 
 }
  
 private boolean dateDansMoisEnCours(Date date)
 {
-    
+Calendar calendrierMoisEnCours = new GregorianCalendar();
+calendrierMoisEnCours.setTime(this.moisTraite);
+
+Calendar calendrierDateLue = new GregorianCalendar();
+calendrierDateLue.setTime(date);
+
+return (calendrierDateLue.get(Calendar.MONTH) == calendrierMoisEnCours.get(Calendar.MONTH));
 }
 
-private Double parser_Valider_Montant_Reclame(Element elementReclamation) throws ExceptionDonneeInvalide
+private Double parserValiderMontantReclame(Element elementReclamation) throws ExceptionDonneeInvalide
 {
         NodeList listeNoeudMontant = elementReclamation.getElementsByTagName("montant");
         if (listeNoeudMontant.getLength() != 1) {
@@ -331,61 +356,61 @@ private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
  
 }
 
-
-    private void ecrireRemboursement(Reclamation reclamation) {
-        
-        Double montantRembourse = reclamation.getdMontantRemboursable();
-
-        System.out.println("Montant remboursé = " + montantRembourse);
-
-        Element remboursement = this.docOutput.createElement("remboursement");
-
-        Element soin = docOutput.createElement("soin");
-        soin.appendChild(docOutput.createTextNode(reclamation.getIntNoSoin().toString()));
-        remboursement.appendChild(soin);
-
-        Element date = docOutput.createElement("date");
-        date.appendChild(docOutput.createTextNode(reclamation.getStrDate()));
-        remboursement.appendChild(date);
-
-        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
-        strMontantRembourse = currencyFormatter.format(montantRembourse);
-        Element montant = docOutput.createElement("montant");
-        montant.appendChild(docOutput.createTextNode(strMontantRembourse));
-        remboursement.appendChild(montant);
-        
-        Double montantRembourseTotal = Double.parseDouble(strMontantRembourse.replaceAll("[$ ]", "").replace(",", "."));
-        sommeTotal = sommeTotal + montantRembourseTotal;
-        
-        rootElement.appendChild(remboursement);
-
-    }
-
-    private void produireFichier()  {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            transformer = transformerFactory.newTransformer();
-        } catch (TransformerConfigurationException ex) {
-            throw new ExceptionFinProgramme(ex.getMessage());
-        }
-
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        DOMSource source = new DOMSource(docOutput);
-        StreamResult result = new StreamResult(fichierOutput);
-
-        try {
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
-            transformer.transform(source, result);
-            
-        } catch (TransformerException ex) {
-            throw new ExceptionFinProgramme(ex.getMessage());
-        }
-
-        System.out.println("File saved!");
-    }
-    
+//
+//    private void ecrireRemboursement(Reclamation reclamation) {
+//        
+//        Double montantRembourse = reclamation.getdMontantRemboursable();
+//
+//        System.out.println("Montant remboursé = " + montantRembourse);
+//
+//        Element remboursement = this.docOutput.createElement("remboursement");
+//
+//        Element soin = docOutput.createElement("soin");
+//        soin.appendChild(docOutput.createTextNode(reclamation.getIntNoSoin().toString()));
+//        remboursement.appendChild(soin);
+//
+//        Element date = docOutput.createElement("date");
+//        date.appendChild(docOutput.createTextNode(reclamation.getStrDate()));
+//        remboursement.appendChild(date);
+//
+//        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
+//        strMontantRembourse = currencyFormatter.format(montantRembourse);
+//        Element montant = docOutput.createElement("montant");
+//        montant.appendChild(docOutput.createTextNode(strMontantRembourse));
+//        remboursement.appendChild(montant);
+//        
+//        Double montantRembourseTotal = Double.parseDouble(strMontantRembourse.replaceAll("[$ ]", "").replace(",", "."));
+//        sommeTotal = sommeTotal + montantRembourseTotal;
+//        
+//        rootElement.appendChild(remboursement);
+//
+//    }
+//
+//    private void produireFichier()  {
+//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+//        Transformer transformer;
+//        try {
+//            transformer = transformerFactory.newTransformer();
+//        } catch (TransformerConfigurationException ex) {
+//            throw new ExceptionFinProgramme(ex.getMessage());
+//        }
+//
+//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//        DOMSource source = new DOMSource(docOutput);
+//        StreamResult result = new StreamResult(fichierOutput);
+//
+//        try {
+//            // Output to console for testing
+//            // StreamResult result = new StreamResult(System.out);
+//            transformer.transform(source, result);
+//            
+//        } catch (TransformerException ex) {
+//            throw new ExceptionFinProgramme(ex.getMessage());
+//        }
+//
+//        System.out.println("File saved!");
+//    }
+//    
     /*
      * Nouvelle Partie: Message d'erreur dans XML resultat (A effacer si ca bogue)
      * EffaceTout() efface tout ce qui est dans <reclamations></reclamations>

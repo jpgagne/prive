@@ -10,10 +10,34 @@ public class Contrat {
     {
         this.typeContrat = typeContrat;
         // todo: verifier type contrat valide
-        
 
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //    //<editor-fold defaultstate="collapsed" desc="etablirTaux()throws ExceptionDonneeInvalide">
 //    private void etablirTaux() throws ExceptionFinProgramme//throws ExceptionDonneeInvalide
 //    {
