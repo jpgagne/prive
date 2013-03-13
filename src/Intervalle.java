@@ -1,7 +1,4 @@
 
-import java.util.Objects;
-
-
 public class Intervalle
 {
     
@@ -13,6 +10,7 @@ public Intervalle(Integer bornePlancher, Integer bornePlafond)
     this.bornePlafond = bornePlafond;
     this.bornePlancher = bornePlancher;
     }
+
 public Intervalle(Integer valeur)
 {
     this.bornePlancher = valeur;
@@ -32,9 +30,9 @@ public boolean estUnaire()
 
 @Override
 public String toString()
-{
+    {
     return "["+getBornePlancher()+".."+getBornePlafond()+"]";
-}
+    }
 
 @Override
 public boolean equals(Object autreObjet)

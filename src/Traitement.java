@@ -1,10 +1,8 @@
-
-import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Traitement {
-    
     
 private SortieXML sortieXML;
 private Entree_ParseurXML_Reclamations parseurXML_Entree;
@@ -13,7 +11,7 @@ private String pathEntrant;
 private String pathSortant;
 
 private static String pathFichierContrats = "data"+System.getProperty("file.separator") +"contrats.xml";
-private ArrayList<Contrat> listeContrats;
+private Map<Character, Contrat> mapContrats;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
@@ -57,12 +55,28 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
         sortieXML.produireFichierSortie();
         }
     }
+
+
+
 private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUsage
-{
-    listeContrats = new ArrayList<>();
+    {
+    mapContrats = new HashMap<>();
     Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
     System.out.println("ANTE PARSE CONTRAT");
-    entree_ParseurXML_Contrats.parserFichierContrats();
+    this.mapContrats = entree_ParseurXML_Contrats.parserFichierContrats();
     System.out.println("POST PARSE CONTRAT");
-}
+    System.out.println(" Nb contrats charges: "+this.mapContrats.size());
+    }
+
+
+public boolean contratPresent(Character carTypeContrat)
+    {
+    return (this.mapContrats.containsKey(carTypeContrat));
+    }
+
+
+
+
+
+
 }
