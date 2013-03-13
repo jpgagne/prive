@@ -1,4 +1,4 @@
-package reclamationsassurance;
+
 
 public class Soin {
     private Integer noSoin;

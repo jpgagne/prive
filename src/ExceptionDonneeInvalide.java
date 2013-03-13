@@ -1,4 +1,4 @@
-package reclamationsassurance;
+
 
 public class ExceptionDonneeInvalide extends Exception {
 EnumErreurLecture typeErreur;

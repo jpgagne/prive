@@ -1,6 +1,6 @@
-package reclamationsassurance;
 
-public class TestRead {
+
+public class ReclamationsAssurance {
 
     public static void main(String args[]) {
         int intNbArgs = args.length;

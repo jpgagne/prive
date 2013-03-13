@@ -1,8 +1,11 @@
 
-package reclamationsassurance;
 
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  *
@@ -18,19 +21,21 @@ private ArrayList<Reclamation> reclamations;
 private ArrayList<Remboursement> remboursements;
     
 private Double total;
-
+private Date moisTraite;
 private Contrat contrat;
 private Integer noClient;
 
-Evaluateur( Integer noClient, char charContrat)
+Evaluateur( Integer noClient, char charContrat, Date moisTraite)
 {
     this.noClient = noClient;
     this.contrat = new Contrat(charContrat);
-    System.out.println("Nouvel evaluateur cree pour client: "+ noClient
-                            + " et contrat: "+ contrat.getTypeContrat());
+    this.moisTraite = moisTraite;
+    SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yy", Locale.FRENCH);
+    System.out.println("Nouvel evaluateur cree pour" + System.getProperty("line.separator")
+                        + "client: "+ noClient+ System.getProperty("line.separator")
+                        + "contrat: "+ contrat.getTypeContrat()+ System.getProperty("line.separator")
+                        + "mois: "+formatDate.format(moisTraite));
 }
-
-
 
 
 

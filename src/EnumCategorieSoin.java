@@ -1,4 +1,4 @@
-package reclamationsassurance;
+
 
 public enum EnumCategorieSoin implements EnumConvertisseur{
     CHIROPRATIE(500),

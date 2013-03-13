@@ -1,4 +1,4 @@
-package reclamationsassurance;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -32,9 +32,6 @@ public class ParseurXML_Imput {
     private char typeContrat;
     private Integer noClient;
     private Date moisTraite;
-    
-    //private String strMontantRembourse;
-    //private Double sommeTotal = 0.00;
 
     
 public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput) 
@@ -112,7 +109,11 @@ docOutput.appendChild(rootElement);
 NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
 this.noClient = parseValideNoClient(nodeListDossier);
 this.typeContrat = parseValideTypeContrat(nodeListDossier);
-evaluateur = new Evaluateur(noClient, typeContrat);
+
+NodeList nodeListMois = docInput.getElementsByTagName("mois");
+this.moisTraite = parserValiderMoisTraite(nodeListMois);
+
+evaluateur = new Evaluateur(noClient, typeContrat, moisTraite);
 
 NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
 parserValiderListeReclamations(listeNoeudsReclamation);
@@ -145,7 +146,6 @@ return intNoClient;
          
       
       
-      
 private char parseValideTypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
 {    
 Element elementContrat = (Element) nodeList.item(0);
@@ -171,9 +171,33 @@ return charTypeContrat;
 }
       
 
+
+
+private Date parserValiderMoisTraite(NodeList nodeList) throws ExceptionDonneeInvalide, ExceptionUsage
+{
+if (nodeList.getLength() != 1)
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.MOIS_ABSENT,
+            "nb d'éléments 'date' = " + nodeList.getLength());
+    }
+Element elementMois = (Element) nodeList.item(0);
+String strMois = ((Text) elementMois.getFirstChild()).getData();
+
+SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+try{
+    Date date = (Date)formatter.parse(strMois);  
+    return date;
+    } 
+catch (ParseException exceptionParsingDate)
+    {
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strMois);
+    } 
+}
+
+
+
 private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide, ExceptionUsage
 { 
-
 System.out.println("Nb objets Reclamation lus= "+ listeNoeudsReclamation.getLength());
 
 for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
@@ -198,7 +222,7 @@ try {
     }
     catch (ExceptionValeurInexistante excValIn)
         {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INEXISTANT, intNoSoin.toString());
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, intNoSoin.toString());
         }
 
 Date dateSoin = parserValiderDateSoin(elementReclamation);
