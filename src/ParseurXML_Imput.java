@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,40 +14,24 @@ import org.xml.sax.SAXException;
 public class ParseurXML_Imput {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
-    File fichierInput;
-    Document docInput;
-    DocumentBuilderFactory docBuilderFactoryInput;
-    DocumentBuilder docBuilderInput;
-    File fichierOutput;
-    DocumentBuilderFactory docFactoryOutput;
-    DocumentBuilder docBuilderOutput;
-    Document docOutput;
-    Element rootElement;
+    private  File fichierInput;
+    private  Document docInput;
+    private  DocumentBuilderFactory docBuilderFactoryInput;
+    private  DocumentBuilder docBuilderInput;
+    
 //</editor-fold>
+    
     private Evaluateur evaluateur;
-    
-    
+
     private char typeContrat;
     private Integer noClient;
     private Date moisTraite;
 
     
-public ParseurXML_Imput(String nomFichierInput, String nomFichierOutput) 
+public ParseurXML_Imput(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
 {
-try {
     ouvrirFichierEntree(nomFichierInput);
-    ouvrirFichierSortie(nomFichierOutput);
-
-    parserFichierReclamations();
-    }
-catch (ExceptionUsage | ExceptionDonneeInvalide ex)
-    {
-    //WWWWWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH!
-    }
-
-
-       // produireFichier();
-    }
+}
 
 //<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
 /* Ouvre le fichier d'entree et cree l'objet documentImput, 
@@ -80,32 +61,12 @@ catch (ExceptionUsage | ExceptionDonneeInvalide ex)
         }
     }
 
-    /* Prépare (ouvre ou crée) le fichier de sortie (vide) 
-     ExceptionUsage détailé si problème I/O  */
-    private void ouvrirFichierSortie(String nomFichierOutput) throws ExceptionUsage {
-        fichierOutput = new File(nomFichierOutput);
-        System.out.println("Ouverture du fichier sortie " + fichierOutput.getName());
 
-        boolean succes = false;
-        try {
-            docFactoryOutput = DocumentBuilderFactory.newInstance();
-            docBuilderOutput = docFactoryOutput.newDocumentBuilder();
-            docOutput = docBuilderOutput.newDocument();
-            succes = true;
-            
-        } catch (ParserConfigurationException ex) {
-            throw new ExceptionUsage(ex.getMessage());
-            
-        } finally {
-            System.out.println("Document " + fichierOutput.getName() + " : " + Boolean.toString(succes));
-        }
-    }
+    
 //</editor-fold>
 
-private void parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage
+protected  Evaluateur  parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage
 {
-rootElement = docOutput.createElement("remboursements");
-docOutput.appendChild(rootElement);
 
 NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
 this.noClient = parseValideNoClient(nodeListDossier);
@@ -116,14 +77,18 @@ this.moisTraite = parserValiderMoisTraite(nodeListMois);
 
 evaluateur = new Evaluateur(noClient, typeContrat, moisTraite);
 
+
 NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
 parserValiderListeReclamations(listeNoeudsReclamation);
+
+
+return  evaluateur;
 
 }
 
 //<editor-fold defaultstate="collapsed" desc="Parser entete">
 private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInvalide
-{
+    {
     Element elementClient = (Element) nodeList.item(0);
     String strDossier = ((Text) elementClient.getFirstChild()).getData();
     String strNoClient = strDossier.substring(1);   // Retrait du premier caractere, en principe la lettre du contrat
@@ -142,7 +107,7 @@ private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInv
     }
     
     return intNoClient;
-}
+    }
 
 
 
@@ -205,7 +170,7 @@ for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++
     Node noeudReclamation = listeNoeudsReclamation.item(compteur);
     if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
             {Reclamation nouvelleReclamation = parserValiderReclamation(noeudReclamation);
-            System.out.println(nouvelleReclamation);
+            evaluateur.ajouterReclamation(nouvelleReclamation);
             }
     else throw new ExceptionUsage("Structure XML non conforme sous balise <reclamation> no "+compteur);
     }

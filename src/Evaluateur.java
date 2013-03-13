@@ -7,15 +7,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-/**
- *
- * @author JP
- */
-
 
 public class Evaluateur 
 {
-    
     
 private ArrayList<Reclamation> reclamations;
 private ArrayList<Remboursement> remboursements;
@@ -30,15 +24,23 @@ Evaluateur( Integer noClient, char charContrat, Date moisTraite)
     this.noClient = noClient;
     this.contrat = new Contrat(charContrat);
     this.moisTraite = moisTraite;
+    reclamations = new ArrayList<>();
     SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yy", Locale.FRENCH);
     System.out.println("Nouvel evaluateur cree pour" + System.getProperty("line.separator")
-                        + "client: "+ noClient+ System.getProperty("line.separator")
-                        + "contrat: "+ contrat.getTypeContrat()+ System.getProperty("line.separator")
-                        + "mois: "+formatDate.format(moisTraite));
+                        + "   client: "+ noClient+ System.getProperty("line.separator")
+                        + "   contrat: "+ contrat.getTypeContrat()+ System.getProperty("line.separator")
+                        + "   mois: "+formatDate.format(moisTraite));
 }
 
 
-
+protected ArrayList<Remboursement> listeRemboursements()
+{
+    calculerRemboursements();
+    return  this.remboursements;
+}
+        
+        
+        
 protected void calculerRemboursements()
 {
     total = 0.0;
@@ -54,6 +56,7 @@ protected void calculerRemboursements()
 protected void ajouterReclamation(Reclamation nouvelleReclamation)
 {
     this.reclamations.add(nouvelleReclamation);
+    System.out.println("Ajouté à Évaluateur: "+nouvelleReclamation);
 }
 
 

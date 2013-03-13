@@ -23,8 +23,8 @@ this.typeContrat = typeContrat;
 public String getValeurs()
 {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd", Locale.FRENCH);
-    return  " RECLAMATION - "
-            +" / Date: "+dateFormat.format(dateSoin)
+    return  "*RECLAMATION* "
+            +"Date: "+dateFormat.format(dateSoin)
             +" / Categ: "+catSoin.toString()
             +" / Montant "+montantReclame;
 }

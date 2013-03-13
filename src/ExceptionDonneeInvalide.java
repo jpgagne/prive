@@ -29,7 +29,7 @@ public ExceptionDonneeInvalide(String msg)
     
     private void genererFichierErreur()
     {
-        System.out.println("genererFichierErreur()");
+        System.out.println("*********** genererFichierErreur() ********");
     }
    
 }
