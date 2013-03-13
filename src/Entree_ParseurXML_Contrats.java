@@ -10,9 +10,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import sun.org.mozilla.javascript.internal.regexp.RegExpImpl;
 
-public class Entree_ParseurXML_Contrats {
+
+
+public class Entree_ParseurXML_Contrats 
+{
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
   //  private  String filePath = "contrats.xml";
@@ -102,6 +104,7 @@ private Map<EnumCategorieSoin, Couverture> parserValiderListeCouvertures(Element
         if (noeudCouverture.getNodeType() == Node.ELEMENT_NODE)
             {
             Couverture nouvelleCouverture = parserValiderCouverture(noeudCouverture);
+            System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
             EnumCategorieSoin categSoin = nouvelleCouverture.getCategorieSoin();
             if (mapCouvertures.containsKey(categSoin))
                 {
@@ -145,7 +148,7 @@ return nouveauContrat;
 private Couverture parserValiderCouverture (Node noeudCouverture) throws ExceptionDonneeInvalide
 {
 Element elementCouverture = (Element) noeudCouverture;
-Integer numeroSoin = parserNumeroSoin(elementCouverture);
+Intervalle numeroSoin = parserNumeroSoin(elementCouverture);
 EnumCategorieSoin categorieSoin;
 EnumMapConversion<EnumCategorieSoin> enumCatSoinConvertisseur = new EnumMapConversion(EnumCategorieSoin.class);
 try 
@@ -174,7 +177,7 @@ return nouvelleCouverture;
 
 
 private Intervalle parserNumeroSoin(Element elementCouverture) throws ExceptionDonneeInvalide
-{
+    {
     NodeList listeNoeudSoin = elementCouverture.getElementsByTagName("numeroSoin");
     if (listeNoeudSoin.getLength() != 1)
         {
@@ -186,43 +189,19 @@ private Intervalle parserNumeroSoin(Element elementCouverture) throws ExceptionD
         {
         throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + sousListe.getLength());
         }
+    
     String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
-    
-    if ((strSoin.charAt(0) == '[') & (strSoin.charAt(strSoin.length()-1) == ']') )
-    {
-        System.out.println("INTERVALLE : "+strSoin);
-        
-        
-        StringBuilder sbNombre = new StringBuilder();
-        Character caractere = '0';
-        Integer index = 0;
-        while ((caractere >= '0') & !(caractere > '9'))
-            {
-            index++;
-            caractere = strSoin.charAt(index);
-            sbNombre.append(caractere);
+   
+        try {
+            return   ParseurNombres.parseChainePourIntervalle(strSoin);
             }
-        if (caractere != '.')
-        {
+        catch (ExceptionParseur excP)
+            {
             throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
-        }
-        index++;
-        caractere = strSoin.charAt(index);
-        if (caractere != '.')
-        {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
-        }
-        RegExp, biatches
+            }
+
     }
-    
-    try {
-        return  Integer.parseInt(strSoin);
-        }
-    catch (NumberFormatException excNF)
-        {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
-        }
-    }
+
 
 private Double parserPourcentage(Element elementCouverture) throws ExceptionDonneeInvalide
     {

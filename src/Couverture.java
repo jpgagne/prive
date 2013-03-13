@@ -45,4 +45,12 @@ public Couverture(EnumCategorieSoin categorieSoin, Double pourcentage)
     {
         return this.categorieSoin;
     }
+
+    
+    public String toString()
+    {
+        return this.categorieSoin.name();
+    }
+    
+
 }

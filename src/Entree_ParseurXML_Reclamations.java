@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -179,14 +181,14 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
 {
 Element elementReclamation = (Element) noeudReclamation;
 
-Integer intNoSoin = parserNumeroSoin(elementReclamation);
+Intervalle intervalleNoSoin = parserNumeroSoin(elementReclamation);
 EnumCategorieSoin catSoin;
 try {
-    catSoin = validerCategorieSoin(intNoSoin);
+    catSoin = validerCategorieSoin(intervalleNoSoin);
     }
     catch (ExceptionValeurInexistante excValIn)
         {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, intNoSoin.toString());
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, intervalleNoSoin.toString());
         }
 
 Date dateSoin = parserValiderDateSoin(elementReclamation);
@@ -204,42 +206,39 @@ return new Reclamation(catSoin, dateSoin, montantReclame, getTypeContrat());
 
 
 
-private EnumCategorieSoin validerCategorieSoin( Integer intNoSoin) throws ExceptionValeurInexistante
-{
-EnumCategorieSoin catSoinValide;
-EnumMapConversion<EnumCategorieSoin> enumSoinConversion = new EnumMapConversion(EnumCategorieSoin.class);
-catSoinValide = enumSoinConversion.get(intNoSoin);
-
-return catSoinValide;
+private EnumCategorieSoin validerCategorieSoin(Intervalle intervalleNoSoin) throws ExceptionValeurInexistante
+    {
+    EnumMapConversion<EnumCategorieSoin> enumSoinConversion =
+                     new EnumMapConversion(EnumCategorieSoin.class);
+    EnumCategorieSoin catSoinValide = enumSoinConversion.get(intervalleNoSoin);
+    return catSoinValide;
 }
 
 
-
-private Integer parserNumeroSoin(Element elementReclamation) throws ExceptionDonneeInvalide
-{
-Integer intNoSoin;
-
-
-NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
-if (listeNoeudSoin.getLength() != 1) {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + listeNoeudSoin.getLength());
-}
-
-Element elementSoin = (Element) listeNoeudSoin.item(0);
-NodeList sousListe = elementSoin.getChildNodes();
-if (sousListe.getLength() != 1) {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, "nb d'éléments 'soin' = " + sousListe.getLength());
-}
-
-String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
-
-try {
-    intNoSoin = Integer.parseInt(strSoin);
-    return intNoSoin;
-} catch (NumberFormatException excNF) {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
-}
-}
+private Intervalle parserNumeroSoin(Element elementReclamation) throws ExceptionDonneeInvalide
+    {
+    NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
+    if (listeNoeudSoin.getLength() != 1)
+        {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT,
+                        "nb d'éléments 'soin' = " + listeNoeudSoin.getLength());
+        }
+    Element elementSoin = (Element) listeNoeudSoin.item(0);
+    NodeList sousListe = elementSoin.getChildNodes();
+    if (sousListe.getLength() != 1)
+        {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_ABSENT, 
+                    "nb d'éléments 'soin' = " + sousListe.getLength());
+        }
+    String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
+    try {
+        return ParseurNombres.parseChainePourIntervalle(strSoin);
+        }
+    catch (ExceptionParseur excP)
+        {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
+        }
+    }
 
  private Date parserValiderDateSoin(Element elementReclamation) throws ExceptionDonneeInvalide 
 {

@@ -61,7 +61,8 @@ private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUs
 {
     listeContrats = new ArrayList<>();
     Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
-            System.out.println("ANTE PARSE CONTRAT");
-    entree_ParseurXML_Contrats.parserFichierContrats();        System.out.println("POST PARSE CONTRAT");
+    System.out.println("ANTE PARSE CONTRAT");
+    entree_ParseurXML_Contrats.parserFichierContrats();
+    System.out.println("POST PARSE CONTRAT");
 }
 }
