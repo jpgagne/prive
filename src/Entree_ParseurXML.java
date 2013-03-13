@@ -11,7 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-public class ParseurXML_Imput {
+public class Entree_ParseurXML {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
     private  File fichierInput;
@@ -27,8 +27,9 @@ public class ParseurXML_Imput {
     private Integer noClient;
     private Date moisTraite;
 
+
     
-public ParseurXML_Imput(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
+public Entree_ParseurXML(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
 {
     ouvrirFichierEntree(nomFichierInput);
 }
@@ -75,7 +76,7 @@ this.typeContrat = parseValideTypeContrat(nodeListDossier);
 NodeList nodeListMois = docInput.getElementsByTagName("mois");
 this.moisTraite = parserValiderMoisTraite(nodeListMois);
 
-evaluateur = new Evaluateur(noClient, typeContrat, moisTraite);
+evaluateur = new Evaluateur(getNoClient(), getTypeContrat(), getMoisTraite());
 
 
 NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
@@ -196,11 +197,11 @@ if (!dateDansMoisEnCours(dateSoin))
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM", Locale.FRENCH);
     throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAISMOIS, 
             "Attendu: " + dateFormat.format(dateSoin)
-            +"; trouvé: "+dateFormat.format(this.moisTraite));
+            +"; trouvé: "+dateFormat.format(this.getMoisTraite()));
 }
 Double montantReclame = parserValiderMontantReclame(elementReclamation);
 
-return new Reclamation(catSoin, dateSoin, montantReclame, typeContrat);
+return new Reclamation(catSoin, dateSoin, montantReclame, getTypeContrat());
 } 
 
 
@@ -292,7 +293,7 @@ private Date validerFormatDate(String strDate) throws ExceptionDonneeInvalide
 private boolean dateDansMoisEnCours(Date date)
 {
 Calendar calendrierMoisEnCours = new GregorianCalendar();
-calendrierMoisEnCours.setTime(this.moisTraite);
+calendrierMoisEnCours.setTime(this.getMoisTraite());
 
 Calendar calendrierDateLue = new GregorianCalendar();
 calendrierDateLue.setTime(date);
@@ -317,13 +318,17 @@ private Double parserValiderMontantReclame(Element elementReclamation) throws Ex
         }  
 
         String strMontant = ((Node) sousListe.item(0)).getNodeValue().trim();
-        return validerMontant(strMontant);
-
+        Double montant = validerMontant(strMontant);
+        if (montant < 0)
+        {
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_NEGATIF, strMontant);
+        }
+    return montant;
 }   
 
 private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
 
-{
+    {
     if (strMontant.length() == 0)
     {     
         throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE, "champ vide");
@@ -334,115 +339,28 @@ private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
     }
     
     strMontant = strMontant.substring(0,strMontant.length()-1);
-    
-    
+
     try
-    {
+        {
         return Double.parseDouble(strMontant);
-    
-    }
+        }
     catch (NumberFormatException excNF)
-    {
+        {
         throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE,strMontant);
+        }
+
     }
-   
-       
- 
-}
 
-//
-//    private void ecrireRemboursement(Reclamation reclamation) {
-//        
-//        Double montantRembourse = reclamation.getdMontantRemboursable();
-//
-//        System.out.println("Montant remboursé = " + montantRembourse);
-//
-//        Element remboursement = this.docOutput.createElement("remboursement");
-//
-//        Element soin = docOutput.createElement("soin");
-//        soin.appendChild(docOutput.createTextNode(reclamation.getIntNoSoin().toString()));
-//        remboursement.appendChild(soin);
-//
-//        Element date = docOutput.createElement("date");
-//        date.appendChild(docOutput.createTextNode(reclamation.getStrDate()));
-//        remboursement.appendChild(date);
-//
-//        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
-//        strMontantRembourse = currencyFormatter.format(montantRembourse);
-//        Element montant = docOutput.createElement("montant");
-//        montant.appendChild(docOutput.createTextNode(strMontantRembourse));
-//        remboursement.appendChild(montant);
-//        
-//        Double montantRembourseTotal = Double.parseDouble(strMontantRembourse.replaceAll("[$ ]", "").replace(",", "."));
-//        sommeTotal = sommeTotal + montantRembourseTotal;
-//        
-//        rootElement.appendChild(remboursement);
-//
-//    }
-//
-//    private void produireFichier()  {
-//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//        Transformer transformer;
-//        try {
-//            transformer = transformerFactory.newTransformer();
-//        } catch (TransformerConfigurationException ex) {
-//            throw new ExceptionFinProgramme(ex.getMessage());
-//        }
-//
-//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-//        DOMSource source = new DOMSource(docOutput);
-//        StreamResult result = new StreamResult(fichierOutput);
-//
-//        try {
-//            // Output to console for testing
-//            // StreamResult result = new StreamResult(System.out);
-//            transformer.transform(source, result);
-//            
-//        } catch (TransformerException ex) {
-//            throw new ExceptionFinProgramme(ex.getMessage());
-//        }
-//
-//        System.out.println("File saved!");
-//    }
-//    
-    /*
-     * Nouvelle Partie: Message d'erreur dans XML resultat (A effacer si ca bogue)
-     * EffaceTout() efface tout ce qui est dans <reclamations></reclamations>
-     * MessageErreur() genere le message <remboursements><message>Donnees invalides</message></remboursements>
-     */
 
-    /*
-     public static void EffaceTout() {
-     Node rc = docInput.getElementsByTagName("reclamations").item(0);
-     NodeList list = rc.getChildNodes();
+    public char getTypeContrat() {
+        return typeContrat;
+    }
 
-     for (int i = 0; i < list.getLength(); i++) {
-     Node node = list.item(i);
-     if ("contrat".equals(node.getNodeName()) 
-     || "client".equals(node.getNodeName()) 
-     || "mois".equals(node.getNodeName())
-     || "reclamation".equals(node.getNodeName())) {
-     rc.removeChild(node);
-     }
-     }
-     }
+    public Integer getNoClient() {
+        return noClient;
+    }
 
-     public static void MessageErreur() {
-     NodeList reclamationsBalise = docInput.getElementsByTagName("reclamations");
-        
-     for (int i = 0; i < reclamationsBalise.getLength(); i++) {
-     docInput.renameNode(reclamationsBalise.item(i), null, "remboursements");
-     }
-        
-     Element rembourse = docOutput.createElement("message"); // <message>
-     rembourse.setTextContent("Donnees invalides");
-     docOutput.getDocumentElement().appendChild(rembourse); // </message>
-     }
-    
-     public static void lanceMessageErreur() throws Exception {
-     EffaceTout();
-     MessageErreur();
-     System.exit(0);
-     }
-     */
+    public Date getMoisTraite() {
+        return moisTraite;
+    }
 }

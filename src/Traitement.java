@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 public class Traitement {
     
     
-private XML_Output sortieXML;
-private ParseurXML_Imput parseurXML_Imput;
+private SortieXML sortieXML;
+private Entree_ParseurXML parseurXML_Entree;
 private Evaluateur evaluateur;
 private String pathEntrant;
 private String pathSortant;
@@ -19,10 +19,11 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
     try{
-        sortieXML  = new XML_Output(pathSortant);
-        parseurXML_Imput = new ParseurXML_Imput(pathEntrant);
-        evaluateur = parseurXML_Imput.parserFichierReclamations();
-
+        sortieXML  = new SortieXML(pathSortant);
+        parseurXML_Entree = new Entree_ParseurXML(pathEntrant);
+        evaluateur = parseurXML_Entree.parserFichierReclamations();
+        sortieXML.setDossier(parseurXML_Entree.getTypeContrat(), parseurXML_Entree.getNoClient());
+        sortieXML.setMoisTraite(parseurXML_Entree.getMoisTraite());
         sortieXML.redigerDocumentSortie(evaluateur.listeRemboursements());
 
         System.out.println("Exécution terminée avec succès");
