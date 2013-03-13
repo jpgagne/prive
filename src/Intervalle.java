@@ -43,6 +43,20 @@ public boolean equals(Object autreObjet)
     if (autreObjet == this) return true;
     if (!(autreObjet instanceof Intervalle))return false;
     Intervalle autreIntervalle = (Intervalle)autreObjet;
+    
+    System.out.print(this.getBornePlancher()+ " == " + this.bornePlancher+"?");
+    System.out.print((this.getBornePlancher() == autreIntervalle.getBornePlancher())+"   ");
+    
+    
+    System.out.print(this.getBornePlafond()+ " == " + this.bornePlafond+"?");
+    System.out.print((this.getBornePlafond() == autreIntervalle.getBornePlafond())+"   ");
+    
+    
+            
+    System.out.print(((this.getBornePlafond() == autreIntervalle.getBornePlafond())
+            & this.getBornePlancher() == autreIntervalle.getBornePlancher())+" ");
+    
+    
     return ((this.getBornePlafond() == autreIntervalle.getBornePlafond())
             & this.getBornePlancher() == autreIntervalle.getBornePlancher());
     }
