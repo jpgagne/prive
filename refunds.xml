@@ -1,18 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<remboursements>
-<remboursement>
-<soin>100</soin>
-<date>2013-01-11</date>
-<montant>58,50 $</montant>
-</remboursement>
-<remboursement>
-<soin>200</soin>
-<date>2013-01-13</date>
-<montant>22,50 $</montant>
-</remboursement>
-<remboursement>
-<soin>334</soin>
-<date>2013-01-23</date>
-<montant>0,00 $</montant>
-</remboursement>
-</remboursements>
+
