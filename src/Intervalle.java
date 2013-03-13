@@ -1,4 +1,7 @@
 
+import java.util.Objects;
+
+
 public class Intervalle
 {
     
@@ -42,6 +45,14 @@ public boolean equals(Object autreObjet)
     Intervalle autreIntervalle = (Intervalle)autreObjet;
     return ((this.getBornePlafond() == autreIntervalle.getBornePlafond())
             & this.getBornePlancher() == autreIntervalle.getBornePlancher());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.bornePlancher);
+        hash = 89 * hash + Objects.hashCode(this.bornePlafond);
+        return hash;
     }
     
 public Integer getBornePlancher()

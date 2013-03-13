@@ -15,7 +15,7 @@ public ExceptionDonneeInvalide(EnumErreurLecture typeErreur, String details)
     {
     super(typeErreur.toString());
     this.typeErreur = typeErreur;
-    System.out.println("ExceptionDonneInvalide_ENUM+DETAILS: "+typeErreur.toString());
+    System.out.println("ExceptionDonneInvalide_ENUM+DETAILS: "+typeErreur.toString()+" : "+details);
     genererFichierErreur();
 }
 

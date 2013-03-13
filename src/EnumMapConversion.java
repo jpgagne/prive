@@ -18,11 +18,17 @@ public V get(Intervalle valeur) throws ExceptionValeurInexistante
     for (Map.Entry<Intervalle, V> entry : map.entrySet())
         {
         Intervalle intervalle = entry.getKey();
+        
+        System.out.print(intervalle.toString()+ " =?= " + valeur.toString());
+        
         if (intervalle.equals(valeur))
             {
+                System.out.println(" OUI");
             return entry.getValue();
             }
+        else System.out.println("NON");
         }
+    System.out.println("EnumMapConversion");
     throw new ExceptionValeurInexistante (valeur);
     }
     
