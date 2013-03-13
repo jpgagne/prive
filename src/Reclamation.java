@@ -1,7 +1,7 @@
 
-
-
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Reclamation {
     
@@ -9,8 +9,6 @@ private EnumCategorieSoin catSoin;
 private Date dateSoin;
 private Double montantReclame;
 private char typeContrat;
-
-
 
 
 Reclamation(EnumCategorieSoin catSoin, Date dateSoin, Double montantReclame, char typeContrat) 
@@ -22,34 +20,39 @@ this.typeContrat = typeContrat;
 }
 
 
+public String getValeurs()
+{
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd", Locale.FRENCH);
+    return  " RECLAMATION - "
+            +" / Date: "+dateFormat.format(dateSoin)
+            +" / Categ: "+catSoin.toString()
+            +" / Montant "+montantReclame;
+}
 
-    /**
-     * @return the dateSoin
-     */
-    public Date getDateSoin() {
-        return dateSoin;
-    }
+    @Override
+public String toString()
+{
+    return getValeurs();
+}
 
-    /**
-     * @return the montantReclame
-     */
-    public Double getMontantReclame() {
-        return montantReclame;
-    }
 
-    /**
-     * @return the typeContrat
-     */
-    public char getTypeContrat() {
-        return typeContrat;
-    }
+    
+    
+public Date getDateSoin() {
+    return dateSoin;
+}
 
-    /**
-     * @return the catSoin
-     */
-    public EnumCategorieSoin getCatSoin() {
-        return catSoin;
-    }
+public Double getMontantReclame() {
+    return montantReclame;
+}
+
+public char getTypeContrat() {
+    return typeContrat;
+}
+
+public EnumCategorieSoin getCatSoin() {
+    return catSoin;
+}
 
     
     

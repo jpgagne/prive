@@ -1,35 +1,35 @@
 
-
-public class ExceptionDonneeInvalide extends Exception {
+public class ExceptionDonneeInvalide extends Exception
+{
 EnumErreurLecture typeErreur;
   
-    public ExceptionDonneeInvalide(EnumErreurLecture typeErreur)
+public ExceptionDonneeInvalide(EnumErreurLecture typeErreur)
     {
-        super(typeErreur.toString());
-        this.typeErreur = typeErreur;
-        System.out.println("ExceptionDonneInvalide_ENUM: "+typeErreur.toString());
-        genererFichierErreur();
+    super(typeErreur.toString());
+    this.typeErreur = typeErreur;
+    System.out.println("ExceptionDonneInvalide_ENUM: "+typeErreur.toString());
+    genererFichierErreur();
     }
 
-      public ExceptionDonneeInvalide(EnumErreurLecture typeErreur, String details)
+public ExceptionDonneeInvalide(EnumErreurLecture typeErreur, String details)
     {
-        super(typeErreur.toString());
-        this.typeErreur = typeErreur;
-        System.out.println("ExceptionDonneInvalide_ENUM+DETAILS: "+typeErreur.toString());
-        genererFichierErreur();
-    }
-    
-    public ExceptionDonneeInvalide(String msg) 
+    super(typeErreur.toString());
+    this.typeErreur = typeErreur;
+    System.out.println("ExceptionDonneInvalide_ENUM+DETAILS: "+typeErreur.toString());
+    genererFichierErreur();
+}
+
+public ExceptionDonneeInvalide(String msg) 
     {
-        super(msg);
-        System.out.println("ExceptionDonneInvalide_str: "+msg);
-        genererFichierErreur();
+    super(msg);
+    System.out.println("ExceptionDonneInvalide_str: "+msg);
+    genererFichierErreur();
     }
     
     
     private void genererFichierErreur()
     {
-        
+        System.out.println("genererFichierErreur()");
     }
    
 }

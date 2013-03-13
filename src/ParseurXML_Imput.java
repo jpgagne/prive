@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -120,80 +121,79 @@ parserValiderListeReclamations(listeNoeudsReclamation);
 
 }
 
-
-
+//<editor-fold defaultstate="collapsed" desc="Parser entete">
 private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInvalide
 {
-Element elementClient = (Element) nodeList.item(0);
-String strDossier = ((Text) elementClient.getFirstChild()).getData();
-String strNoClient = strDossier.substring(1);   // Retrait du premier caractere, en principe la lettre du contrat
-Integer intNoClient = 0;
-
-try {
-    intNoClient = Integer.valueOf(strNoClient);
+    Element elementClient = (Element) nodeList.item(0);
+    String strDossier = ((Text) elementClient.getFirstChild()).getData();
+    String strNoClient = strDossier.substring(1);   // Retrait du premier caractere, en principe la lettre du contrat
+    Integer intNoClient = 0;
+    
+    try {
+        intNoClient = Integer.valueOf(strNoClient);
     } catch (NumberFormatException nfexc)
-        {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, strNoClient);
-        }
-
-if ((intNoClient > 999999) || (intNoClient < 100000))
     {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, intNoClient.toString());
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, strNoClient);
     }
-
-return intNoClient;  
-}   
-         
-      
-      
-private char parseValideTypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
-{    
-Element elementContrat = (Element) nodeList.item(0);
-String strDossier = ((Text) elementContrat.getFirstChild()).getData();
-
-char charTypeContrat;
-
-if (strDossier.length() < 1) {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, strDossier);
+    
+    if ((intNoClient > 999999) || (intNoClient < 100000))
+    {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOCLIENT_INVALIDE, intNoClient.toString());
+    }
+    
+    return intNoClient;
 }
-charTypeContrat = strDossier.charAt(0);
 
-return valider_Code_Contrat(charTypeContrat);  
+
+
+private char parseValideTypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
+{
+    Element elementContrat = (Element) nodeList.item(0);
+    String strDossier = ((Text) elementContrat.getFirstChild()).getData();
+    
+    char charTypeContrat;
+    
+    if (strDossier.length() < 1) {
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, strDossier);
+    }
+    charTypeContrat = strDossier.charAt(0);
+    
+    return valider_Code_Contrat(charTypeContrat);
 }
 
 private char valider_Code_Contrat(char charTypeContrat) throws ExceptionDonneeInvalide  // todo -> à intégrer avec chargement dynamique
-{        
-if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')|| (charTypeContrat == 'E')))
+{
+    if (!((charTypeContrat == 'A') || (charTypeContrat == 'B') || (charTypeContrat == 'C') || (charTypeContrat == 'D')|| (charTypeContrat == 'E')))
     {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, Character.toString(charTypeContrat));
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE, Character.toString(charTypeContrat));
     }
-return charTypeContrat;
+    return charTypeContrat;
 }
-      
+
 
 
 
 private Date parserValiderMoisTraite(NodeList nodeList) throws ExceptionDonneeInvalide, ExceptionUsage
 {
-if (nodeList.getLength() != 1)
+    if (nodeList.getLength() != 1)
     {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.MOIS_ABSENT,
-            "nb d'éléments 'date' = " + nodeList.getLength());
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MOIS_ABSENT,
+                "nb d'éléments 'date' = " + nodeList.getLength());
     }
-Element elementMois = (Element) nodeList.item(0);
-String strMois = ((Text) elementMois.getFirstChild()).getData();
-
-SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
-try{
-    Date date = (Date)formatter.parse(strMois);  
-    return date;
-    } 
-catch (ParseException exceptionParsingDate)
+    Element elementMois = (Element) nodeList.item(0);
+    String strMois = ((Text) elementMois.getFirstChild()).getData();
+    
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+    try{
+        Date date = (Date)formatter.parse(strMois);
+        return date;
+    }
+    catch (ParseException exceptionParsingDate)
     {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strMois);
-    } 
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strMois);
+    }
 }
-
+//</editor-fold>
 
 
 private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide, ExceptionUsage
@@ -204,8 +204,8 @@ for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++
     {
     Node noeudReclamation = listeNoeudsReclamation.item(compteur);
     if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
-            {
-            parserValiderReclamation(noeudReclamation);
+            {Reclamation nouvelleReclamation = parserValiderReclamation(noeudReclamation);
+            System.out.println(nouvelleReclamation);
             }
     else throw new ExceptionUsage("Structure XML non conforme sous balise <reclamation> no "+compteur);
     }
@@ -226,8 +226,13 @@ try {
         }
 
 Date dateSoin = parserValiderDateSoin(elementReclamation);
-dateDansMoisEnCours(dateSoin);
-
+if (!dateDansMoisEnCours(dateSoin))
+{
+SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM", Locale.FRENCH);
+    throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAISMOIS, 
+            "Attendu: " + dateFormat.format(dateSoin)
+            +"; trouvé: "+dateFormat.format(this.moisTraite));
+}
 Double montantReclame = parserValiderMontantReclame(elementReclamation);
 
 return new Reclamation(catSoin, dateSoin, montantReclame, typeContrat);
