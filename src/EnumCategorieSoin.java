@@ -8,7 +8,9 @@ public enum EnumCategorieSoin implements EnumConvertisseur{
     OSTEOPATIE(100), 
     PHYSIOTHERAPIE(600),
     PSYCHOLOGIE_INDIVIDUELLE(200), 
-    SOINS_DENTAIRES(300);
+    SOINS_DENTAIRES(300),
+    KINESITHERAPIE(150), // Ca refuse d'afficher, c'est masquer par CHIROPRATIE(100)
+    MEDECIN_GENERALISTE_PRIVE(175); // Ca refuse d'afficher, c'est masquer par CHIROPRATIE(100)
     
     private final Integer valeur;
 
