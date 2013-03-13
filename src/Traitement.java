@@ -1,27 +1,31 @@
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+
 
 
 public class Traitement {
     
     
 private SortieXML sortieXML;
-private Entree_ParseurXML parseurXML_Entree;
+private Entree_ParseurXML_Reclamations parseurXML_Entree;
 private Evaluateur evaluateur;
 private String pathEntrant;
 private String pathSortant;
 
-
+private static String pathFichierContrats = "data"+System.getProperty("file.separator") +"contrats.xml";
+private ArrayList<Contrat> listeContrats;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
     try{
-        sortieXML  = new SortieXML(pathSortant);
-        parseurXML_Entree = new Entree_ParseurXML(pathEntrant);
+        chargementDesContrats();
+        sortieXML  = new SortieXML(this.pathSortant);
+        parseurXML_Entree = new Entree_ParseurXML_Reclamations(this.pathEntrant);
+                System.out.println("PARSEUR OK");
         evaluateur = parseurXML_Entree.parserFichierReclamations();
+        System.out.println("EVALUATEUR OK");
         sortieXML.setDossier(parseurXML_Entree.getTypeContrat(), parseurXML_Entree.getNoClient());
         sortieXML.setMoisTraite(parseurXML_Entree.getMoisTraite());
         sortieXML.redigerDocumentSortie(evaluateur.listeRemboursements());
@@ -53,5 +57,11 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
         sortieXML.produireFichierSortie();
         }
     }
-
+private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUsage
+{
+    listeContrats = new ArrayList<>();
+    Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
+            System.out.println("ANTE PARSE CONTRAT");
+    entree_ParseurXML_Contrats.parserFichierContrats();        System.out.println("POST PARSE CONTRAT");
+}
 }

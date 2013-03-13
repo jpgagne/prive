@@ -1,28 +1,36 @@
 
 
-public enum EnumCategorieSoin implements EnumConvertisseur{
-    CHIROPRATIE(500),
-    MASSOTHERAPIE(0), 
-    NATUROPATHIE_ACUPONCTURE(400), 
-    ORTHOPHONIE_ERGOTHERAPIE(700),
-    OSTEOPATIE(100), 
-    PHYSIOTHERAPIE(600),
+public enum EnumCategorieSoin implements EnumConvertisseur
+{   MASSOTHERAPIE(0), 
+    OSTEOPATIE(100),
     PSYCHOLOGIE_INDIVIDUELLE(200), 
-    SOINS_DENTAIRES(300),
-    KINESITHERAPIE(150), // Ca refuse d'afficher, c'est masquer par CHIROPRATIE(100)
-    MEDECIN_GENERALISTE_PRIVE(175); // Ca refuse d'afficher, c'est masquer par CHIROPRATIE(100)
+    SOINS_DENTAIRES(300,399),
+    NATUROPATHIE_ACUPONCTURE(400),    
+    CHIROPRATIE(500),
+    PHYSIOTHERAPIE(600),
+    ORTHOPHONIE_ERGOTHERAPIE(700) ; 
     
-    private final Integer valeur;
 
+    
+    private final Integer valeurPlancher;
+    private final Integer valeurPlafond;
+    
   EnumCategorieSoin(Integer valeur)
     {
-    this.valeur =  valeur;
+    this.valeurPlancher = valeur;
+    this.valeurPlafond = valeur;
+    }
+ EnumCategorieSoin(Integer valeurPlancher, Integer valeurPlafond)
+    {
+    this.valeurPlancher = valeurPlancher;
+    this.valeurPlafond = valeurPlafond;
     }
 
+    
     @Override
-  public Integer conversion() 
+  public Intervalle conversion() 
     {
-    return valeur;
+    return new Intervalle(valeurPlancher, valeurPlafond);
     }
 
     

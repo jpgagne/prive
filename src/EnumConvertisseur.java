@@ -1,11 +1,4 @@
-
-
-
-/**
- *
- * @author JP
- */
 public interface EnumConvertisseur
-{
-    public Integer conversion();
-}
+    {
+    public Intervalle conversion();
+    }

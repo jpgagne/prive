@@ -1,23 +1,45 @@
 
+import java.util.HashMap;
+import java.util.Map;
 
-public class Contrat {
+public class Contrat
+{
+private char typeContrat;
 
+private Map<EnumCategorieSoin, Couverture> couvertures;
 
-    private char typeContrat;
-
-
-    Contrat(char typeContrat) 
+Contrat(char typeContrat) 
     {
-        this.typeContrat = typeContrat;
-        // todo: verifier type contrat valide
-
+    this.typeContrat = typeContrat;
+    couvertures = new HashMap<>();
     }
 
-    
-    
-    
-    
-    
+
+protected void ajouterCouverture(Couverture nouvelleCouverture)
+    {
+    this.couvertures.put(nouvelleCouverture.getCategorieSoin(), nouvelleCouverture);
+    }
+
+protected void setMapCouvertures (Map<EnumCategorieSoin, Couverture> couvertures)
+    {
+    this.couvertures = couvertures;
+    }
+
+
+protected boolean aCouverture(EnumCategorieSoin categorieSoin)
+    {
+    return this.couvertures.containsKey(categorieSoin);
+    }
+
+protected Couverture trouverCouverture(EnumCategorieSoin categorieSoin) throws ExceptionSoinNonCouvert
+    {
+    if (aCouverture(categorieSoin))
+        {
+        return this.couvertures.get(categorieSoin);
+        }
+    throw new ExceptionSoinNonCouvert(categorieSoin);
+    }
+
     
     
     

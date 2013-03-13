@@ -11,7 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
-public class Entree_ParseurXML {
+public class Entree_ParseurXML_Reclamations {
 
 //<editor-fold defaultstate="collapsed" desc="Objets accès XML">
     private  File fichierInput;
@@ -29,7 +29,7 @@ public class Entree_ParseurXML {
 
 
     
-public Entree_ParseurXML(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
+public Entree_ParseurXML_Reclamations(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
 {
     ouvrirFichierEntree(nomFichierInput);
 }
@@ -78,10 +78,8 @@ this.moisTraite = parserValiderMoisTraite(nodeListMois);
 
 evaluateur = new Evaluateur(getNoClient(), getTypeContrat(), getMoisTraite());
 
-
 NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
 parserValiderListeReclamations(listeNoeudsReclamation);
-
 
 return  evaluateur;
 
@@ -164,7 +162,7 @@ private Date parserValiderMoisTraite(NodeList nodeList) throws ExceptionDonneeIn
 
 private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide, ExceptionUsage
 { 
-System.out.println("Nb objets Reclamation lus= "+ listeNoeudsReclamation.getLength());
+System.out.println("Nb objets Reclamation lus = "+ listeNoeudsReclamation.getLength());
 
 for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
     {
