@@ -90,6 +90,11 @@ return  evaluateur;
 //<editor-fold defaultstate="collapsed" desc="Parser entete">
 private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInvalide
     {
+    if (nodeList.getLength() != 1)
+        {
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.DOSSIER_ABSENT);
+        }
+        
     Element elementClient = (Element) nodeList.item(0);
     String strDossier = ((Text) elementClient.getFirstChild()).getData();
     String strNoClient = strDossier.substring(1);   // Retrait du premier caractere, en principe la lettre du contrat
