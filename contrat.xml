@@ -29,7 +29,7 @@
         </couverture>
         
         <couverture>
-            <numeroSoin>300..399</numeroSoin>
+            <numeroSoin>[300..399]</numeroSoin>
             <pourcentage>0.00</pourcentage>
         </couverture>
         
@@ -86,7 +86,7 @@
         </couverture>
         
         <couverture>
-            <numeroSoin>300..399</numeroSoin>
+            <numeroSoin>[300..399]</numeroSoin>
             <pourcentage>0.50</pourcentage>
         </couverture>
         
@@ -144,7 +144,7 @@
         </couverture>
         
         <couverture>
-            <numeroSoin>300..399</numeroSoin>
+            <numeroSoin>[300..399]</numeroSoin>
             <pourcentage>0.90</pourcentage>
         </couverture>
         
@@ -203,7 +203,7 @@
         </couverture>
         
         <couverture>
-            <numeroSoin>300..399</numeroSoin>
+            <numeroSoin>[300..399]</numeroSoin>
             <pourcentage>1.00</pourcentage>
         </couverture>
         
@@ -265,7 +265,7 @@
         </couverture>
         
         <couverture>
-            <numeroSoin>300..399</numeroSoin>
+            <numeroSoin>[300..399]</numeroSoin>
             <pourcentage>0.60</pourcentage>
         </couverture>
         
