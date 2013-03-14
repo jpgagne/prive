@@ -1,5 +1,4 @@
 
-
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -70,36 +69,23 @@ private Remboursement calculerRemboursement(Reclamation reclamation)
     return remboursement;
     }
 
-    /**
-     * @return the total
-     */
+
+
     public Double getTotal() {
         return total;
     }
 
-    /**
-     * @return the moisTraite
-     */
     public Date getMoisTraite() {
         return moisTraite;
     }
 
-    /**
-     * @return the contrat
-     */
     public Contrat getContrat() {
         return contrat;
     }
 
-    /**
-     * @return the noClient
-     */
     public Integer getNoClient() {
         return noClient;
     }
-
-
-
 
 
 }

@@ -25,36 +25,22 @@ this.nombreIntervalle = new Intervalle(nombreInteger);
 this.nombreInteger = nombreInteger;
 }
 
-    /**
-     * @return the nombreIntervalle
-     */
+
     public Intervalle getNombreIntervalle() {
         return nombreIntervalle;
     }
 
-    /**
-     * @return the nombreInteger
-     */
     public Integer getNombreInteger() {
         return nombreInteger;
     }
 
-    /**
-     * @return the estIntegerDoitEtreIntervalle
-     */
     public boolean isEstIntegerDoitEtreIntervalle() {
         return estIntegerDoitEtreIntervalle;
     }
 
-    /**
-     * @return the estIntervalleDoitEtreInteger
-     */
     public boolean isEstIntervalleDoitEtreInteger() {
         return estIntervalleDoitEtreInteger;
     }
-
-
-
 
 
 
