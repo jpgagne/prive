@@ -14,7 +14,6 @@ Contrat(char typeContrat)
     couvertures = new HashMap<>();
     }
 
-
 protected void ajouterCouverture(Couverture nouvelleCouverture)
     {
     this.couvertures.put(nouvelleCouverture.getSoin(), nouvelleCouverture);
