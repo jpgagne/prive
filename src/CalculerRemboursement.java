@@ -11,7 +11,7 @@ public class CalculerRemboursement {
     
     public static double claculeRemboursement ( Reclamation reclamation, Contrat contract){
         
-    double d;
+    double d = 0.0; //TODO = watchout!
     
     return d;
     }
