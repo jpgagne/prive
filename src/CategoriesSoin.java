@@ -15,14 +15,54 @@ private CategoriesSoin()
 chargerSoins();
 }
 
+public static CategoriesSoin getSessionUnique(){
+    if (instance == null){
+        instance = new CategoriesSoin();
+        
+    }
+    return instance;
+}
 
 
 
 
 private void chargerSoins()
 {
+    mapSoins = new HashMap();
     
+    Soin nouveauSoin = new Soin(0, "Massothérapie"); 
     this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+            
+    nouveauSoin = new Soin(100, "Ostéopathie"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(200, "Psychologie individuelle"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(500, "Chiropratie"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(600, "Physiothérapie"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    nouveauSoin = new Soin(700, "Orthophonie, ergothérapie"); 
+    this.mapSoins = new HashMap<>();
+    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
+    
+    System.out.print("taille du hashMap: "+mapSoins.size() );
 }
 
 public static CategoriesSoin getInstance()
