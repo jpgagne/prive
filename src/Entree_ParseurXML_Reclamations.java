@@ -188,7 +188,7 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
     {
     Element elementReclamation = (Element) noeudReclamation;
 
-    Intervalle intervalleNoSoin = parserNumeroSoin(elementReclamation);
+    Integer intNoSoin = parserNumeroSoin(elementReclamation);
     EnumCategorieSoin catSoin;
     try {
         catSoin = validerCategorieSoin(intervalleNoSoin);
@@ -212,16 +212,16 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
 
 
 
-private EnumCategorieSoin validerCategorieSoin(Intervalle intervalleNoSoin) throws ExceptionValeurInexistante
+private EnumCategorieSoin validerCategorieSoin(Integer integerNoSoin) throws ExceptionValeurInexistante, ExceptionIntervalle
     {
     EnumMapConversion<EnumCategorieSoin> enumSoinConversion =
                      new EnumMapConversion(EnumCategorieSoin.class);
-    EnumCategorieSoin catSoinValide = enumSoinConversion.get(intervalleNoSoin);
+    EnumCategorieSoin catSoinValide = enumSoinConversion.get(integerNoSoin);
     return catSoinValide;
     }
 
 
-private Intervalle parserNumeroSoin(Element elementReclamation) throws ExceptionDonneeInvalide
+private Integer parserNumeroSoin(Element elementReclamation) throws ExceptionDonneeInvalide
     {
     NodeList listeNoeudSoin = elementReclamation.getElementsByTagName("soin");
     if (listeNoeudSoin.getLength() != 1)
@@ -238,11 +238,11 @@ private Intervalle parserNumeroSoin(Element elementReclamation) throws Exception
         }
     String strSoin = ((Node) sousListe.item(0)).getNodeValue().trim();
     try {
-        return ParseurNombres.parseChainePourIntervalle(strSoin);
+        return ParseurNombres.parseChainePourInteger(strSoin);
         }
     catch (ExceptionParseur excP)
         {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, strSoin);
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.NOSOIN_INVALIDE, excP.getMessage());
         }
     }
 

@@ -27,7 +27,18 @@ public static Intervalle parseChainePourIntervalle(String chaine) throws Excepti
     throw new ExceptionParseur(chaine);
     }
 
-
+public static Integer parseChainePourInteger(String chaine) throws ExceptionParseur
+    {
+    if (chaineEstNombreEntier(chaine))
+        {
+        return parseNombreEntier(chaine);
+        }
+    if (chaineEstIntervalle(chaine))
+        {
+        throw new ExceptionParseur(chaine+ " Est un intervalle, doit etre unaire");
+        }
+    throw new ExceptionParseur(chaine);
+    }
 private static boolean  chaineEstIntervalle(String chaine)
     {
     return ((chaine.matches(regexIntervalleEntier)) & (chaine.charAt(0) == '[') & (chaine.charAt(chaine.length()-1) == ']') );

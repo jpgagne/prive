@@ -14,22 +14,62 @@ public enum EnumCategorieSoin implements EnumConvertisseur
     
     private final Integer valeurPlancher;
     private final Integer valeurPlafond;
-    
+    private final Integer valeurUnaire;
+    private final boolean estUnaire;
+    private final boolean estIntervalle;
 
+private EnumCategorieSoin(Integer valeurUnaire)
+    {
+    this.valeurUnaire = valeurUnaire;
+    this.estUnaire = true;
+    this.estIntervalle = false;
+    this.valeurPlafond = -1;
+    this.valeurPlancher = -1;
+    }
+
+    
+    
  EnumCategorieSoin(Integer valeurPlancher, Integer valeurPlafond)
     {
     this.valeurPlancher = valeurPlancher;
     this.valeurPlafond = valeurPlafond;
+    this.estUnaire = false;
+    this.estIntervalle = true;
+    this.valeurUnaire = -1;
     }
 
-    
-    @Override
-  public Intervalle conversion() 
+    public boolean  estUnaire()
     {
-    return new Intervalle(valeurPlancher, valeurPlafond);
+        return this.estUnaire;
     }
-
     
+    public boolean estIntervalle()
+    {
+        return this.estIntervalle;
+    }
+    @Override
+
+
+public Intervalle conversionIntervalle()  throws ExceptionIntervalle
+{
+if (this.estIntervalle)
+{
+return new Intervalle(valeurPlancher, valeurPlafond);
+}
+throw new ExceptionIntervalle(valeurUnaire);
+}
+
+@Override
+public Integer conversionInteger() throws ExceptionIntervalle
+{
+if (this.estUnaire)
+{
+    return valeurUnaire;
+}
+throw new ExceptionIntervalle(new Intervalle(valeurPlancher, valeurPlafond));
+}
+
+
     
     
     

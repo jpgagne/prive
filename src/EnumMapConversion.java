@@ -5,11 +5,11 @@ import java.util.Map;
 public class EnumMapConversion<V extends Enum<V> & EnumConvertisseur> 
 {
   private Map<Intervalle, V> map = new HashMap<>();
-  public EnumMapConversion(Class<V> valueType)
+  public EnumMapConversion(Class<V> valueType) throws ExceptionIntervalle
     {
     for (V v : valueType.getEnumConstants())
            {
-        map.put(v.conversion(), v);
+        map.put(v.conversionIntervalle(), v);
         }
     }
 

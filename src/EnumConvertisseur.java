@@ -1,4 +1,6 @@
 public interface EnumConvertisseur
     {
-    public Intervalle conversion();
+    public Intervalle conversionIntervalle() throws ExceptionIntervalle;
+    public Integer conversionInteger() throws ExceptionIntervalle;
     }
+
