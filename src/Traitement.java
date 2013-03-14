@@ -1,7 +1,5 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Traitement 
@@ -20,7 +18,8 @@ private ListeContrats listeContrats;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
-    categoriesSoin.getClass();  
+    categoriesSoin = CategoriesSoin.getInstance();
+    listeContrats = ListeContrats.getInstance();
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
     try{
@@ -58,7 +57,7 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     }
     finally
         {
-        sortieXML.produireFichierSortie();
+//        sortieXML.produireFichierSortie();
         }
     }
 

@@ -10,7 +10,7 @@ Soin(Integer integerNoSoin, String litteral)
     this.intervalleNoSoin = new Intervalle(integerNoSoin);
     }
 
-public Soin(Intervalle intervalleNoSoin, String litteral)
+Soin(Intervalle intervalleNoSoin, String litteral)
     {
     this.intervalleNoSoin = intervalleNoSoin;
     this.litteral = litteral;
@@ -26,4 +26,11 @@ protected String getLitteral()
     {
     return this.litteral;
     }
+
+    @Override
+public String toString()
+{
+    return (this.intervalleNoSoin+" - "+this.getLitteral());
+}
+
 }

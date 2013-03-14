@@ -1,13 +1,13 @@
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 
 public class CategoriesSoin 
 {
+    private Set<Soin> setSoins;
 
 
-    private Map<Intervalle, Soin> mapSoins;
-    
     
 private static CategoriesSoin instance = null;
 private CategoriesSoin() 
@@ -15,55 +15,6 @@ private CategoriesSoin()
 chargerSoins();
 }
 
-public static CategoriesSoin getSessionUnique(){
-    if (instance == null){
-        instance = new CategoriesSoin();
-        
-    }
-    return instance;
-}
-
-
-
-
-private void chargerSoins()
-{
-    mapSoins = new HashMap();
-    
-    Soin nouveauSoin = new Soin(0, "Massothérapie"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-            
-    nouveauSoin = new Soin(100, "Ostéopathie"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(200, "Psychologie individuelle"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(500, "Chiropratie"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(600, "Physiothérapie"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    nouveauSoin = new Soin(700, "Orthophonie, ergothérapie"); 
-    this.mapSoins = new HashMap<>();
-    mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
-    
-    System.out.print("taille du hashMap: " + mapSoins.size());
-}
 
 public static CategoriesSoin getInstance()
     {
@@ -74,62 +25,84 @@ public static CategoriesSoin getInstance()
     return instance;
     }
 
+protected Soin getSoinInteger(Integer noSoinInteger) throws ExceptionSoinNonCouvert
+    {
+   // System.out.println("NB de soins charges: "+ setSoins.size());
+    for (Iterator<Soin> it1 = setSoins.iterator(); it1.hasNext();) {
+        Soin soin = it1.next();
+       // System.out.println(soin);
+        if (soin.getIntervalleNoSoin().inclus(noSoinInteger))
+          //  System.out.println("TROUVE");
+            return soin;
+    }
+    throw new ExceptionSoinNonCouvert(noSoinInteger);
+    }
 
 
-private Map<Intervalle, Soin> soins = new HashMap();
 
-private void ajouterSoin(Intervalle intervalleNoSoin, Soin nouveauSoin)
+
+private void chargerSoins()
 {
-    this.soins.put(intervalleNoSoin, nouveauSoin);
+    setSoins= new HashSet<>();
+    
+    Soin nouveauSoin = new Soin(0, "Massothérapie"); 
+
+   setSoins.add( nouveauSoin);
+    nouveauSoin = new Soin(100, "Ostéopathie"); 
+
+   setSoins.add( nouveauSoin);
+
+    nouveauSoin = new Soin(200, "Psychologie individuelle"); 
+
+   setSoins.add( nouveauSoin);
+
+    nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
+
+   setSoins.add( nouveauSoin);
+;
+    nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
+
+   setSoins.add( nouveauSoin);
+
+    nouveauSoin = new Soin(500, "Chiropratie"); 
+  
+   setSoins.add( nouveauSoin);
+
+    nouveauSoin = new Soin(600, "Physiothérapie"); 
+
+   setSoins.add( nouveauSoin);
+
+    nouveauSoin = new Soin(700, "Orthophonie, ergothérapie"); 
+
+   setSoins.add( nouveauSoin);
+    
+    System.out.println("taille du ThreeSet: " +setSoins.size());
 }
 
 
 
 
-protected boolean soinExiste (Integer integerNumeroSoin)
+
+private void ajouterSoin(Intervalle intervalleNoSoin, Soin nouveauSoin)
+{
+    this.setSoins.add(nouveauSoin);
+}
+
+
+
+
+protected boolean soinExisteInteger (Integer integerNumeroSoin)
     {
-    return true; //TODO
+    try 
+        {
+        Soin soin = this.getSoinInteger(integerNumeroSoin);  
+        return true;
+
+        } catch (ExceptionSoinNonCouvert ex)
+        {
+            return false;
+        }
     }
 
-
-protected Soin trouverSoinIntervalle( Intervalle intervalleNumeroSoin) throws ExceptionSoinNonCouvert
-    {
-
-
-    Soin soinTrouve;
-    if (soinExisteIntervalle(intervalleNumeroSoin))
-
-    {
-    soinTrouve = new Soin(intervalleNumeroSoin, null);
-    return soinTrouve;
-
-    }throw new ExceptionSoinNonCouvert(intervalleNumeroSoin);
-        //TODO
-
-    }
-
-
-
-protected boolean soinExisteIntervalle (Intervalle integerNumeroSoin)
-    {
-    return true; //TODO
-    }
-
-
-protected Soin trouverSoinInteger( Integer integerNumeroSoin) throws ExceptionSoinNonCouvert
-    {
-
-
-    Soin soinTrouve;
-    if (soinExiste(integerNumeroSoin))
-
-    {
-    soinTrouve = new Soin(integerNumeroSoin, null);
-    return soinTrouve;
-
-    }throw new ExceptionSoinNonCouvert(integerNumeroSoin);
-        //TODO
-
-    }
 
 }

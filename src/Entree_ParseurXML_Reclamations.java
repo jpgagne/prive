@@ -39,6 +39,8 @@ public class Entree_ParseurXML_Reclamations {
     
 public Entree_ParseurXML_Reclamations(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
     {
+    categoriesSoin = CategoriesSoin.getInstance();
+    listeContrats = ListeContrats.getInstance();
     ouvrirFichierEntree(nomFichierInput);
     }
 
@@ -191,6 +193,7 @@ private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) thr
 
 private Reclamation parserValiderReclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
     {
+    System.out.println("RECLAMATION");
     Element elementReclamation = (Element) noeudReclamation;
 
     Integer intNoSoin = parserNumeroSoin(elementReclamation);
@@ -220,7 +223,7 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
 
 private Soin validerCategorieSoin(Integer integerNoSoin) throws ExceptionSoinNonCouvert 
     {
-    return categoriesSoin.trouverSoinInteger(integerNoSoin);
+    return categoriesSoin.getSoinInteger(integerNoSoin);
     }
 
 

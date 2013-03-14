@@ -10,6 +10,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import java.util.Set;
+import java.util.HashSet;
 
 
 
@@ -22,14 +24,15 @@ public class Entree_ParseurXML_Contrats
     private Document docInput;
     private DocumentBuilderFactory docBuilderFactoryInput;
     private DocumentBuilder docBuilderInput;
-    private Map<Soin, Couverture> mapCouvertures;
-    
+  
 
 
 
     
 public Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionUsage 
 {
+    this.categoriesSoin = CategoriesSoin.getInstance();
+    this.listeContrats = ListeContrats.getInstance();
     ouvrirFichierEntree(nomFichierInput);
 }
 
@@ -74,16 +77,18 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
     if (noeudContrat.getNodeType() == Node.ELEMENT_NODE)
         {
         Contrat nouveauContrat = parserValiderContrat(noeudContrat);
+        System.out.print("Nouveau contrat : ");
         Character carTypeContrat = nouveauContrat.getTypeContrat();
+        System.out.println(carTypeContrat);
         if (mapContrats.containsKey(carTypeContrat))
             {
             throw new ExceptionDonneeInvalide("Contrat |"+carTypeContrat+"| dédoublé");
             }
         
         
-        this.mapCouvertures = parserValiderListeCouvertures((Element) noeudContrat);
+        Set<Couverture> setCouvertures = parserValiderListeCouvertures((Element) noeudContrat);
         
-        nouveauContrat.setMapCouvertures(mapCouvertures);
+        nouveauContrat.setSetCouvertures(setCouvertures);
         mapContrats.put(carTypeContrat, nouveauContrat);
         }
     else
@@ -96,9 +101,9 @@ return mapContrats;
 
 
 
-private Map<Soin, Couverture> parserValiderListeCouvertures(Element elementContrat) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
+private Set<Couverture> parserValiderListeCouvertures(Element elementContrat) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
     {
-    this.mapCouvertures = new HashMap<>();
+    HashSet<Couverture> setCouvertures = new HashSet<>();
     NodeList listeNoeudsCouverture = elementContrat.getElementsByTagName("couverture");
     String typeContrat = elementContrat.getAttribute("type");
     System.out.println("Nb objets Couverture lus pour Contrat "+typeContrat+" = "+ listeNoeudsCouverture.getLength());
@@ -109,12 +114,8 @@ private Map<Soin, Couverture> parserValiderListeCouvertures(Element elementContr
             {
             Couverture nouvelleCouverture = parserValiderCouverture(noeudCouverture);
             System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
-            
-            if (mapCouvertures.containsKey(nouvelleCouverture.getSoin()))
-                {
-                throw new ExceptionDonneeInvalide("Couverture "+nouvelleCouverture.getSoin().toString()+" dédoublé");
-                }
-            mapCouvertures.put(nouvelleCouverture.getSoin(), nouvelleCouverture);
+
+            setCouvertures.add(nouvelleCouverture);
             }
         else
             {                            
@@ -122,7 +123,7 @@ private Map<Soin, Couverture> parserValiderListeCouvertures(Element elementContr
                     +compteur+" du contrat "+typeContrat);
             }
         }
-    return mapCouvertures;
+    return setCouvertures;
     }
 
 
@@ -151,13 +152,12 @@ return nouveauContrat;
 
 private Couverture parserValiderCouverture (Node noeudCouverture) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
 {
-    Soin soin;
+Soin soin;
 Element elementCouverture = (Element) noeudCouverture;
 Intervalle intervalleNumeroSoin = parserNumeroSoin(elementCouverture);
 
-soin = categoriesSoin.trouverSoinIntervalle(intervalleNumeroSoin);
-    
-    
+soin = categoriesSoin.getSoinInteger(intervalleNumeroSoin.getBornePlancher());
+
 Double pourcentage = parserPourcentage(elementCouverture);
 Boolean aMaximum = parserAMaximum(elementCouverture);
 Double maximum;
