@@ -20,7 +20,7 @@ private ListeContrats listeContrats;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
-        
+    categoriesSoin.getClass();  
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
     try{
