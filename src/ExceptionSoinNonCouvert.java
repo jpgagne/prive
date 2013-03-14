@@ -1,17 +1,20 @@
 public class ExceptionSoinNonCouvert extends Exception
 {
     
-EnumCategorieSoin categorieSoin;
 
-public ExceptionSoinNonCouvert(EnumCategorieSoin categorieSoin)
+public ExceptionSoinNonCouvert(Intervalle noSoinIntervalle)
     {
-    super(categorieSoin.toString());
-    this.categorieSoin = categorieSoin;
+    super(noSoinIntervalle.toString());
     }
 
-protected EnumCategorieSoin getCatSoin()
+public ExceptionSoinNonCouvert(Integer intNoSoin) 
     {
-    return this.categorieSoin;
+    super(intNoSoin.toString());
+    }
+
+public ExceptionSoinNonCouvert(Soin soin)
+    {
+    super(soin.toString());
     }
 
 

@@ -6,7 +6,7 @@ public class Contrat
 {
 private char typeContrat;
 
-private Map<EnumCategorieSoin, Couverture> couvertures;
+private Map<Soin, Couverture> couvertures;
 
 Contrat(char typeContrat) 
     {
@@ -17,27 +17,27 @@ Contrat(char typeContrat)
 
 protected void ajouterCouverture(Couverture nouvelleCouverture)
     {
-    this.couvertures.put(nouvelleCouverture.getCategorieSoin(), nouvelleCouverture);
+    this.couvertures.put(nouvelleCouverture.getSoin(), nouvelleCouverture);
     }
 
-protected void setMapCouvertures (Map<EnumCategorieSoin, Couverture> couvertures)
+protected void setMapCouvertures (Map<Soin, Couverture> couvertures)
     {
     this.couvertures = couvertures;
     }
 
 
-protected boolean aCouverture(EnumCategorieSoin categorieSoin)
+protected boolean aCouverture(Soin soin)
     {
-    return this.couvertures.containsKey(categorieSoin);
+    return this.couvertures.containsKey(soin);
     }
 
-protected Couverture trouverCouverture(EnumCategorieSoin categorieSoin) throws ExceptionSoinNonCouvert
+protected Couverture trouverCouverture(Soin soin) throws ExceptionSoinNonCouvert
     {
-    if (aCouverture(categorieSoin))
+    if (aCouverture(soin))
         {
-        return this.couvertures.get(categorieSoin);
+        return this.couvertures.get(soin);
         }
-    throw new ExceptionSoinNonCouvert(categorieSoin);
+    throw new ExceptionSoinNonCouvert(soin);
     }
 
     

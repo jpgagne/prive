@@ -2,22 +2,22 @@
 public class Couverture
 
 {
-    private EnumCategorieSoin categorieSoin;
+    private Soin soin;
     private Double pourcentage;
     private Double valeurMax;
     private  boolean aValeurMax;
 
-public Couverture(EnumCategorieSoin categorieSoin, Double pourcentage, Double valeurMax)
+public Couverture(Soin soin, Double pourcentage, Double valeurMax)
     {
-    this.categorieSoin = categorieSoin;
+    this.soin = soin;
     this.pourcentage = pourcentage;
     this.valeurMax = valeurMax;
     this.aValeurMax = Boolean.TRUE;
     }
 
-public Couverture(EnumCategorieSoin categorieSoin, Double pourcentage)
+public Couverture(Soin soin, Double pourcentage)
     {
-    this.categorieSoin = categorieSoin;
+    this.soin = soin;
     this.pourcentage = pourcentage;
     this.valeurMax = -1.0;
     this.aValeurMax = Boolean.FALSE;
@@ -41,15 +41,23 @@ public Couverture(EnumCategorieSoin categorieSoin, Double pourcentage)
         return pourcentage;
     }
     
-    protected EnumCategorieSoin getCategorieSoin()
+    protected Soin getSoin()
     {
-        return this.categorieSoin;
+        return this.soin;
     }
 
     
+    @Override
     public String toString()
     {
-        return this.categorieSoin.name();
+        StringBuilder litteral = new StringBuilder(this.soin.getIntervalleNoSoin().toString()+ " : " 
+                                     +this.soin.getLitteral() + " = "
+                                     +this.pourcentage.toString()+"%");
+        if (this.aValeurMax)
+            {
+            litteral.append(", Max: ").append(this.valeurMax).append(" $");
+            }
+        return litteral.toString();
     }
     
 

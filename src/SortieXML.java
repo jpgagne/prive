@@ -117,7 +117,7 @@ private void ajouterUnRemboursementaDocumentSortie( Remboursement remboursement)
     Element elementRemboursement = this.documentSortie.createElement("remboursement");
 
     Element elementSoin = this.documentSortie.createElement("soin");
-    elementSoin.appendChild(this.documentSortie.createTextNode(remboursement.getCatSoin().toString())); //TODO = numero
+    elementSoin.appendChild(this.documentSortie.createTextNode(remboursement.getSoin().toString())); //TODO = numero
     elementRemboursement.appendChild(elementSoin);
 
     String strDate = formatDateSoinSortie.format(remboursement.getDate());

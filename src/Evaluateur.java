@@ -66,7 +66,7 @@ private Remboursement calculerRemboursement(Reclamation reclamation)
     {
     Remboursement remboursement;
     Double montantRembourse = -1.0;
-    remboursement = new Remboursement(reclamation.getCatSoin(), reclamation.getDateSoin(), montantRembourse);
+    remboursement = new Remboursement(reclamation.getSoin(), reclamation.getDateSoin(), montantRembourse);
     return remboursement;
     }
 

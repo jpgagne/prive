@@ -5,15 +5,15 @@ import java.util.Locale;
 
 public class Reclamation {
     
-private EnumCategorieSoin catSoin;
+private Soin soin;
 private Date dateSoin;
 private Double montantReclame;
 private char typeContrat;
 
 
-Reclamation(EnumCategorieSoin catSoin, Date dateSoin, Double montantReclame, char typeContrat) 
+Reclamation(Soin soin, Date dateSoin, Double montantReclame, char typeContrat) 
 {  
-this.catSoin = catSoin;
+this.soin =soin;
 this.dateSoin = dateSoin;
 this.montantReclame = montantReclame;
 this.typeContrat = typeContrat;
@@ -25,7 +25,7 @@ public String getValeurs()
     SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM-dd", Locale.FRENCH);
     return  "*RECLAMATION* "
             +"Date: "+dateFormat.format(dateSoin)
-            +" / Categ: "+catSoin.toString()
+            +" / Categ: "+soin.getLitteral().toString()
             +" / Montant "+montantReclame;
 }
 
@@ -50,8 +50,8 @@ public char getTypeContrat() {
     return typeContrat;
 }
 
-public EnumCategorieSoin getCatSoin() {
-    return catSoin;
+public Soin getSoin() {
+    return soin;
 }
 
     

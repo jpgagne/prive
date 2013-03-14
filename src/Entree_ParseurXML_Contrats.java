@@ -15,15 +15,16 @@ import org.xml.sax.SAXException;
 
 public class Entree_ParseurXML_Contrats 
 {
+    private CategoriesSoin categoriesSoin;
+    private ListeContrats listeContrats;
 
-//<editor-fold defaultstate="collapsed" desc="Objets accès XML">
-  //  private  String filePath = "contrats.xml";
-    private  File fichierInput;
-    private  Document docInput;
-    private  DocumentBuilderFactory docBuilderFactoryInput;
-    private  DocumentBuilder docBuilderInput;
+    private File fichierInput;
+    private Document docInput;
+    private DocumentBuilderFactory docBuilderFactoryInput;
+    private DocumentBuilder docBuilderInput;
+    private Map<Soin, Couverture> mapCouvertures;
     
-//</editor-fold>
+
 
 
     
@@ -61,7 +62,7 @@ public Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonnee
     }
 //</editor-fold>
 
-protected  Map<Character, Contrat>  parserFichierContrats() throws ExceptionDonneeInvalide, ExceptionUsage
+protected  Map<Character, Contrat>  parserFichierContrats() throws ExceptionDonneeInvalide, ExceptionUsage, ExceptionSoinNonCouvert
 {
 Map<Character,Contrat> mapContrats = new HashMap<>();
 NodeList listeNoeudsContrat = docInput.getElementsByTagName("contrat");
@@ -79,7 +80,10 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
             throw new ExceptionDonneeInvalide("Contrat |"+carTypeContrat+"| dédoublé");
             }
         
-        nouveauContrat.setMapCouvertures(parserValiderListeCouvertures((Element) noeudContrat));
+        
+        this.mapCouvertures = parserValiderListeCouvertures((Element) noeudContrat);
+        
+        nouveauContrat.setMapCouvertures(mapCouvertures);
         mapContrats.put(carTypeContrat, nouveauContrat);
         }
     else
@@ -92,9 +96,9 @@ return mapContrats;
 
 
 
-private Map<EnumCategorieSoin, Couverture> parserValiderListeCouvertures(Element elementContrat) throws ExceptionDonneeInvalide
+private Map<Soin, Couverture> parserValiderListeCouvertures(Element elementContrat) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
     {
-    Map<EnumCategorieSoin, Couverture> mapCouvertures = new HashMap<>();
+    this.mapCouvertures = new HashMap<>();
     NodeList listeNoeudsCouverture = elementContrat.getElementsByTagName("couverture");
     String typeContrat = elementContrat.getAttribute("type");
     System.out.println("Nb objets Couverture lus pour Contrat "+typeContrat+" = "+ listeNoeudsCouverture.getLength());
@@ -105,12 +109,12 @@ private Map<EnumCategorieSoin, Couverture> parserValiderListeCouvertures(Element
             {
             Couverture nouvelleCouverture = parserValiderCouverture(noeudCouverture);
             System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
-            EnumCategorieSoin categSoin = nouvelleCouverture.getCategorieSoin();
-            if (mapCouvertures.containsKey(categSoin))
+            
+            if (mapCouvertures.containsKey(nouvelleCouverture.getSoin()))
                 {
-                throw new ExceptionDonneeInvalide("Couverture "+categSoin.toString()+" dédoublé");
+                throw new ExceptionDonneeInvalide("Couverture "+nouvelleCouverture.getSoin().toString()+" dédoublé");
                 }
-            mapCouvertures.put(categSoin, nouvelleCouverture);
+            mapCouvertures.put(nouvelleCouverture.getSoin(), nouvelleCouverture);
             }
         else
             {                            
@@ -145,32 +149,28 @@ return nouveauContrat;
 }
 
 
-private Couverture parserValiderCouverture (Node noeudCouverture) throws ExceptionDonneeInvalide
+private Couverture parserValiderCouverture (Node noeudCouverture) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
 {
+    Soin soin;
 Element elementCouverture = (Element) noeudCouverture;
-Intervalle numeroSoin = parserNumeroSoin(elementCouverture);
-EnumCategorieSoin categorieSoin;
-EnumMapConversion<EnumCategorieSoin> enumCatSoinConvertisseur = new EnumMapConversion(EnumCategorieSoin.class);
-try 
-    {
-    categorieSoin = enumCatSoinConvertisseur.get(numeroSoin);
-    }
-catch (ExceptionValeurInexistante excVI)
-    {
-    throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, numeroSoin.toString());
-    }
+Intervalle intervalleNumeroSoin = parserNumeroSoin(elementCouverture);
+
+soin = categoriesSoin.trouverSoinIntervalle(intervalleNumeroSoin);
+    
+    
 Double pourcentage = parserPourcentage(elementCouverture);
 Boolean aMaximum = parserAMaximum(elementCouverture);
 Double maximum;
+
 Couverture nouvelleCouverture;
 if (aMaximum)
     {
     maximum = parserMaximum(elementCouverture);
-    nouvelleCouverture = new  Couverture(categorieSoin, pourcentage, maximum);
+    nouvelleCouverture = new  Couverture(soin, pourcentage, maximum);
     }
 else
     {
-    nouvelleCouverture = new Couverture(categorieSoin, pourcentage);
+    nouvelleCouverture = new Couverture(soin, pourcentage);
     }  
 return nouvelleCouverture;
 }

@@ -1,5 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Traitement 
@@ -14,6 +16,7 @@ private String pathSortant;
 private static String pathFichierContrats = "data"+System.getProperty("file.separator") +"contrats.xml";
 private Map<Character, Contrat> mapContrats;
 private CategoriesSoin categoriesSoin;
+private ListeContrats listeContrats;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
@@ -66,7 +69,11 @@ private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUs
     mapContrats = new HashMap<>();
     Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
     System.out.println("ANTE PARSE CONTRAT");
-    this.mapContrats = entree_ParseurXML_Contrats.parserFichierContrats();
+    try {
+        this.mapContrats = entree_ParseurXML_Contrats.parserFichierContrats();
+        } catch (ExceptionSoinNonCouvert excSNC) {
+            throw new ExceptionDonneeInvalide(excSNC.getMessage());
+        }
     System.out.println("POST PARSE CONTRAT");
     System.out.println(" Nb contrats charges: "+this.mapContrats.size());
     }

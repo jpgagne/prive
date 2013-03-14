@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +25,9 @@ public class Entree_ParseurXML_Reclamations {
     private  DocumentBuilder docBuilderInput;
     
 //</editor-fold>
+    
+    private ListeContrats listeContrats;
+    private CategoriesSoin categoriesSoin;
     
     private Evaluateur evaluateur;
 
@@ -189,13 +194,14 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
     Element elementReclamation = (Element) noeudReclamation;
 
     Integer intNoSoin = parserNumeroSoin(elementReclamation);
-    EnumCategorieSoin catSoin;
+    
+    Soin soin;
     try {
-        catSoin = validerCategorieSoin(intervalleNoSoin);
+        soin = validerCategorieSoin(intNoSoin);
         }
-        catch (ExceptionValeurInexistante excValIn)
+        catch (ExceptionSoinNonCouvert excSNC)
             {
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, intervalleNoSoin.toString());
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.CODESOIN_INCONNU, intNoSoin.toString());
             }
 
     Date dateSoin = parserValiderDateSoin(elementReclamation);
@@ -207,17 +213,14 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
                     +"; trouvé: "+dateFormat.format(this.getMoisTraite()));
         }
     Double montantReclame = parserValiderMontantReclame(elementReclamation);
-    return new Reclamation(catSoin, dateSoin, montantReclame, getTypeContrat());
+    return new Reclamation(soin, dateSoin, montantReclame, getTypeContrat());
     } 
 
 
 
-private EnumCategorieSoin validerCategorieSoin(Integer integerNoSoin) throws ExceptionValeurInexistante, ExceptionIntervalle
+private Soin validerCategorieSoin(Integer integerNoSoin) throws ExceptionSoinNonCouvert 
     {
-    EnumMapConversion<EnumCategorieSoin> enumSoinConversion =
-                     new EnumMapConversion(EnumCategorieSoin.class);
-    EnumCategorieSoin catSoinValide = enumSoinConversion.get(integerNoSoin);
-    return catSoinValide;
+    return categoriesSoin.trouverSoinInteger(integerNoSoin);
     }
 
 

@@ -4,29 +4,29 @@ import java.util.Date;
 public class Remboursement {
     
  
-private EnumCategorieSoin catSoin;
+private Soin soin;
 private Date date;
 private Double montant;
 
-Remboursement(EnumCategorieSoin catSoin, Date date, Double montant)
+Remboursement(Soin soin, Date date, Double montant)
     {
      this.montant = montant;
-     this.catSoin = catSoin;
+     this.soin = soin;
      this.date = date;
     }
 
 
-public EnumCategorieSoin getCatSoin()
+protected Soin getSoin()
     {
-    return catSoin;
+    return this.soin;
     }
 
-public Date getDate()
+protected Date getDate()
     {
     return date;
     }
 
-public Double getMontant()
+protected Double getMontant()
     {
     return montant;
     }
