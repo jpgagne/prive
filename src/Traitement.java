@@ -2,7 +2,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Traitement {
+public class Traitement 
+{
     
 private SortieXML sortieXML;
 private Entree_ParseurXML_Reclamations parseurXML_Entree;
@@ -12,9 +13,11 @@ private String pathSortant;
 
 private static String pathFichierContrats = "data"+System.getProperty("file.separator") +"contrats.xml";
 private Map<Character, Contrat> mapContrats;
+private CategoriesSoin categoriesSoin;
 
 Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     {
+        
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
     try{
