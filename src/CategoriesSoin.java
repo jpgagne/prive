@@ -62,7 +62,7 @@ private void chargerSoins()
     this.mapSoins = new HashMap<>();
     mapSoins.put(nouveauSoin.getIntervalleNoSoin(), nouveauSoin);
     
-    System.out.print("taille du hashMap: "+mapSoins.size() );
+    System.out.print("taille du hashMap: " + mapSoins.size());
 }
 
 public static CategoriesSoin getInstance()
