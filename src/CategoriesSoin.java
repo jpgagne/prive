@@ -1,14 +1,14 @@
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.HashSet;
 
 public class CategoriesSoin 
 {
-    private Set<Soin> setSoins;
+
+private Set<Soin> setSoins;
 
 
-    
 private static CategoriesSoin instance = null;
 private CategoriesSoin() 
 {
@@ -25,16 +25,29 @@ public static CategoriesSoin getInstance()
     return instance;
     }
 
-protected Soin getSoinInteger(Integer noSoinInteger) throws ExceptionSoinNonCouvert
+protected Soin getSoinParInteger(Integer noSoinInteger) throws ExceptionSoinNonCouvert
     {
    // System.out.println("NB de soins charges: "+ setSoins.size());
-    for (Iterator<Soin> it1 = setSoins.iterator(); it1.hasNext();) {
+    int i = 0;
+    for (Iterator<Soin> it1 = setSoins.iterator(); it1.hasNext();)
+        {
+        
+        i++;
+     //  System.out.print(" i = " + i +"   ");
+        
         Soin soin = it1.next();
-       // System.out.println(soin);
+     // System.out.print(" Cherche: "+noSoinInteger.toString()+" inc dans? "+soin);
         if (soin.getIntervalleNoSoin().inclus(noSoinInteger))
-          //  System.out.println("TROUVE");
+            {
+        //    System.out.println("  TROUVE");
             return soin;
-    }
+            }
+        else
+            {
+         //   System.out.println( "  NOPE");
+            }
+         }
+    System.out.println("ABSENT");
     throw new ExceptionSoinNonCouvert(noSoinInteger);
     }
 
@@ -51,7 +64,13 @@ private void chargerSoins()
     nouveauSoin = new Soin(100, "Ostéopathie"); 
 
    setSoins.add( nouveauSoin);
+   
+   nouveauSoin = new Soin(150, "Kinésithérapie");
+   setSoins.add(nouveauSoin);
 
+   nouveauSoin = new Soin(175, "Médecin généraliste privé");
+   setSoins.add(nouveauSoin);
+   
     nouveauSoin = new Soin(200, "Psychologie individuelle"); 
 
    setSoins.add( nouveauSoin);
@@ -59,7 +78,7 @@ private void chargerSoins()
     nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
 
    setSoins.add( nouveauSoin);
-;
+
     nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
 
    setSoins.add( nouveauSoin);
@@ -95,7 +114,7 @@ protected boolean soinExisteInteger (Integer integerNumeroSoin)
     {
     try 
         {
-        Soin soin = this.getSoinInteger(integerNumeroSoin);  
+        Soin soin = this.getSoinParInteger(integerNumeroSoin);  
         return true;
 
         } catch (ExceptionSoinNonCouvert ex)

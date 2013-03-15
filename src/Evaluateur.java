@@ -1,6 +1,5 @@
 
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,13 +14,24 @@ private ArrayList<Remboursement> remboursements;
     
 private Double total;
 private Date moisTraite;
-private Contrat contrat;
+private Character carTypeContrat;
 private Integer noClient;
+private Contrat contrat;
 
-Evaluateur( Integer noClient, char charContrat, Date moisTraite)
-{
+private Traitement traitement;
+private CategoriesSoin categoriesSoin;
+private ListeContrats listeContrats;
+
+
+Evaluateur( Integer noClient, char charContrat, Date moisTraite) throws ExceptionContratInexistant
+    {
+    this.traitement = Traitement.getInstance();
+    this.categoriesSoin = CategoriesSoin.getInstance();
+    this.listeContrats = ListeContrats.getInstance();
+    this.carTypeContrat = charContrat;
     this.noClient = noClient;
-    this.contrat = new Contrat(charContrat);
+    this.contrat = listeContrats.trouverContrat(carTypeContrat);
+
     this.moisTraite = moisTraite;
     reclamations = new ArrayList<>();
     remboursements = new ArrayList<>();
@@ -33,7 +43,7 @@ Evaluateur( Integer noClient, char charContrat, Date moisTraite)
 }
 
 
-protected ArrayList<Remboursement> listeRemboursements()
+protected ArrayList<Remboursement> listeRemboursements() throws ExceptionUsage
     {
     calculerRemboursements();
     return this.remboursements;
@@ -41,15 +51,17 @@ protected ArrayList<Remboursement> listeRemboursements()
         
         
         
-protected void calculerRemboursements()
+protected void calculerRemboursements() throws ExceptionUsage 
     {
-    total = 0.0;
-    for (Iterator<Reclamation> it = reclamations.iterator(); it.hasNext();)
+        System.out.println("Calculer Remboursements ()");
+        total = 0.0;
+        for (Iterator<Reclamation> it = reclamations.iterator(); it.hasNext();)
         {
         Reclamation reclamation = it.next();
+        System.out.print("Reclamation = "+reclamation+ " |  Remboursement= ");
         Remboursement remboursement = calculerRemboursement(reclamation);
         remboursements.add(remboursement);
-        it.remove();
+        
         this.total = getTotal() + remboursement.getMontant();
         }
     }
@@ -61,12 +73,55 @@ protected void ajouterReclamation(Reclamation nouvelleReclamation)
     }
 
 
-private Remboursement calculerRemboursement(Reclamation reclamation)
+private Remboursement calculerRemboursement(Reclamation reclamation) throws ExceptionUsage 
     {
+        
+        System.out.println("calculerRemboursement()");
+        System.out.print(" CONTRAT = " + this.contrat.getTypeContrat());
+        System.out.println (reclamation);
     Remboursement remboursement;
-    Double montantRembourse = -1.0;
-    remboursement = new Remboursement(reclamation.getSoin(), reclamation.getDateSoin(), montantRembourse);
+    
+    Double montantReclame = reclamation.getMontantReclame();
+    
+    Couverture couverture;
+        try {
+            couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
+        } catch (ExceptionSoinNonCouvert excSNC) {
+            System.out.println("SOIN NON COUVERT : "+excSNC.getMessage());
+            throw new ExceptionUsage(excSNC.getMessage());
+        }
+
+    remboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
+    System.out.println("NOUVEAU REMBOURSEMENT: "+remboursement);
     return remboursement;
+    }
+
+
+
+private double onPaieCombien(Double montantDemande, Couverture couverture)
+    {       
+    Double montantRemboursable =  montantDemande * couverture.getPourcentage();
+
+    if (couverture.aValeurMax())
+        {
+        return Math.max(montantRemboursable, couverture.getValeurMax());
+        }
+    return montantRemboursable;
+    }
+
+
+
+
+
+public void setContrat(Contrat contrat)
+{
+    this.contrat = contrat;
+}
+
+public void setContrat(Character charContrat) throws ExceptionContratInexistant
+    {  
+    this.contrat = listeContrats.trouverContrat(carTypeContrat);
+    
     }
 
 

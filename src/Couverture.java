@@ -1,4 +1,7 @@
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
+
 public class Couverture
 
 {
@@ -46,6 +49,17 @@ public Couverture(Soin soin, Double pourcentage)
         return this.soin;
     }
 
+    
+    protected boolean estCouvertureCherchee(Integer noSoin)
+    {
+        
+        System.out.print(noSoin+" inclus?dans "+this.soin.getIntervalleNoSoin().getBornePlancher()+".."+this.soin.getIntervalleNoSoin().getBornePlancher()+ " = ");
+       Boolean trouve =  ((noSoin >= this.soin.getIntervalleNoSoin().getBornePlancher())
+                &(noSoin >= this.soin.getIntervalleNoSoin().getBornePlancher()));
+       System.out.println(trouve);
+       return trouve;
+    }
+    
     
     @Override
     public String toString()

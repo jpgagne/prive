@@ -12,7 +12,12 @@ public static void main(String args[])
             {
             throw new ExceptionIO("NB arguments = " + intNbArgs + " / doit être =2");
             }
-        Traitement traitement = new Traitement(args[0], args[1]);
+        
+        
+        
+        Traitement traitement;
+        traitement =  Traitement.getInstance();
+        traitement.execution(args[0], args[1]);
         }
 
     catch (ExceptionIO excIO)

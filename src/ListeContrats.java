@@ -1,33 +1,29 @@
 
 
-
-
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class ListeContrats
 {
 
-private static ListeContrats instance = null;
-
-
 
 private Map<Character, Contrat> mapContrats;
 
+
+private static ListeContrats instance = null;
 
 
 
 
 private ListeContrats() 
-{
-chargerContrats();
-}
+    {
+    chargerContrats();
+    }
 
 
 
 
-public static ListeContrats getInstance()
+protected static ListeContrats getInstance()
     {
     if(instance == null)
         {
@@ -42,18 +38,28 @@ private void chargerContrats()
     }
 
 
+protected void ajouterContrat(Contrat contrat)
+    {
+    this.mapContrats.put(contrat.getTypeContrat(), contrat);
+    }
 
+
+protected boolean  contratPresent(Character carTypeContrat)
+{
+    return this.mapContrats.containsKey(carTypeContrat);
+}
+
+protected Contrat trouverContrat (Character carTypeContrat) throws ExceptionContratInexistant
+{
     
+    System.out.println( "Je recherche le contrat '"+carTypeContrat+"' parmis mes "+this.mapContrats.size()+" Entrees");
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+if (this.mapContrats.containsKey(carTypeContrat))
+    {
+    return this.mapContrats.get(carTypeContrat);
+    }
+throw new ExceptionContratInexistant(carTypeContrat);
+}
     
     
     

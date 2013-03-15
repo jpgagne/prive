@@ -16,23 +16,48 @@ private Map<Character, Contrat> mapContrats;
 private CategoriesSoin categoriesSoin;
 private ListeContrats listeContrats;
 
-Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
+
+private static Traitement instance = null;
+private Traitement() 
+{
+
+}
+
+public static Traitement getInstance()
     {
-    categoriesSoin = CategoriesSoin.getInstance();
-    listeContrats = ListeContrats.getInstance();
+    if(instance == null)
+        {
+        instance = new Traitement();
+ 
+        }
+    return instance;
+    }
+
+protected void execution(String pathEntrant, String pathSortant) throws ExceptionIO
+    {
+    this.categoriesSoin = CategoriesSoin.getInstance();
+    this.listeContrats = ListeContrats.getInstance();
     this.pathEntrant = pathEntrant;
     this.pathSortant = pathSortant;
+    this.mapContrats = new HashMap<>();
     try{
         chargementDesContrats();
-        sortieXML  = new SortieXML(this.pathSortant);
-        parseurXML_Entree = new Entree_ParseurXML_Reclamations(this.pathEntrant);
-                System.out.println("PARSEUR OK");
+        sortieXML  = new SortieXML(this.getPathSortant());
+        parseurXML_Entree = new Entree_ParseurXML_Reclamations(this.getPathEntrant());
+
         evaluateur = parseurXML_Entree.parserFichierReclamations();
-        System.out.println("EVALUATEUR OK");
+//            try {
+//                evaluateur.setContrat(parseurXML_Entree.getTypeContrat());
+//            } catch (ExceptionContratInexistant excCI) {
+//                throw  new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE);
+//            }
+        evaluateur.calculerRemboursements();
+
         sortieXML.setDossier(parseurXML_Entree.getTypeContrat(), parseurXML_Entree.getNoClient());
         sortieXML.setMoisTraite(parseurXML_Entree.getMoisTraite());
         sortieXML.redigerDocumentSortie(evaluateur.listeRemboursements());
-
+        sortieXML.produireFichierSortie();
+        
         System.out.println("Exécution terminée avec succès");
     }
     catch (ExceptionDonneeInvalide excDI)
@@ -42,7 +67,8 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
         {
         System.out.println(excDI.getMessage() + "\n");
         }
-    sortieXML.redigerDocumentSortie(excDI);
+        
+ 
 
         }
    catch ( ExceptionUsage excU)
@@ -55,10 +81,7 @@ Traitement(String pathEntrant, String pathSortant) throws ExceptionIO
     sortieXML.redigerDocumentSortie(excU);
 
     }
-    finally
-        {
-//        sortieXML.produireFichierSortie();
-        }
+
     }
 
 
@@ -67,25 +90,49 @@ private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUs
     {
     mapContrats = new HashMap<>();
     Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
-    System.out.println("ANTE PARSE CONTRAT");
+   // System.out.println("ANTE PARSE CONTRAT");
     try {
         this.mapContrats = entree_ParseurXML_Contrats.parserFichierContrats();
         } catch (ExceptionSoinNonCouvert excSNC) {
             throw new ExceptionDonneeInvalide(excSNC.getMessage());
         }
-    System.out.println("POST PARSE CONTRAT");
-    System.out.println(" Nb contrats charges: "+this.mapContrats.size());
+    //System.out.println("POST PARSE CONTRAT");
+    //System.out.println(" Nb contrats charges: "+this.mapContrats.size());
     }
 
-
-public boolean contratPresent(Character carTypeContrat)
+protected boolean contratPresent(Character carTypeContrat)
     {
     return (this.mapContrats.containsKey(carTypeContrat));
     }
 
 
+protected Map<Character, Contrat> getContrats()
+{
+    return  this.mapContrats;
+}
 
 
+protected Contrat getContrat(Character carTypeContrat) throws ExceptionContratInexistant
+{
+    if (this.contratPresent(carTypeContrat))
+            {
+                return this.mapContrats.get(carTypeContrat);
+            }
+    throw new ExceptionContratInexistant(carTypeContrat);
+}
 
+    /**
+     * @return the pathEntrant
+     */
+    public String getPathEntrant() {
+        return pathEntrant;
+    }
+
+    /**
+     * @return the pathSortant
+     */
+    public String getPathSortant() {
+        return pathSortant;
+    }
 
 }

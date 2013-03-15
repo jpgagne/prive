@@ -26,10 +26,10 @@ protected void setSetCouvertures (Set<Couverture> couvertures)
     }
 
 
-protected boolean aCouverture(Soin soin)
+protected boolean aCouverture(Integer noSoin)
     {
         try {
-            Couverture couverture = this.trouverCouverture(soin);
+            Couverture couverture = this.trouverCouvertureParNoSoin(noSoin);
             return  true;
         } catch (ExceptionSoinNonCouvert ex) {
             return false;
@@ -37,20 +37,20 @@ protected boolean aCouverture(Soin soin)
     }
 
 
-protected Couverture trouverCouverture(Soin soin) throws ExceptionSoinNonCouvert
+protected Couverture trouverCouvertureParNoSoin(Integer noSoin) throws ExceptionSoinNonCouvert
     {
         Couverture couverture;
-        
+        System.out.println("nb de couvertures chargees pour contrat "+this.getTypeContrat()+" : "+couvertures.size());
          for (Iterator<Couverture> it = couvertures.iterator(); it.hasNext();) 
             {
             couverture = it.next();
             
-            if (couverture.getSoin().getLitteral().equals(soin.getLitteral()))
+            if (couverture.estCouvertureCherchee(noSoin))
                 {
                 return couverture;
                 }
             }
-    throw new ExceptionSoinNonCouvert(soin); 
+    throw new ExceptionSoinNonCouvert(noSoin); 
    
     }
 

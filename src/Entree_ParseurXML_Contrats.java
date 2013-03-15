@@ -12,8 +12,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import java.util.Set;
 import java.util.HashSet;
-
-
+import java.util.Iterator;
 
 public class Entree_ParseurXML_Contrats 
 {
@@ -36,9 +35,8 @@ public Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonnee
     ouvrirFichierEntree(nomFichierInput);
 }
 
-//<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
 /* Ouvre le fichier d'entree et cree l'objet documentImput, 
-     * ExceptionUsage détaillé si problème*/
+ * ExceptionUsage détaillé si problème*/
     private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionUsage {
         fichierInput = new File(nomFichierInput);
         System.out.println("Ouverture du fichier entrée " + fichierInput.getName());
@@ -48,7 +46,7 @@ public Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonnee
         try {
             docBuilderInput = docBuilderFactoryInput.newDocumentBuilder();
             docInput = docBuilderInput.parse(fichierInput);
-            docInput.getDocumentElement().normalize();     //Répare les balises XML mal formées
+            docInput.getDocumentElement().normalize(); //Répare les balises XML mal formées
             succes = true;
             
         } catch (java.io.FileNotFoundException fnfExc) {
@@ -63,8 +61,8 @@ public Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonnee
             System.out.println("Document " + fichierInput.getName() + " : " + Boolean.toString(succes));
         }
     }
-//</editor-fold>
 
+    
 protected  Map<Character, Contrat>  parserFichierContrats() throws ExceptionDonneeInvalide, ExceptionUsage, ExceptionSoinNonCouvert
 {
 Map<Character,Contrat> mapContrats = new HashMap<>();
@@ -87,9 +85,15 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
         
         
         Set<Couverture> setCouvertures = parserValiderListeCouvertures((Element) noeudContrat);
-        
-        nouveauContrat.setSetCouvertures(setCouvertures);
-        mapContrats.put(carTypeContrat, nouveauContrat);
+        //System.out.println ( "NB de couvertures pour contrat "+nouveauContrat.getTypeContrat()+" : "+setCouvertures.size());
+            for (Iterator<Couverture> it = setCouvertures.iterator(); it.hasNext();) {
+                Couverture couverture = it.next();
+                nouveauContrat.ajouterCouverture(couverture);
+                
+            }
+       // nouveauContrat.setSetCouvertures(setCouvertures);
+        listeContrats.ajouterContrat(nouveauContrat);
+     
         }
     else
         {
@@ -98,7 +102,6 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
     }
 return mapContrats;
 }
-
 
 
 private Set<Couverture> parserValiderListeCouvertures(Element elementContrat) throws ExceptionDonneeInvalide, ExceptionSoinNonCouvert
@@ -113,7 +116,7 @@ private Set<Couverture> parserValiderListeCouvertures(Element elementContrat) th
         if (noeudCouverture.getNodeType() == Node.ELEMENT_NODE)
             {
             Couverture nouvelleCouverture = parserValiderCouverture(noeudCouverture);
-            System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
+          //  System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
 
             setCouvertures.add(nouvelleCouverture);
             }
@@ -156,7 +159,7 @@ Soin soin;
 Element elementCouverture = (Element) noeudCouverture;
 Intervalle intervalleNumeroSoin = parserNumeroSoin(elementCouverture);
 
-soin = categoriesSoin.getSoinInteger(intervalleNumeroSoin.getBornePlancher());
+soin = categoriesSoin.getSoinParInteger(intervalleNumeroSoin.getBornePlancher());
 
 Double pourcentage = parserPourcentage(elementCouverture);
 Boolean aMaximum = parserAMaximum(elementCouverture);
@@ -259,7 +262,6 @@ private Double parserMaximum(Element elementCouverture) throws ExceptionDonneeIn
         throw new ExceptionDonneeInvalide(EnumErreurLecture.MAXIMUM_INVALIDE, strMaximum);
         }
     }
-
 
 
 }

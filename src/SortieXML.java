@@ -16,6 +16,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import java.text.DecimalFormatSymbols;
+import java.text.DecimalFormat;
 
 
 
@@ -55,7 +57,7 @@ SortieXML(String filePath) throws ExceptionIO
     this.documentSortie = docBuilder.newDocument();
     this.formatDateSoinSortie = new SimpleDateFormat("yyyy-MM-dd", Locale.FRENCH);
     this.formatDateMoisTraite = new SimpleDateFormat("yyyy-MM", Locale.FRENCH);
-    this.currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA_FRENCH);
+    this.currencyFormatter = NumberFormat.getCurrencyInstance(Locale.CANADA);
     }
 
 protected void setDossier(char contrat, Integer numeroClient)
@@ -79,10 +81,11 @@ protected void setMoisTraite(Date moisTraite)
 protected void redigerDocumentSortie(ArrayList<Remboursement> remboursements) throws ExceptionIO
     {
         
-        if (this.dossierClient.isEmpty() | this.strMoisTraite.isEmpty())    // Assertion defensive
-            {
-            throw new ExceptionIO("Dossier client ou mois traite vide");
-            }
+    if (this.dossierClient.isEmpty() | this.strMoisTraite.isEmpty())    // Assertion defensive
+        {
+        throw new ExceptionIO("Dossier client ou mois traite vide");
+        }
+
         
     docFactory = DocumentBuilderFactory.newInstance(); 
     elementRacine = documentSortie.createElement("remboursements");
@@ -104,14 +107,48 @@ protected void redigerDocumentSortie(ArrayList<Remboursement> remboursements) th
     ajouterTotalRemboursementsaDocumentSortie();
     }
 
+
+
+
 protected void redigerDocumentSortie(Throwable exception) throws ExceptionIO
+{
+String message;
+docFactory = DocumentBuilderFactory.newInstance(); 
+elementRacine = documentSortie.createElement("remboursements");
+documentSortie.appendChild(elementRacine);
+if (exception instanceof ExceptionDonneeInvalide)
     {
-    docFactory = DocumentBuilderFactory.newInstance(); 
-    elementRacine = documentSortie.createElement("remboursements");
-    documentSortie.appendChild(elementRacine);
+    ExceptionDonneeInvalide exceptionDonneeInvalide = (ExceptionDonneeInvalide)exception;
+    message = exceptionDonneeInvalide.getLiteral();
+    
     }
+else message = exception.getMessage();
+creerMessageErreur(message);
+}
 
 
+private void creerMessageErreur(String message)
+{
+    Element elementMessage = this.documentSortie.createElement("message");
+    elementMessage.setTextContent(message);
+    System.out.println(message);
+    
+    this.elementRacine.appendChild(elementMessage);
+        try {
+            produireFichierSortie();
+        } catch (ExceptionIO ex) {
+            quandCaVaMal(message);
+        }
+}
+
+private void quandCaVaMal(String message)
+{
+System.out.println("Ça va vraiment pas bien!");
+System.out.println(" Exception entree/sortie sur le fichier de sortie "+this.filePath);
+System.out.println(" Donc on pourra pas vous laisser un log de l'exception de type");
+System.out.println(message);
+
+}
 private void ajouterUnRemboursementaDocumentSortie( Remboursement remboursement)
     {
     Element elementRemboursement = this.documentSortie.createElement("remboursement");
@@ -125,8 +162,8 @@ private void ajouterUnRemboursementaDocumentSortie( Remboursement remboursement)
     elementDateSoin.appendChild(this.documentSortie.createTextNode(strDate));
     elementRemboursement.appendChild(elementDateSoin);
 
-
-    String strMontantRembourse = currencyFormatter.format(remboursement.getMontant());
+    
+   String strMontantRembourse = formateWeirdo(remboursement.getMontant());
     Element elementMontant = this.documentSortie.createElement("montant");
     elementMontant.appendChild(this.documentSortie.createTextNode(strMontantRembourse));
     elementRemboursement.appendChild(elementMontant);
@@ -148,7 +185,7 @@ private void ajouterMoisTraiteADocumentSortie()
     }
 private void ajouterTotalRemboursementsaDocumentSortie()
     {
-    String strTotalRemboursements = currencyFormatter.format(this.totalRemboursements);
+    String strTotalRemboursements = formateWeirdo(totalRemboursements);
     System.out.println("TOTAL = "+strTotalRemboursements);
     Element elementTotalRemboursements = this.documentSortie.createElement("total");
     elementTotalRemboursements.appendChild(this.documentSortie.createTextNode(strTotalRemboursements));
@@ -176,6 +213,13 @@ protected void produireFichierSortie() throws ExceptionIO
     System.out.println("Fichier " + fichierSortie.getName() + " : créé");
     }
 
-
+            
+    private String formateWeirdo(Double valeurDouble)
+    {
+    DecimalFormat formatDecimal = new DecimalFormat("#,###,##0.00");
+    String str = formatDecimal.format(valeurDouble).toString().trim().replace(',', '.')+'$';
+    return str;
+    }
+    
 
 }

@@ -1,9 +1,6 @@
-
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,15 +13,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+
 public class Entree_ParseurXML_Reclamations {
 
-//<editor-fold defaultstate="collapsed" desc="Objets accès XML">
     private  File fichierInput;
     private  Document docInput;
     private  DocumentBuilderFactory docBuilderFactoryInput;
     private  DocumentBuilder docBuilderInput;
-    
-//</editor-fold>
     
     private ListeContrats listeContrats;
     private CategoriesSoin categoriesSoin;
@@ -43,8 +38,6 @@ public Entree_ParseurXML_Reclamations(String nomFichierInput) throws ExceptionDo
     listeContrats = ListeContrats.getInstance();
     ouvrirFichierEntree(nomFichierInput);
     }
-
-//<editor-fold defaultstate="collapsed" desc="Ouvrir Fichiers">
 
 private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionUsage
     {
@@ -73,10 +66,6 @@ private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionUsage
         }
     }
 
-
-    
-//</editor-fold>
-
 protected  Evaluateur  parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage
     {
     NodeList nodeListDossier = docInput.getElementsByTagName("dossier");
@@ -85,16 +74,20 @@ protected  Evaluateur  parserFichierReclamations() throws ExceptionDonneeInvalid
 
     NodeList nodeListMois = docInput.getElementsByTagName("mois");
     this.moisTraite = parserValiderMoisTraite(nodeListMois);
-
-    evaluateur = new Evaluateur(getNoClient(), getTypeContrat(), getMoisTraite());
+        try {
+            evaluateur = new Evaluateur(getNoClient(), getTypeContrat(), getMoisTraite());
+        } catch (ExceptionContratInexistant excCI) {
+           throw  new ExceptionDonneeInvalide("Type de contrat inexistant: "+excCI.getMessage());
+        }
 
     NodeList listeNoeudsReclamation = docInput.getElementsByTagName("reclamation");
     parserValiderListeReclamations(listeNoeudsReclamation);
-
-    return  evaluateur;
+    System.out.println("Fichier reclamation fin parsing");
+    return this.evaluateur;
+    
     }
 
-//<editor-fold defaultstate="collapsed" desc="Parser entete">
+
 private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInvalide
     {
     if (nodeList.getLength() != 1)
@@ -121,7 +114,6 @@ private Integer parseValideNoClient(NodeList nodeList) throws ExceptionDonneeInv
     
     return intNoClient;
     }
-
 
 
 private char parseValideTypeContrat(NodeList nodeList) throws ExceptionDonneeInvalide
@@ -172,19 +164,17 @@ private Date parserValiderMoisTraite(NodeList nodeList) throws ExceptionDonneeIn
         throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_FORMAT_INVALIDE, strMois);
         }
     }
-//</editor-fold>
-
 
 private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) throws ExceptionDonneeInvalide, ExceptionUsage
     { 
-    System.out.println("Nb objets Reclamation lus = "+ listeNoeudsReclamation.getLength());
+    //System.out.println("Nb objets Reclamation lus = "+ listeNoeudsReclamation.getLength());
 
     for (int compteur = 0; compteur < listeNoeudsReclamation.getLength(); compteur++)
         {
         Node noeudReclamation = listeNoeudsReclamation.item(compteur);
         if (noeudReclamation.getNodeType() == Node.ELEMENT_NODE)
                 {Reclamation nouvelleReclamation = parserValiderReclamation(noeudReclamation);
-                evaluateur.ajouterReclamation(nouvelleReclamation);
+                this.evaluateur.ajouterReclamation(nouvelleReclamation);
                 }
         else throw new ExceptionUsage("Structure XML non conforme sous balise <reclamation> no "+compteur);
         }
@@ -193,7 +183,7 @@ private void parserValiderListeReclamations(NodeList listeNoeudsReclamation) thr
 
 private Reclamation parserValiderReclamation(Node noeudReclamation) throws ExceptionDonneeInvalide
     {
-    System.out.println("RECLAMATION");
+
     Element elementReclamation = (Element) noeudReclamation;
 
     Integer intNoSoin = parserNumeroSoin(elementReclamation);
@@ -211,19 +201,19 @@ private Reclamation parserValiderReclamation(Node noeudReclamation) throws Excep
     if (!dateDansMoisEnCours(dateSoin))
         {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM", Locale.FRENCH);
-            throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAISMOIS, 
+            throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAIS_MOIS, 
                     "Attendu: " + dateFormat.format(dateSoin)
                     +"; trouvé: "+dateFormat.format(this.getMoisTraite()));
         }
     Double montantReclame = parserValiderMontantReclame(elementReclamation);
-    return new Reclamation(soin, dateSoin, montantReclame, getTypeContrat());
+    return new Reclamation(intNoSoin, dateSoin, montantReclame, getTypeContrat());
     } 
 
 
 
 private Soin validerCategorieSoin(Integer integerNoSoin) throws ExceptionSoinNonCouvert 
     {
-    return categoriesSoin.getSoinInteger(integerNoSoin);
+    return categoriesSoin.getSoinParInteger(integerNoSoin);
     }
 
 
@@ -276,7 +266,7 @@ private Integer parserNumeroSoin(Element elementReclamation) throws ExceptionDon
         }
     else
         {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAISMOIS, strDate);
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.DATE_MAUVAIS_MOIS, strDate);
         }
     }
  
@@ -339,21 +329,35 @@ private Double validerMontant(String strMontant) throws ExceptionDonneeInvalide
     {
     if (strMontant.length() == 0)
         {     
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE, "champ vide");
-        }     
-    if (strMontant.charAt(strMontant.length()-1) != '$')
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMAT_INVALIDE, "champ vide");
+        } 
+    String strMontantTrim = strMontant.trim();
+    if (strMontantTrim.charAt(strMontantTrim.length()-1) != '$')
         {     
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_SIGNEDEPIASSE, strMontant);
+        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_SIGNE_DOLLAR, strMontant);
         }
     
     strMontant = strMontant.substring(0,strMontant.length()-1);
     try
+        
         {
-        return Double.parseDouble(strMontant);
+          String strMontantSansEspaces = strMontant.replaceAll("\\s","");
+        return Double.parseDouble(strMontantSansEspaces);
         }
     catch (NumberFormatException excNF)
         {
-        throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMATINVALIDE,strMontant);
+            DecimalFormat formatDecimal = new DecimalFormat();
+            DecimalFormatSymbols symbolesDecimaux = new DecimalFormatSymbols();
+            symbolesDecimaux.setDecimalSeparator(',');
+            formatDecimal.setDecimalFormatSymbols(symbolesDecimaux);
+            try {
+                return formatDecimal.parse(strMontant).doubleValue();
+            } catch (ParseException ex) {
+                 throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMAT_INVALIDE,strMontant);
+            }
+            
+            
+       
         }
     }
 
