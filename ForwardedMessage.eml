@@ -1,0 +1,353 @@
+Return-path: <owner-131-inf2015-040@uqam.ca>
+Received: from listes.uqam.ca ([10.177.30.42]) by mta02z02.sitel.uqam.ca
+ (Oracle Communications Messaging Server 7u4-24.01(7.0.4.24.0) 64bit (built Nov
+ 17 2011)) with ESMTP id <0MHV008VTRMYLG00@mta02z02.sitel.uqam.ca> for
+ gagne.jean-philippe@courrier.uqam.ca; Thu, 07 Feb 2013 21:44:59 -0500 (EST)
+Received: from listes.telecom.uqam.ca (localhost [127.0.0.1])
+ by listes.uqam.ca (8.14.5/8.10.0) with SMTP id r182kn9r019013; Thu,
+ 07 Feb 2013 21:46:49 -0500 (EST)
+Received: from data.hamecon.telecom.uqam.ca ([132.208.246.165])
+ by listes.uqam.ca (8.14.5/8.10.0) with ESMTP id r182k35R018998	for
+ <131-inf2015-040@listes.uqam.ca>; Thu, 07 Feb 2013 21:46:03 -0500 (EST)
+Received: from mail2.uqam.ca (HELO data.hamecon.telecom.uqam.ca)
+ ([132.208.246.165]) by data.hamecon.telecom.uqam.ca with ESMTP; Thu,
+ 07 Feb 2013 21:45:02 -0500
+Received: from unknown (HELO cahier.gst.uqam.ca) ([132.208.246.209])
+ by data2.hamecon.telecom.uqam.ca with ESMTP; Thu, 07 Feb 2013 21:45:01 -0500
+Date: Thu, 07 Feb 2013 21:43:49 -0500
+From: "Berger, Jacques" <berger.jacques@uqam.ca>
+Subject: [131-INF2015-040:5] Fichiers de test
+Sender: owner-131-inf2015-040@uqam.ca
+To: Forum de discussion 131-inf2015-040 <131-inf2015-040@uqam.ca>
+Reply-to: 131-inf2015-040@uqam.ca
+Message-id: <33EBFE291DF4EB4CAFE9E594639B25EE04FB3E42@CAHIER.gst.uqam.ca>
+MIME-version: 1.0
+X-MIMEOLE: Produced By Microsoft Exchange V6.5
+Content-type: multipart/mixed; boundary="Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)"
+Content-class: urn:content-classes:message
+Thread-topic: Fichiers de test
+Thread-index: Ac4Fph/LDmRsLkOESZW7Xwzo8rUhhA==
+X-Cloudmark-SP-Filtered: true
+X-Cloudmark-SP-Result: v=1.1 cv=GZU1tPAKpW+42zsspNb0bI4PdaCDAJ8S0Ok+U9Qcx0s=
+ c=1 sm=2 a=BLceEmwcHowA:10 a=_AaZj-7CMF-qa0ZCIT4A:9 a=wPNLvfGTeEIA:10
+ a=_W_S_7VecoQA:10 a=Vn0i7sEduPFd1RJQ94kA:9 a=zJJgJrR4LD4A:10
+ a=q4YtxyNhnLiOInsIeB0A:9 a=IBb0kSfaIf6PSN7HATYA:9 a=b3iSqyQegKEnFDSTbD8A:9
+ a=Hr3yQ-C-8I6MPnrL20oA:9 a=rTWTMlBAclGgLOWvgoUA:9
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result:
+ Av8EAMJlFFGE0PbR/2dsb2JhbABFwHAWc4IWCwUMEBEDWwELAQIHFQYMDAcBVgEEGwaIA58ZoR6Qe2EDiDA2hi2BJYVphhKKQIMe
+X-IronPort-AV: E=Sophos;i="4.84,626,1355115600";
+ d="xml'?scan'208,217";a="38046285"
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator:
+X-Listprocessor-Version: 8.2.09/990901/11:28 -- ListProc(tm) by CREN
+Original-recipient: rfc822;gagne.jean-philippe@courrier.uqam.ca
+
+This is a multi-part message in MIME format.
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: multipart/alternative;
+ boundary="Boundary_(ID_M0u+XKIqDeEyf5v4sdXMNw)"
+
+
+--Boundary_(ID_M0u+XKIqDeEyf5v4sdXMNw)
+Content-type: text/plain; charset=iso-8859-1
+Content-transfer-encoding: quoted-printable
+
+Bonjour,
+
+Voici les fichiers de test et les r=E9sultats attendus qui ont =E9t=E9 =
+utilis=E9s durant la correction de ce soir.
+
+Jacques
+
+--Boundary_(ID_M0u+XKIqDeEyf5v4sdXMNw)
+Content-type: text/html; charset=iso-8859-1
+Content-transfer-encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.5.7654.12">
+<TITLE>Fichiers de test</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+
+<P><FONT SIZE=3D2>Bonjour,<BR>
+<BR>
+Voici les fichiers de test et les r=E9sultats attendus qui ont =E9t=E9 =
+utilis=E9s durant la correction de ce soir.<BR>
+<BR>
+Jacques<BR>
+</FONT>
+</P>
+
+</BODY>
+</HTML>=
+
+--Boundary_(ID_M0u+XKIqDeEyf5v4sdXMNw)--
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=1.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=1.xml
+Content-description: 1.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+	<client>100323</client>
+	<contrat>B</contrat>
+	<mois>2013-01</mois>
+	<reclamation>
+		<soin>100</soin>
+		<date>2013-01-11</date>
+		<montant>110.00$</montant>
+	</reclamation>
+	<reclamation>
+		<soin>315</soin>
+		<date>2013-01-22</date>
+		<montant>450.00$</montant>
+	</reclamation>
+	<reclamation>
+        <soin>400</soin>
+        <date>2013-01-23</date>
+        <montant>60.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>600</soin>
+        <date>2013-01-25</date>
+        <montant>100.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>200</soin>
+        <date>2013-01-30</date>
+        <montant>100.00$</montant>
+    </reclamation>
+</reclamations>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=2.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=2.xml
+Content-description: 2.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+    <client>100323</client>
+    <contrat>C</contrat>
+    <mois>2013-01</mois>
+    <reclamation>
+        <soin>100</soin>
+        <date>2013-01-11</date>
+        <montant>100.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>315</soin>
+        <date>2013-01-22</date>
+        <montant>200.00$</montant>
+    </reclamation>
+</reclamations>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=3.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=3.xml
+Content-description: 3.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+	<client>1A0323</client>
+	<contrat>B</contrat>
+	<mois>2013-01</mois>
+	<reclamation>
+		<soin>100</soin>
+		<date>2013-01-11</date>
+		<montant>110.00$</montant>
+	</reclamation>
+	<reclamation>
+		<soin>315</soin>
+		<date>2013-01-22</date>
+		<montant>450.00$</montant>
+	</reclamation>
+	<reclamation>
+        <soin>400</soin>
+        <date>2013-01-23</date>
+        <montant>60.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>600</soin>
+        <date>2013-01-25</date>
+        <montant>100.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>200</soin>
+        <date>2013-01-30</date>
+        <montant>100.00$</montant>
+    </reclamation>
+</reclamations>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=4.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=4.xml
+Content-description: 4.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+	<client>100323</client>
+	<contrat>E</contrat>
+	<mois>2013-01</mois>
+	<reclamation>
+		<soin>100</soin>
+		<date>2013-01-11</date>
+		<montant>110.00$</montant>
+	</reclamation>
+	<reclamation>
+		<soin>315</soin>
+		<date>2013-01-22</date>
+		<montant>450.00$</montant>
+	</reclamation>
+	<reclamation>
+        <soin>400</soin>
+        <date>2013-01-23</date>
+        <montant>60.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>600</soin>
+        <date>2013-01-25</date>
+        <montant>100.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>200</soin>
+        <date>2013-01-30</date>
+        <montant>100.00$</montant>
+    </reclamation>
+</reclamations>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=5.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=5.xml
+Content-description: 5.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<reclamations>
+	<client>100323</client>
+	<contrat>B</contrat>
+	<mois>2013-01</mois>
+	<reclamation>
+		<soin>100</soin>
+		<date>2013-01-11</date>
+		<montant>110.00</montant>
+	</reclamation>
+	<reclamation>
+		<soin>315</soin>
+		<date>2013-01-22</date>
+		<montant>450.00</montant>
+	</reclamation>
+	<reclamation>
+        <soin>400</soin>
+        <date>2013-01-23</date>
+        <montant>60.00</montant>
+    </reclamation>
+    <reclamation>
+        <soin>600</soin>
+        <date>2013-01-25</date>
+        <montant>100.00</montant>
+    </reclamation>
+</reclamations>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=resultat1.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=resultat1.xml
+Content-description: resultat1.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<remboursements>
+	<client>100323</client>
+	<mois>2013-01</mois>
+	<remboursement>
+		<soin>100</soin>
+		<date>2013-01-11</date>
+		<montant>50.00$</montant>
+	</remboursement>
+	<remboursement>
+        <soin>315</soin>
+        <date>2013-01-22</date>
+        <montant>225.00$</montant>
+    </remboursement>
+    <remboursement>
+        <soin>400</soin>
+        <date>2013-01-23</date>
+        <montant>0.00$</montant>
+    </remboursement>
+    <remboursement>
+        <soin>600</soin>
+        <date>2013-01-25</date>
+        <montant>100.00$</montant>
+    </remboursement>
+    <remboursement>
+        <soin>200</soin>
+        <date>2013-01-30</date>
+        <montant>70.00$</montant>
+    </remboursement>
+</remboursements>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=resultat2.xml
+Content-transfer-encoding: 7BIT
+Content-disposition: attachment; filename=resultat2.xml
+Content-description: resultat2.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<remboursements>
+    <client>100323</client>
+    <mois>2013-01</mois>
+    <reclamation>
+        <soin>100</soin>
+        <date>2013-01-11</date>
+        <montant>90.00$</montant>
+    </reclamation>
+    <reclamation>
+        <soin>315</soin>
+        <date>2013-01-22</date>
+        <montant>180.00$</montant>
+    </reclamation>
+</remboursements>
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=resultat3.xml
+Content-transfer-encoding: base64
+Content-disposition: attachment; filename=resultat3.xml
+Content-description: resultat3.xml
+
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxyZW1ib3Vyc2VtZW50cz4N
+Cgk8bWVzc2FnZT5Eb25uw6llcyBpbnZhbGlkZXM8L21lc3NhZ2U+DQo8L3JlbWJvdXJzZW1lbnRz
+Pg==
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=resultat4.xml
+Content-transfer-encoding: base64
+Content-disposition: attachment; filename=resultat4.xml
+Content-description: resultat4.xml
+
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxyZW1ib3Vyc2VtZW50cz4N
+Cgk8bWVzc2FnZT5Eb25uw6llcyBpbnZhbGlkZXM8L21lc3NhZ2U+DQo8L3JlbWJvdXJzZW1lbnRz
+Pg==
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)
+Content-type: text/xml; name=resultat5.xml
+Content-transfer-encoding: base64
+Content-disposition: attachment; filename=resultat5.xml
+Content-description: resultat5.xml
+
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxyZW1ib3Vyc2VtZW50cz4N
+Cgk8bWVzc2FnZT5Eb25uw6llcyBpbnZhbGlkZXM8L21lc3NhZ2U+DQo8L3JlbWJvdXJzZW1lbnRz
+Pg==
+
+--Boundary_(ID_E+6sJIYW9fkHZ36x+cqkFQ)--

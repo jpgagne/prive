@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contrats>
+	<contrat type = "A">
+        <couverture>
+            <numeroSoin>0</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>100</numeroSoin>
+            <pourcentage>0.35</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>150</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>175</numeroSoin>
+            <pourcentage>0.50</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>200</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>300..399</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>400</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>500</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>600</numeroSoin>
+            <pourcentage>0.40</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>700</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+    </contrat>
+    
+    <contrat type = "B">
+            
+        <couverture>
+            <numeroSoin>0</numeroSoin>
+            <pourcentage>0.50</pourcentage>
+            <valeurMaximale>40.00</valeurMaximale>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>100</numeroSoin>
+            <pourcentage>0.50</pourcentage>
+            <valeurMaximale>50.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>150</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>175</numeroSoin>
+            <pourcentage>0.75</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>200</numeroSoin>
+            <pourcentage>1.00</pourcentage>            
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>300..399</numeroSoin>
+            <pourcentage>0.50</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>400</numeroSoin>
+            <pourcentage>0.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>500</numeroSoin>
+            <pourcentage>0.50</pourcentage>
+            <valeurMaximale>50.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>600</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>700</numeroSoin>
+            <pourcentage>0.70</pourcentage>
+        </couverture>
+    </contrat>
+    
+    <contrat type = "C">
+    
+        <couverture>
+            <numeroSoin>0</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>100</numeroSoin>
+            <pourcentage>0.95</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>150</numeroSoin>
+            <pourcentage>0.85</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>175</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>200</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>300..399</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>400</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>500</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>600</numeroSoin>
+            <pourcentage>0.75</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>700</numeroSoin>
+            <pourcentage>0.90</pourcentage>
+        </couverture>
+    </typeC>
+    
+    <contrat type = "D">
+        <couverture>
+            <numeroSoin>0</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>85.00</valeurMaximale>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>100</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>75.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>150</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>150.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>175</numeroSoin>
+            <pourcentage>0.95</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>200</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>100.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>300..399</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>400</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>65.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>500</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>600</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>100.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>700</numeroSoin>
+            <pourcentage>1.00</pourcentage>
+            <valeurMaximale>90.00</valeurMaximale>
+        </couverture>
+    </contrat>
+    
+    <contrat type = "E">
+    
+        <couverture>
+            <numeroSoin>0</numeroSoin>
+            <pourcentage>0.15</pourcentage>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>100</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>150</numeroSoin>
+            <pourcentage>0.15</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>175</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+            <valeurMaximale>20.00</valeurMaximale>
+        </couverture>
+            
+        <couverture>
+            <numeroSoin>200</numeroSoin>
+            <pourcentage>0.12</pourcentage>
+
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>300..399</numeroSoin>
+            <pourcentage>0.60</pourcentage>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>400</numeroSoin>
+            <pourcentage>0.25</pourcentage>
+            <valeurMaximale>15.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>500</numeroSoin>
+            <pourcentage>0.30</pourcentage>
+            <valeurMaximale>20.00</valeurMaximale>
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>600</numeroSoin>
+            <pourcentage>0.15</pourcentage>
+
+        </couverture>
+        
+        <couverture>
+            <numeroSoin>700</numeroSoin>
+            <pourcentage>0.22</pourcentage>
+        </couverture>
+	</contrat>
+	
+</contrats>

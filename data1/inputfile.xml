@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reclamations>
-    <dossier>E100323</dossier>
+    <dossier>A100323</dossier>
     <mois>2013-01</mois>
     <reclamation>
         <soin>0</soin>
@@ -8,9 +8,9 @@
         <montant>100.00$</montant>
     </reclamation>
     <reclamation>
-        <soin>100</soin>
+        <soin>0</soin>
         <date>2013-01-22</date>
-        <montant>100.00$</montant>
+        <montant>100000000.00$</montant>
     </reclamation>
      <reclamation>
         <soin>200</soin>
@@ -20,7 +20,7 @@
      <reclamation>
         <soin>300</soin>
         <date>2013-01-22</date>
-        <montant>100.00$</montant>
+        <montant>100,00$</montant>
     </reclamation>
     <reclamation>
         <soin>400</soin>
