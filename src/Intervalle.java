@@ -1,4 +1,9 @@
 
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+
 public class Intervalle
 {
     
@@ -12,10 +17,10 @@ public Intervalle(Integer bornePlancher, Integer bornePlafond)
     }
 
 public Intervalle(Integer valeur)
-{
+    {
     this.bornePlancher = valeur;
     this.bornePlafond = valeur;
-}
+    }
 
 public boolean inclus(Integer valeur)
     {
@@ -26,6 +31,29 @@ public boolean estUnaire()
     {
     return (this.getBornePlafond() == this.getBornePlancher());
     }
+
+
+
+public boolean estCoherent()
+    {
+    return (this.bornePlafond >= this.bornePlancher);
+    }
+
+public SortedSet<Integer> sequence()
+    {
+    SortedSet<Integer> set = new  TreeSet<Integer>();
+    
+    if (this.estCoherent())
+    {
+    for (int i = this.bornePlancher; i < this.bornePlafond; i++) 
+        {
+        set.add(i);
+        }
+    }
+    return set;
+    }
+
+
 
 
 @Override
