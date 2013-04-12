@@ -2,6 +2,7 @@ package inf2015.assurance;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -61,12 +62,16 @@ public void deQuosse()
 }
 
 
-private Reclamation lireUneReclamation() throws ExceptionDonneeInvalide
+private ArrayList<EntreeReclamationJSON> lirelesReclamations() throws ExceptionDonneeInvalide
 {
     EntreeReclamationJSON nouvelleEntreeReclamationJSON;
     Reclamation nouvelleReclamation;
+    ArrayList<EntreeReclamationJSON> listeReclamation = new ArrayList<EntreeReclamationJSON>();
     ObjectMapper mapper = new ObjectMapper();
         try {
+             
+            
+            listeReclamation = mapper.readValue(this.fichierInput,new TypeReference<List<EntreeReclamationJSON>>(){});
             nouvelleEntreeReclamationJSON = mapper.readValue(fichierInput, EntreeReclamationJSON.class);
         }  catch (JsonParseException ex) {
             throw new ExceptionDonneeInvalide(ex.getMessage());
