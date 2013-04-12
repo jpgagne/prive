@@ -6,19 +6,21 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Reclamation {
+
     
+
 private Integer noSoin;
 private Date dateSoin;
 private Double montantReclame;
 private char typeContrat;
+private String codeTypePrestataire;
 
 
-Reclamation(Integer noSoin, Date dateSoin, Double montantReclame, char typeContrat) 
-{  
-this.noSoin = noSoin;
-this.dateSoin = dateSoin;
-this.montantReclame = montantReclame;
-this.typeContrat = typeContrat;
+EntreeReclamationJSON entreeReclamationJSON;
+
+Reclamation (EntreeReclamationJSON entreeReclamationJSON)
+{
+    this.entreeReclamationJSON = entreeReclamationJSON;
 }
 
 
@@ -34,7 +36,7 @@ public String getValeurs()
     @Override
 public String toString()
 {
-    return getValeurs();
+    return this.entreeReclamationJSON.toString();
 }
 
 

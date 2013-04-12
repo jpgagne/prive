@@ -34,15 +34,9 @@ public ExceptionDonneeInvalide(String msg)
     private void genererFichierErreur()      
             
     {
-        Traitement traitement = Traitement.getInstance();
-        try {        
-            SortieXML sortieXML = new SortieXML(traitement.getPathSortant());
-            sortieXML.redigerDocumentSortie(this);
-            }
-        catch (ExceptionIO ex)
-            {
+       //TODO
 
-        }
+        
     }
    
     
