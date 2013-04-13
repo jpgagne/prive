@@ -33,26 +33,41 @@ public Argent(Integer montantCentimes)
 
 private Argent(Double montantDouble)
     {
-        // 
+         
     }
 
-public Argent(String montantString) throws ExceptionParseur
+public Argent(String montantString) throws ExceptionParseur, ExceptionArgent
     {
+    if (!signeDollar(montantString))
+        {
+        throw new ExceptionArgent(EnumCodeErreur.MONTANT_SIGNE_DOLLAR, montantString);
+        }
+    
     try {
         Double montantDouble = Double.parseDouble(montantString); 
         if ((montantDouble > Integer.MAX_VALUE/100)||(montantDouble < Integer.MIN_VALUE))
             {
-            throw new ExceptionParseur("Montant lu est hors bornes +\\-MaxInt -> " + montantDouble);
+            throw new ExceptionArgent(EnumCodeErreur.ARGENT_MONTANT_HORSBORNES, montantDouble.toString());
             }
         this.montant = montantDouble.intValue()*100;
         }
-    catch (NumberFormatException e)
+    catch (NumberFormatException excFN)
         {
-        throw new ExceptionParseur(montantString);
+        throw new ExceptionParseur(Double.class, montantString);
         }
     }
 
 
+private boolean signeDollar(String chaine)
+{
+    return (chaine.endsWith("$"));
+}
+
+
+public boolean estPositif()
+    {
+    return (this.montant < 0);
+    }
 
 
 public Integer getMontantCentimes()

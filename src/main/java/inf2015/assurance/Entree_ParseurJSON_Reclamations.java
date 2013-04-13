@@ -12,7 +12,9 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 
 public class Entree_ParseurJSON_Reclamations 
@@ -49,30 +51,33 @@ Entree_ParseurJSON_Reclamations(File fichierInput) //throws ExceptionDonneeInval
     }
 
 //</editor-fold>
+ 
 
 
-public void deQuosse()
+private ArrayList<EnregistrementJSON_Reclamation> lireLesReclamations() throws ExceptionDonneeInvalide
 {
-        try {
-            Reclamation nouvelleReclamation = lireUneReclamation();
-            System.out.println(nouvelleReclamation);
-        } catch (ExceptionDonneeInvalide ex) {
-            System.out.println(" KAPLOW!!!!!"+ ex.getMessage());
-        }
-}
-
-
-private ArrayList<EntreeReclamationJSON> lirelesReclamations() throws ExceptionDonneeInvalide
-{
-    EntreeReclamationJSON nouvelleEntreeReclamationJSON;
+    EnregistrementJSON_Reclamation nouvelleEntreeReclamationJSON;
     Reclamation nouvelleReclamation;
-    ArrayList<EntreeReclamationJSON> listeReclamation = new ArrayList<EntreeReclamationJSON>();
+    ArrayList<EnregistrementJSON_Reclamation> listeReclamation = new ArrayList<EnregistrementJSON_Reclamation>();
+    
+    
+    
+    
+    JSONArray root = (JSONArray) JSONSerializer.toJSON(jsonTxt);
+        int documentCount = root.size();
+        for (int i = 0; i < documentCount; i++) {
+            JSONObject document = root.getJSONObject(i);
+            if (document.getString("type").equals("book")) {
+                System.out.println(document.getString("title") + " publié en " + document.getInt("year"));
+            }
+        }
+    
     ObjectMapper mapper = new ObjectMapper();
         try {
              
             
-            listeReclamation = mapper.readValue(this.fichierInput,new TypeReference<List<EntreeReclamationJSON>>(){});
-            nouvelleEntreeReclamationJSON = mapper.readValue(fichierInput, EntreeReclamationJSON.class);
+            listeReclamation = mapper.readValue(this.fichierInput,new TypeReference<List<EnregistrementJSON_Reclamation>>(){});
+            nouvelleEntreeReclamationJSON = mapper.readValue(fichierInput, EnregistrementJSON_Reclamation.class);
         }  catch (JsonParseException ex) {
             throw new ExceptionDonneeInvalide(ex.getMessage());
         } catch (JsonMappingException ex) {

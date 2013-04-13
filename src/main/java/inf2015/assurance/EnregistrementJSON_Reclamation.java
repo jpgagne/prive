@@ -2,7 +2,7 @@
 package inf2015.assurance;
 
 
-public class EntreeReclamationJSON
+public class EnregistrementJSON_Reclamation
 {
 
 

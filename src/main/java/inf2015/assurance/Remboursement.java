@@ -9,16 +9,16 @@ public class Remboursement {
 //private Soin soin;
 private Integer noSoin;
 private Date date;
-private Double montant;
+private Argent montant;
 
-//Remboursement(Soin soin, Date date, Double montant)
+//Remboursement(Soin soin, Date date, Argent montant)
 //    {
 //     this.montant = montant;
 //     this.soin = soin;
 //     this.date = date;
 //    }
 
-Remboursement(Integer noSoin, Date date, Double montant)
+Remboursement(Integer noSoin, Date date, Argent montant)
     {
      this.montant = montant;
      this.noSoin = noSoin;
@@ -35,7 +35,7 @@ protected Date getDate()
     return date;
     }
 
-protected Double getMontant()
+protected Argent getMontant()
     {
     return montant;
     }
