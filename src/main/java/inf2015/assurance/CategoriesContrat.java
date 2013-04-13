@@ -5,19 +5,19 @@ package inf2015.assurance;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListeContrats
+public class CategoriesContrat
 {
 
 
 private Map<Character, Contrat> mapContrats;
 
 
-private static ListeContrats instance = null;
+private static CategoriesContrat instance = null;
 
 
 
 
-private ListeContrats() 
+private CategoriesContrat() 
     {
     chargerContrats();
     }
@@ -25,11 +25,11 @@ private ListeContrats()
 
 
 
-protected static ListeContrats getInstance()
+protected static CategoriesContrat getInstance()
     {
     if(instance == null)
         {
-        instance = new ListeContrats();
+        instance = new CategoriesContrat();
         }
     return instance;
     }

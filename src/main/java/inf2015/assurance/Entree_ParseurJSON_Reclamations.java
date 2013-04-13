@@ -4,17 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 
 public class Entree_ParseurJSON_Reclamations 
@@ -22,10 +17,21 @@ public class Entree_ParseurJSON_Reclamations
 
 //<editor-fold defaultstate="collapsed" desc="attributs">
 
+public static final String JSON_KEY_DOSSIER = "Dossier";
+public static final String JSON_KEY_MOIS = "Mois";
+public static final String JSON_KEY_RECLAMATIONS = "Reclamation";
 
-//singletons
-private ListeContrats listeContrats;
+public static final String JSON_KEY_SOIN = "Soin";
+public static final String JSON_KEY_CODE = "Code";
+public static final String JSON_KEY_DATE = "Date";
+public static final String JSON_KEY_MONTANT = "Montant";
+
+
+
+
+private CategoriesContrat categoriesContrat;
 private CategoriesSoin categoriesSoin;
+private CategoriesBeneficiaire categoriesBeneficiaire;
 
 //in
 private  File fichierInput;
@@ -41,12 +47,12 @@ private Date moisTraite;
 
 //<editor-fold defaultstate="collapsed" desc="constructeurs">
     
-Entree_ParseurJSON_Reclamations(File fichierInput) //throws ExceptionDonneeInvalide, ExceptionUsage
+Entree_ParseurJSON_Reclamations(File fichierInput)
     {
     this.categoriesSoin = CategoriesSoin.getInstance();
-    this.listeContrats = ListeContrats.getInstance();
+    this.categoriesContrat = CategoriesContrat.getInstance();
+    this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     this.fichierInput = fichierInput;
-
     
     }
 
@@ -60,18 +66,26 @@ private ArrayList<EnregistrementJSON_Reclamation> lireLesReclamations() throws E
     Reclamation nouvelleReclamation;
     ArrayList<EnregistrementJSON_Reclamation> listeReclamation = new ArrayList<EnregistrementJSON_Reclamation>();
     
+
+    
+    JSONObject root = (JSONObject) JSONSerializer.toJSON(this.fichierInput);
+    JSONObject dossier = root.getJSONObject(JSON_KEY_DOSSIER);
+    JSONObject mois = root.getJSONObject(JSON_KEY_MOIS);
+    JSONArray reclamations = root.getJSONArray(JSON_KEY_RECLAMATIONS);
     
     
     
-    JSONArray root = (JSONArray) JSONSerializer.toJSON(jsonTxt);
-        int documentCount = root.size();
+        int documentCount = reclamations.size();
         for (int i = 0; i < documentCount; i++) {
-            JSONObject document = root.getJSONObject(i);
-            if (document.getString("type").equals("book")) {
-                System.out.println(document.getString("title") + " publié en " + document.getInt("year"));
-            }
+            JSONObject reclamation = reclamations.getJSONObject(i);
+            nouvelleReclamation = validerReclamation(reclamation);
+           nope  listeReclamation.add(nouvelleEntreeReclamationJSON);
         }
-    
+}
+        
+        
+        private Reclamation validerReclamation(JSONObject reclamationLue)
+        {
     ObjectMapper mapper = new ObjectMapper();
         try {
              
