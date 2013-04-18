@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Evaluateur 
@@ -48,7 +46,6 @@ private void initialiser()
     this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     try {
         this.contrat = categoriesContrat.trouverContrat(carTypeContrat);
-        System.out.println("Contrat chargé dans évaluateur: "+this.contrat);
         }
     catch (ExceptionContratInexistant excCI) 
         {
@@ -73,10 +70,8 @@ private void calculerRemboursements()
     for (Iterator<Reclamation> it = listeReclamations.iterator(); it.hasNext();)
         {
         Reclamation reclamation = it.next();
-        System.out.print("Reclamation = "+reclamation+ " |  Remboursement= ");
-        Remboursement remboursement;
         try {
-            remboursement = calculerRemboursement(reclamation);
+            Remboursement remboursement = calculerRemboursement(reclamation);
             this.listeRemboursements.add(remboursement);
             this.total.additionner(remboursement.getMontant()) ;
             } 
@@ -88,8 +83,6 @@ private void calculerRemboursements()
     }
 
 
-
-
 private Remboursement calculerRemboursement(Reclamation reclamation) throws ExceptionSoinNonCouvert  
 {
 
@@ -97,36 +90,23 @@ System.out.println("calculerRemboursement()");
 System.out.println(this.contrat);
 System.out.println(reclamation);
 
-
 Argent montantReclame = reclamation.getMontantReclame();
 
-System.out.println("Reclamé: "+montantReclame);
 Couverture couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
-System.out.println("COUVERTURE CHARGEE POUR "+contrat+" : "+couverture);
-System.out.println("ON PAIE: "+onPaieCombien(montantReclame, couverture));
-Remboursement remboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
-System.out.println("NOUVEAU REMBOURSEMENT: "+remboursement);
-return remboursement;
 
-
-
-   
+Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
+System.out.println(nouveauRemboursement);
+return nouveauRemboursement;
     
 }
 
-
-
 private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
     {       
-        
-        System.out.println("Demandé: "+montantDemande);
-        System.out.println("Pourcentage: "+couverture.getPourcentage());
-        int intPourcentage = (int) Math.round(couverture.getPourcentage()*100);
-        montantDemande.multiplierPar(intPourcentage);
-        montantDemande.diviserPar(100);
-        System.out.println("remboursement potentiel: "+montantDemande);
+    int intPourcentage = (int) Math.round(couverture.getPourcentage()*100);
+    montantDemande.multiplierPar(intPourcentage);
+    montantDemande.diviserPar(100);
     if ((couverture.aValeurMax()) &
-            ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
+        ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
         {
         return  couverture.getValeurMax();
         }
@@ -137,23 +117,26 @@ private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
     }
 
 
+//<editor-fold defaultstate="collapsed" desc="getters">
+public Argent getTotal()
+{
+    return total;
+}
 
+public Date getMoisTraite()
+{
+    return moisTraite;
+}
 
-    public Argent getTotal() {
-        return total;
-    }
+public Contrat getContrat()
+{
+    return contrat;
+}
 
-    public Date getMoisTraite() {
-        return moisTraite;
-    }
-
-    public Contrat getContrat() {
-        return contrat;
-    }
-
-    public Integer getNoClient() {
-        return noClient;
-    }
-
+public Integer getNoClient()
+{
+    return noClient;
+}
 
 }
+//</editor-fold>

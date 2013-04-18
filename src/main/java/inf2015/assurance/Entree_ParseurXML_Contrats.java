@@ -13,7 +13,6 @@ public class Entree_ParseurXML_Contrats
 {
     
 private CategoriesSoin categoriesSoin;
-//private CategoriesContrat categoriesContrat;
 private CategoriesBeneficiaire categoriesBeneficiaire;
 
 private File fichierInput;
@@ -26,7 +25,6 @@ private DocumentBuilder docBuilderInput;
 protected Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDonneeInvalide, ExceptionIO
     {
     this.categoriesSoin = CategoriesSoin.getInstance();
-    //this.categoriesContrat = CategoriesContrat.getInstance();
     this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     ouvrirFichierEntree(nomFichierInput);
     }
@@ -35,8 +33,6 @@ protected Entree_ParseurXML_Contrats(String nomFichierInput) throws ExceptionDon
 private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionIO
     {
     fichierInput = new File(nomFichierInput);
-    System.out.println("Ouverture du fichier entrée " + fichierInput.getName());
-
     docBuilderFactoryInput = DocumentBuilderFactory.newInstance();
     boolean succes = false;
     try {
@@ -55,10 +51,6 @@ private void ouvrirFichierEntree(String nomFichierInput) throws ExceptionIO
         System.out.println("ERREUR - " + ex.getMessage());
         throw new ExceptionIO(ex.getMessage());
         }
-    finally 
-        {
-        System.out.println("Document " + fichierInput.getName() + " : " + Boolean.toString(succes));
-        }
     }
 
     
@@ -66,7 +58,6 @@ public  Map<Character, Contrat>  parserFichierContrats() throws ExceptionDonneeI
 {
 Map<Character,Contrat> mapContrats = new HashMap<Character,Contrat>();
 NodeList listeNoeudsContrat = docInput.getElementsByTagName("contrat");
-System.out.println("Nb objets Contrat lus= "+ listeNoeudsContrat.getLength());
 
 for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
     {
@@ -74,9 +65,7 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
     if (noeudContrat.getNodeType() == Node.ELEMENT_NODE)
         {
         Contrat nouveauContrat = parserValiderContrat(noeudContrat);
-        System.out.print("Nouveau contrat : ");
         Character carTypeContrat = nouveauContrat.getTypeContrat();
-        System.out.println(carTypeContrat);
         if (mapContrats.containsKey(carTypeContrat))
             {
             throw new ExceptionDonneeInvalide("Contrat |"+carTypeContrat+"| dédoublé");
@@ -84,13 +73,11 @@ for (int compteur = 0; compteur < listeNoeudsContrat.getLength(); compteur++)
         
         
         Set<Couverture> setCouvertures = parserValiderListeCouvertures((Element) noeudContrat);
-        //System.out.println ( "NB de couvertures pour contrat "+nouveauContrat.getTypeContrat()+" : "+setCouvertures.size());
-            for (Iterator<Couverture> it = setCouvertures.iterator(); it.hasNext();) {
+                 for (Iterator<Couverture> it = setCouvertures.iterator(); it.hasNext();) {
                 Couverture couverture = it.next();
                 nouveauContrat.ajouterCouverture(couverture);
                 
             }
-       // nouveauContrat.setSetCouvertures(setCouvertures);
         mapContrats.put(nouveauContrat.getTypeContrat(), nouveauContrat);
      
         }
@@ -108,14 +95,13 @@ private Set<Couverture> parserValiderListeCouvertures(Element elementContrat) th
     HashSet<Couverture> setCouvertures = new HashSet<Couverture>();
     NodeList listeNoeudsCouverture = elementContrat.getElementsByTagName("couverture");
     String typeContrat = elementContrat.getAttribute("type");
-    System.out.println("Nb objets Couverture lus pour Contrat "+typeContrat+" = "+ listeNoeudsCouverture.getLength());
     for (int compteur = 0; compteur < listeNoeudsCouverture.getLength(); compteur++)
         {
         Node noeudCouverture = listeNoeudsCouverture.item(compteur);
         if (noeudCouverture.getNodeType() == Node.ELEMENT_NODE)
             {
             Couverture nouvelleCouverture = parserValiderCouverture(noeudCouverture);
-          //  System.out.println("Couverture chargee: "+nouvelleCouverture.toString());
+
 
             setCouvertures.add(nouvelleCouverture);
             }

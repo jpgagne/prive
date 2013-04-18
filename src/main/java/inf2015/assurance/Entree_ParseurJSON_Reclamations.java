@@ -73,15 +73,15 @@ Entree_ParseurJSON_Reclamations(File fichierInput) throws ExceptionSpecifique
  
 
 private Evaluateur creerEvaluateur()
-{
+    {
     this.evaluateur = new Evaluateur(noClient, typeContrat, moisTraite, listeReclamations);
     return evaluateur;
-}
+    }
 
 private void chargerContenuFichier() throws ExceptionIO
     {
     this.strImput = "";
-    FileInputStream fis = null;
+    FileInputStream fis;
     try 
         {
         fis = new FileInputStream(fichierInput);
@@ -126,7 +126,6 @@ private void parserContenuFichierImput() throws  ExceptionContratInexistant, Exc
                 }
             if (fieldname.equals(JSON_KEY_MOIS))
                 {
-               // jsonParser.nextToken();
                 this.LireMoisTraite(jsonParser.getText());
                 }
 
@@ -150,8 +149,6 @@ private void parserContenuFichierImput() throws  ExceptionContratInexistant, Exc
 
 private void parserUneReclamation(JsonParser parser) throws IOException, ExceptionParseur
     {
-     System.out.print("NOUVELLE RECLAMATION LUE: "); 
-    
      EnregistrementJSON_Reclamation ejsonr = new EnregistrementJSON_Reclamation();
      while (parser.nextToken() != JsonToken.END_OBJECT)
         {
@@ -187,7 +184,7 @@ private void parserUneReclamation(JsonParser parser) throws IOException, Excepti
                 }
             }  
         } // End While
-     System.out.println(ejsonr);
+
      this.listeLue.add(ejsonr);
     }
 
@@ -201,8 +198,6 @@ private void validerListeReclamations() throws ExceptionDonneeInvalide
         EnregistrementJSON_Reclamation enregistrementJSON_Reclamation = it.next();
         nouvelleReclamation = new Reclamation(enregistrementJSON_Reclamation);
         listeReclamations.add(nouvelleReclamation);
-        System.out.println("Reclamation validee:");
-        System.out.println(nouvelleReclamation);
         }
 }
 
@@ -249,40 +244,7 @@ private void LireMoisTraite(String strMois) throws ExceptionParseur, ExceptionVa
     
     this.moisTraite = ParseurNombres.parseChainePourDateMois(strMois);
     }
-
-        
-
 }
-
-
-        
-
-
-
-    
-//<editor-fold defaultstate="collapsed" desc="traitement principal">
-    
-//protected Evaluateur parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage
-//    {        
-//        
-//        
-//        
-//        
-//        ObjectMapper mapper = new ObjectMapper();
-//        
-//        
-//        Reclamation reclamation = mapper.readValue(this.fichierInput, Reclamation.class);
-//        
-//    this.noClient = ?
-//    this.typeContrat = ?
-//    this.moisTraite = ?
-//
-//    this.evaluateur = new Evaluateur(getNoClient(), getTypeContrat(), getMoisTraite());
-//    return this.evaluateur;
-//    }
-//
-////</editor-fold>
-//       
     
 //<editor-fold defaultstate="collapsed" desc="methodes utilitaires private">
 
