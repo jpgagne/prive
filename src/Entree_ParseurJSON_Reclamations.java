@@ -39,41 +39,14 @@ public class Entree_ParseurJSON_Reclamations {
     private void lireFichier() throws IOException{     
         String jsonTxt = loadFileIntoString(this.fichierInput.getAbsolutePath(), "UTF-8");
         System.out.println(jsonTxt);
-//        JSONArray root = (JSONArray) JSONSerializer.toJSON(jsonTxt);
-//        int documentCount = root.size();
-  
-//        ObjectMapper mapper = new ObjectMapper();
-//        Reclamation projets = mapper.readValue(this.fichierInput, Reclamation.class);
-//        HashMap<Integer, Reclamation> reclamations = new HashMap();
-//        reclamations = mapper.readValue(fichierInput, <Integer, Reclamation>reclamations  );
-//        reclamations = mapper.readValue(this.fichierInput, Reclamation.class);
-//        
-//        ArrayList<Reclamation> ArrayReclam = projets.getMontantReclame();
-//        for (Reclamation p : ArrayReclam) {
-//            ArrayList<String> description = p.getDescription();
-//            for (String s : description) {
-//                System.out.println(s);
-//        for (int i = 0; i < documentCount; i++) {
-//            JSONObject document = root.getJSONObject(i);
-//            if (document.getString("mois").compareTo(moisTraite.toString()) == 0) {
-//                System.out.println(document.getString("title") + " publié en "
-//                        + document.getInt("year"));
-//            }
-//        }
     }
     
     
     private void ouvrirFichierEntree() throws ExceptionUsage, FileNotFoundException {
-        //docBuilderFactoryInput = DocumentBuilderFactory.newInstance();
-        //boolean succes = false;
         JSONObject object = JSONObject.fromObject(new FileReader(fichierInput));
         JSONArray arr = object.getJSONArray("reclamations");
         
         try {
-//            docBuilderInput = docBuilderFactoryInput.newDocumentBuilder();
-//            docInput = docBuilderInput.parse(fichierInput);
-//            docInput.getDocumentElement().normalize(); //Répare les balises XML mal formées
-//            succes = true;
             for (int i = 0; i < arr.size(); i++) {
                 JSONObject person = (JSONObject) arr.get(i);
                 String soin = (String) person.get("soin");
@@ -92,8 +65,6 @@ public class Entree_ParseurJSON_Reclamations {
     }
     
     protected Evaluateur parserFichierReclamations() throws ExceptionDonneeInvalide, ExceptionUsage {
-        // JSONArray jsonListDossier = docInput.getElementsByTagName("dossier");
-        // JSONArray jsonListMois = docInput.getElementsByTagName("mois");
         JSONObject json = JSONObject.fromObject(fichierInput);
         JSONArray listDossierJSON = json.getJSONArray("dossier");
         JSONArray listMoisJSON = json.getJSONArray("mois");
@@ -113,7 +84,7 @@ public class Entree_ParseurJSON_Reclamations {
 //<editor-fold defaultstate="collapsed" desc="methodes utilitaires private">
 //</editor-fold>
     private Integer parseValideNoClient(JSONArray jsonList) throws ExceptionDonneeInvalide {
-        if (jsonList.size() != 1) { // // //
+        if (jsonList.size() != 1) {
             throw new ExceptionDonneeInvalide(EnumErreurLecture.DOSSIER_ABSENT);
         }
 
@@ -162,7 +133,6 @@ public class Entree_ParseurJSON_Reclamations {
             throw new ExceptionDonneeInvalide(EnumErreurLecture.MOIS_ABSENT,
                     "nb d'éléments 'date' = " + jsonList.size());
         }
-        //Element elementMois = (Element) jsonList.item(0);
         JSONObject elementMois = jsonList.getJSONObject(0);
         String strMois = elementMois.getString(moisTraite.toString());//
 
@@ -191,7 +161,6 @@ public class Entree_ParseurJSON_Reclamations {
 
     private Reclamation parserValiderReclamation(JSONArray noeudReclamation) throws ExceptionDonneeInvalide {
 
-        //Element elementReclamation = (Element) noeudReclamation;
         JSONObject elementReclamation = noeudReclamation.toJSONObject(noeudReclamation);
 
         Integer intNoSoin = parserNumeroSoin(elementReclamation);
@@ -225,7 +194,6 @@ public class Entree_ParseurJSON_Reclamations {
                     "nb d'éléments 'soin' = " + listeNoeudSoin.size());
         }
         
-        //Element elementSoin = (Element) listeNoeudSoin.item(0);
         JSONObject elementSoin = listeNoeudSoin.getJSONObject(0);
         
         JSONArray sousListe = elementSoin.names();
@@ -248,7 +216,6 @@ public class Entree_ParseurJSON_Reclamations {
                     "nb d'éléments 'date' = " + listeNoeudDate.size());
         }
 
-        //Element elementDate = (Element) listeNoeudDate.item(0);
         JSONObject elementDate = listeNoeudDate.getJSONObject(0);
         JSONArray sousListe = elementDate.names();
         if (sousListe.size() != 1) {
@@ -292,7 +259,7 @@ public class Entree_ParseurJSON_Reclamations {
             throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_ABSENT,
                     "nb d'éléments 'montant' = " + listeNoeudMontant.size());
         }
-        //Element elementMontant = (Element) listeNoeudMontant.item(0);
+
         JSONObject elementMontant = listeNoeudMontant.getJSONObject(0);
         JSONArray sousListe = elementMontant.names();
         if (sousListe.size() != 1) {
