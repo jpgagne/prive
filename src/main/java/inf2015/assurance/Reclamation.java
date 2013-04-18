@@ -47,7 +47,7 @@ private void validerNoSoin(EnregistrementJSON_Reclamation ejsonr) throws Excepti
         throw new ExceptionDonneeInvalide(EnumCodeErreur.NOSOIN_INVALIDE, ejsonr.soin);
         }
     
-    if (! categoriesSoin.soinExisteInteger(noSoin))
+    if (! categoriesSoin.soinExiste(noSoin))
         {
         throw new ExceptionDonneeInvalide(EnumCodeErreur.NOSOIN_INCONNU, this.noSoin.toString());
         }

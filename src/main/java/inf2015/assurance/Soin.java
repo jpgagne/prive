@@ -18,21 +18,26 @@ Soin(Intervalle intervalleNoSoin, String litteral)
     this.litteral = litteral;
     }   
     
-protected Intervalle getIntervalleNoSoin()
+
+public boolean estSoinCherche(Integer noSoin)
+    {
+    return this.intervalleNoSoin.inclus(noSoin);
+    }
+
+public Intervalle getIntervalleNoSoin()
     {
     return this.intervalleNoSoin;
     }
-    
-    
-protected String getLitteral()
+
+public String getLitteral()
     {
     return this.litteral;
     }
 
-    @Override
+@Override
 public String toString()
-{
-    return (this.intervalleNoSoin+" - "+this.getLitteral());
-}
+    {
+    return (" * "+this.intervalleNoSoin+" * "+this.getLitteral()+" * ");
+    }
 
 }

@@ -94,29 +94,29 @@ public Double floatValue()
     return new Double(this.montant.floatValue()/100);
     }
 
-public Argent multiplierPar(Double multiplicateur)
+public void multiplierPar(Double multiplicateur)
     {
-    return new Argent(this.montant*multiplicateur);
+    this.montant = this.montant*multiplicateur.intValue();
     }
 
-public Argent multiplierPar(Integer multiplicateur)
+public void multiplierPar(Integer multiplicateur)
     {
-    return new Argent(this.montant*multiplicateur);
+    this.montant = this.montant*multiplicateur;
     }
 
-public Argent diviserPar (Integer diviseur)
+public void diviserPar (Integer diviseur)
     {
-    return new Argent(this.montant/diviseur);
+    this.montant =this.montant/diviseur;
     }
 
-public Argent additionner (Argent valeurAdditionnee)
+public void additionner (Argent valeurAdditionnee)
     {
-    return new Argent(this.montant+valeurAdditionnee.getMontantCentimes());
+    this.montant =this.montant+valeurAdditionnee.getMontantCentimes();
     }
 
-public Argent soustraire (Argent valeurSoustraite)
+public void soustraire (Argent valeurSoustraite)
     {
-    return new Argent(this.montant-valeurSoustraite.getMontantCentimes());
+    this.montant = this.montant-valeurSoustraite.getMontantCentimes();
     }
 
 

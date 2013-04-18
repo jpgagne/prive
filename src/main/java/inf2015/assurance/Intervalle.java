@@ -1,16 +1,20 @@
 package inf2015.assurance;
 
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
-public class Intervalle
+public class Intervalle implements Comparable<Intervalle>
 {
     
 private Integer bornePlancher;
 private Integer bornePlafond;
+private Comparator<Intervalle> comparateur;
 
 public Intervalle(Integer bornePlancher, Integer bornePlafond)
     {
@@ -86,5 +90,32 @@ public Integer getBornePlafond()
     {
     return bornePlafond;
     }
+
+public int compareTo(Intervalle o)
+{
+
+if (this.bornePlancher > o.getBornePlafond())
+    {
+    return 1;
+    }
+
+if (this.bornePlafond < o.getBornePlancher())
+    {
+    return -1;
+    }
+
+if ((this.bornePlafond == o.getBornePlafond())&(this.bornePlancher == o.getBornePlancher()))
+{
+    return 0;
+}
+
+try {
+    throw new ExceptionIntervalle(this, o);
+    } 
+catch (ExceptionIntervalle ex)
+    {
+    throw new RuntimeException(ex); // Intégrité du programme corrompue. On crash.
+    }
+}
 
 }

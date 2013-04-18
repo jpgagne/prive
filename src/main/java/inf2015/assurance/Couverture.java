@@ -1,13 +1,11 @@
 package inf2015.assurance;
 
-
 public class Couverture
-
 {
-    private Soin soin;
-    private Double pourcentage;
-    private Argent valeurMax;
-    private  boolean aValeurMax;
+private Soin soin;
+private Double pourcentage;
+private Argent valeurMax;
+private  boolean aValeurMax;
 
 public Couverture(Soin soin, Double pourcentage, Double valeurMax)
     {
@@ -26,52 +24,51 @@ public Couverture(Soin soin, Double pourcentage)
     }
 
    
-    
-    protected boolean aValeurMax()
+//<editor-fold defaultstate="collapsed" desc="getters">
+public boolean aValeurMax()
+{
+    return this.aValeurMax;
+}
+
+public Argent getValeurMax()
+{
+    return this.valeurMax;
+}
+
+public Double getPourcentage()
+{
+    return pourcentage;
+}
+
+public Soin getSoin()
+{
+    return this.soin;
+}
+//</editor-fold>
+
+
+public boolean estCouvertureCherchee(Integer noSoin)
     {
-        return this.aValeurMax;
-    }
-    
-    protected Argent getValeurMax()
-    {
-        return this.valeurMax;
-    }
-    
-    
-    protected Double getPourcentage()
-    {
-        return pourcentage;
-    }
-    
-    protected Soin getSoin()
-    {
-        return this.soin;
+    return this.soin.estSoinCherche(noSoin);
     }
 
-    
-    protected boolean estCouvertureCherchee(Integer noSoin)
-    {
-        
-        System.out.print(noSoin+" inclus?dans "+this.soin.getIntervalleNoSoin().getBornePlancher()+".."+this.soin.getIntervalleNoSoin().getBornePlancher()+ " = ");
-       Boolean trouve =  ((noSoin >= this.soin.getIntervalleNoSoin().getBornePlancher())
-                &(noSoin >= this.soin.getIntervalleNoSoin().getBornePlancher()));
-       System.out.println(trouve);
-       return trouve;
+
+@Override
+public String toString()
+{
+    StringBuilder litteral = new StringBuilder(this.soin.getIntervalleNoSoin().toString()+ " : " 
+                                    +this.soin.getLitteral() + " = "
+                                    +this.pourcentage.toString()+"%");
+    litteral.append(", Max: ");
+    if (this.aValeurMax)
+        {
+        litteral.append(this.valeurMax);
+        }
+    else{
+        litteral.append("NON");
     }
-    
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder litteral = new StringBuilder(this.soin.getIntervalleNoSoin().toString()+ " : " 
-                                     +this.soin.getLitteral() + " = "
-                                     +this.pourcentage.toString()+"%");
-        if (this.aValeurMax)
-            {
-            litteral.append(", Max: ").append(this.valeurMax).append(" $");
-            }
-        return litteral.toString();
-    }
-    
+    return litteral.toString();
+}
+
 
 }

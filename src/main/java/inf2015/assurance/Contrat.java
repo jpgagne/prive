@@ -62,5 +62,11 @@ protected Couverture trouverCouvertureParNoSoin(Integer noSoin) throws Exception
     {
         return this.typeContrat;
     }
+    
+    @Override
+    public String toString()
+    {
+        return ("* CONTRAT "+this.typeContrat+" *");
+    }
 
 }

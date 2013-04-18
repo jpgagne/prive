@@ -48,6 +48,7 @@ private void initialiser()
     this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     try {
         this.contrat = categoriesContrat.trouverContrat(carTypeContrat);
+        System.out.println("Contrat chargé dans évaluateur: "+this.contrat);
         }
     catch (ExceptionContratInexistant excCI) 
         {
@@ -77,7 +78,7 @@ private void calculerRemboursements()
             try {
                 remboursement = calculerRemboursement(reclamation);
                 this.listeRemboursements.add(remboursement);
-                this.total = getTotal().additionner(remboursement.getMontant()) ;
+                this.total.additionner(remboursement.getMontant()) ;
                 } 
             catch (ExceptionSoinNonCouvert excSNC) 
                 {
@@ -90,42 +91,46 @@ private void calculerRemboursements()
 
 
 private Remboursement calculerRemboursement(Reclamation reclamation) throws ExceptionSoinNonCouvert  
-    {
-        
-        System.out.println("calculerRemboursement()");
-        System.out.print(" CONTRAT = " + this.contrat.getTypeContrat());
-        System.out.println (reclamation);
-    Remboursement remboursement;
-    
-    Argent montantReclame = reclamation.getMontantReclame();
-    
-    Couverture couverture;
-     
-            couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
-            remboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
-         System.out.println("NOUVEAU REMBOURSEMENT: "+remboursement);
-         return remboursement;
-        
+{
 
-    
+System.out.println("calculerRemboursement()");
+System.out.println(this.contrat);
+System.out.println(reclamation);
+
+
+Argent montantReclame = reclamation.getMontantReclame();
+
+System.out.println("Reclamé: "+montantReclame);
+Couverture couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
+System.out.println("COUVERTURE CHARGEE POUR "+contrat+" : "+couverture);
+System.out.println("ON PAIE: "+onPaieCombien(montantReclame, couverture));
+Remboursement remboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
+System.out.println("NOUVEAU REMBOURSEMENT: "+remboursement);
+return remboursement;
+
+
+
    
     
-    }
+}
 
 
 
 private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
     {       
-    Argent montantRemboursable =  montantDemande.multiplierPar(couverture.getPourcentage());
+        
+        System.out.println("Demandé: "+montantDemande);
+        System.out.println("Pourcentage: "+couverture.getPourcentage());
+        montantDemande.multiplierPar(couverture.getPourcentage());
 
     if ((couverture.aValeurMax()) &
-            ( montantRemboursable.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
+            ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
         {
         return  couverture.getValeurMax();
         }
     else
         {
-        return montantRemboursable;
+        return montantDemande;
         }     
     }
 

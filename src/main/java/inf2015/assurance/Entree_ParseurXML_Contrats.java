@@ -158,7 +158,7 @@ Soin soin;
 Element elementCouverture = (Element) noeudCouverture;
 Intervalle intervalleNumeroSoin = parserNumeroSoin(elementCouverture);
 
-soin = categoriesSoin.getSoinParInteger(intervalleNumeroSoin.getBornePlancher());
+soin = categoriesSoin.trouverSoin(intervalleNumeroSoin.getBornePlancher());
 
 Double pourcentage = parserPourcentage(elementCouverture);
 Boolean aMaximum = parserAMaximum(elementCouverture);
