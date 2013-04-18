@@ -56,29 +56,39 @@ Entree_ParseurJSON_Reclamations(File fichierInput)
     this.categoriesContrat = CategoriesContrat.getInstance();
     this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     this.fichierInput = fichierInput;
-    parserFichier();
+        try {
+            Reclamation nouvelleReclamation = new Reclamation(parserFichier());
+            System.out.println(nouvelleReclamation);
+        } catch (ExceptionDonneeInvalide ex) {
+             System.out.println("FUCK 4");
+                System.out.println(ex.getMessage());
+        }
+    
     }
 
 //</editor-fold>
  
-private ValeurEntreeJSON parserFichier()
+private EnregistrementJSON_Reclamation parserFichier()
 {
     ObjectMapper mapper = new ObjectMapper();
 
-ValeurEntreeJSON vejson = new ValeurEntreeJSON();
+EnregistrementJSON_Reclamation vejson;
         try {
-            mapper.writeValue(fichierInput, vejson);
+            vejson = mapper.readValue(fichierInput, EnregistrementJSON_Reclamation.class);
+            return vejson;
         } catch (JsonGenerationException ex) {
             System.out.println("FUCK 1");
+            System.out.println(ex.getMessage());
         } catch (JsonMappingException ex) {
                System.out.println("FUCK 2");
                System.out.println(ex.getMessage());
         }
         catch (IOException ex) {
                 System.out.println("FUCK 3");
-        } 
+                System.out.println(ex.getMessage());
+        }   
         
-        return vejson;
+        return null;
         
 }
 
