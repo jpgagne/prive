@@ -21,10 +21,6 @@ private Integer noClient;
 private Contrat contrat;
 
 
-private CategoriesSoin categoriesSoin;
-private CategoriesContrat categoriesContrat;
-private CategoriesBeneficiaire categoriesBeneficiaire;
-
 private Evaluateur()
 {
 }
@@ -41,10 +37,9 @@ Evaluateur( Integer noClient, char charContrat, Date moisTraite, ArrayList<Recla
 
 private void initialiser()
     {
-    this.categoriesSoin = CategoriesSoin.getInstance();
-    this.categoriesContrat = CategoriesContrat.getInstance();
-    this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
+
     try {
+        CategoriesContrat categoriesContrat = CategoriesContrat.getInstance();
         this.contrat = categoriesContrat.trouverContrat(carTypeContrat);
         }
     catch (ExceptionContratInexistant excCI) 
@@ -60,9 +55,6 @@ private void initialiser()
     }
 
 
-        
-        
-        
 private void calculerRemboursements()
     {
     System.out.println("Calculer Remboursements ()");
@@ -93,18 +85,21 @@ System.out.println(reclamation);
 Argent montantReclame = reclamation.getMontantReclame();
 
 Couverture couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
-
-Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
+CategoriesBeneficiaire categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
+Beneficiaire beneficiaire = categoriesBeneficiaire.trouverBeneficiaire(reclamation.getCodeTypeBeneficiaire());
+System.out.println(beneficiaire);
+Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture, beneficiaire ));
 System.out.println(nouveauRemboursement);
 return nouveauRemboursement;
     
 }
 
-private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
+private Argent onPaieCombien(Argent montantDemande, Couverture couverture, Beneficiaire beneficiaire)
     {       
     int intPourcentage = (int) Math.round(couverture.getPourcentage()*100);
     montantDemande.multiplierPar(intPourcentage);
-    montantDemande.diviserPar(100);
+    montantDemande.multiplierPar(beneficiaire.getPourcentage());
+    montantDemande.diviserPar(10000);
     if ((couverture.aValeurMax()) &
         ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
         {

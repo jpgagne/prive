@@ -2,23 +2,20 @@ package inf2015.assurance;
 
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 public class CategoriesBeneficiaire 
 {
-
-private Set<String> setPatternsCategoriesBeneficiaire;
-private String[] patterns = { "A", "C", "E\\d", "H\\d"};
-
+private Map<EnumCodetypeBeneficiaire, Beneficiaire> mapBeneficiaires;
 
 private static CategoriesBeneficiaire instance = null;
-private CategoriesBeneficiaire() 
-{
-chargerPatternsCategorieBeneficiaire();
-}
 
+private CategoriesBeneficiaire() 
+    {
+    this.chargerMapBeneficiaires();
+    }
 
 public static CategoriesBeneficiaire getInstance()
     {
@@ -31,23 +28,65 @@ public static CategoriesBeneficiaire getInstance()
 
 
 
-private void chargerPatternsCategorieBeneficiaire()
+private void chargerMapBeneficiaires()
     {
-    this.setPatternsCategoriesBeneficiaire = new HashSet<String>(Arrays.asList(patterns));
+    Beneficiaire beneficiaire;
+    this.mapBeneficiaires = new EnumMap<EnumCodetypeBeneficiaire, Beneficiaire>(EnumCodetypeBeneficiaire.class);
+    beneficiaire = new Beneficiaire("a", EnumCodetypeBeneficiaire.ADHERENT, "Adherent", 100 );
+    this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.ADHERENT, beneficiaire);
+    beneficiaire = new Beneficiaire("c", EnumCodetypeBeneficiaire.CONJOINT, "Conjoint", 100 );
+    this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.CONJOINT, beneficiaire);
+    beneficiaire = new Beneficiaire("e*", EnumCodetypeBeneficiaire.ENFANT, "Enfant", 100 );
+    this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.ENFANT, beneficiaire);
+    beneficiaire = new Beneficiaire("h*", EnumCodetypeBeneficiaire.PERSONNE_A_CHARGE, "Personne à charge", 50 );
+    this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.PERSONNE_A_CHARGE, beneficiaire);
+    System.out.println(mapBeneficiaires.size()+" BENEFICIAIRES RECONNUS");
     }
 
 
-public boolean validerCodeBeneficiaire( String codeLu)
+public Beneficiaire trouverBeneficiaire(EnumCodetypeBeneficiaire codetypeBeneficiaire)
     {
-    for (Iterator<String> it = setPatternsCategoriesBeneficiaire.iterator(); it.hasNext();)
+    return this.mapBeneficiaires.get(codetypeBeneficiaire);
+    }
+
+
+public final EnumCodetypeBeneficiaire trouverType(String str) throws ExceptionDonneeInvalide
+{
+
+if (str.matches("A"))
+    {
+    return EnumCodetypeBeneficiaire.ADHERENT;
+    }
+
+if (str.matches("C"))
+    {
+    return EnumCodetypeBeneficiaire.CONJOINT;
+    }
+
+if (str.matches("E\\d"))
+    {
+    return EnumCodetypeBeneficiaire.ENFANT;
+    }
+
+if (str.matches("H\\d"))
+    {
+    return EnumCodetypeBeneficiaire.PERSONNE_A_CHARGE;
+    }
+
+throw new ExceptionDonneeInvalide (EnumCodeErreur.TYPEBENEFICIAIRE_INVALIDE, str);
+}
+
+
+public boolean validerCodeBeneficiaire(String codeLu)
+    {
+    try {
+        trouverType(codeLu);
+        return  true;
+        } 
+    catch (ExceptionDonneeInvalide excDI)
         {
-        String pattern = it.next();
-        if (codeLu.matches(pattern))
-            {
-            return true;
-            }
+        return false;
         }
-    return false;   
     }
 
 

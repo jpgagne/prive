@@ -12,7 +12,7 @@ public class Reclamation {
 private Integer noSoin;
 private Date dateSoin;
 private Argent montantReclame;
-private String codeTypeBeneficiaire;
+private EnumCodetypeBeneficiaire codeTypeBeneficiaire;
 
 
 
@@ -93,14 +93,8 @@ private void validerMontantReclame(EnregistrementJSON_Reclamation ejsonr) throws
 private void validerCodeTypeBeneficiaire(EnregistrementJSON_Reclamation ejsonr) throws ExceptionDonneeInvalide
     {
     CategoriesBeneficiaire categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
-    this.codeTypeBeneficiaire = ejsonr.code;
-    if (!categoriesBeneficiaire.validerCodeBeneficiaire(codeTypeBeneficiaire))
-        {
-        throw new ExceptionDonneeInvalide(EnumCodeErreur.CODEBENEFICIAIRE_INVALIDE, codeTypeBeneficiaire);
-        }
+    this.codeTypeBeneficiaire = categoriesBeneficiaire.trouverType(ejsonr.code);
     }
-
-
 //</editor-fold>
 
 
@@ -131,7 +125,7 @@ public Argent getMontantReclame()
     return montantReclame;
 }
 
-public String getCodeTypeBeneficiaire()
+public EnumCodetypeBeneficiaire getCodeTypeBeneficiaire()
 {
     return this.codeTypeBeneficiaire;
 }
