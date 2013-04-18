@@ -39,6 +39,7 @@ public class Entree_ParseurJSON_Reclamations {
     private void lireFichier() throws IOException{     
         String jsonTxt = loadFileIntoString(this.fichierInput.getAbsolutePath(), "UTF-8");
         System.out.println(jsonTxt);
+        //test
     }
     
     
