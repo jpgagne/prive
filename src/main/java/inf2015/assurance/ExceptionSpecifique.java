@@ -35,11 +35,17 @@ public ExceptionSpecifique(EnumCodeErreur codeErreur, String message)
 
 
 public void afficherException()
-{
-    System.out.println("EXCEPTION: "+this.getClass().getName()
-            +"  CODE: "+ this.codeErreur
-            +"  MESSAGE: "+super.getMessage());
-}
+    {
+    System.out.println("*****************************************");
+    System.out.println("EXCEPTION: "+this.getClass().getName());
+    System.out.println("CODE: "+ this.codeErreur);
+    System.out.println("MESSAGE: "+super.getMessage());
+
+    Throwable t = new Throwable();  
+    StackTraceElement[] ste = t.getStackTrace();  
+    String classeAppelante = ste[3].getClassName() + "." + ste[3].getMethodName() + ":" + ste[3].getLineNumber(); 
+    System.out.println("CLASSE: "+classeAppelante);
+    }
 
 public EnumCodeErreur getCodeErreur()
     {

@@ -1,5 +1,10 @@
 package inf2015.assurance;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,13 +13,22 @@ public class ParseurNombres
 
 final static String regexIntervalleEntier = ".\\d{1,3}..\\d{1,3}.";
 final static String regexNombreEntier = "\\d{1,3}";
-
+final static String formatDateSimple = "yyyy-MM";
 
 
 private ParseurNombres()
 {
     
 }
+
+
+public static Double parseChainePourDouble(String chaine) throws ParseException
+    {
+    NumberFormat format = NumberFormat.getInstance(Locale.CANADA_FRENCH);
+    Number number = format.parse(chaine);
+    return number.doubleValue();
+    }
+
 
 public static Intervalle parseChainePourIntervalle(String chaine) throws ExceptionParseur
     {
@@ -41,6 +55,34 @@ public static Integer parseChainePourInteger(String chaine) throws ExceptionPars
         }
     throw new ExceptionParseur(chaine);
     }
+
+
+public static Date parseChainePourDate(String chaine) throws ExceptionParseur 
+    {
+    SimpleDateFormat formatter = new SimpleDateFormat(formatDateSimple);
+    try
+        {
+        Date date = (Date)formatter.parse(chaine);
+        return date;
+        }
+    catch (ParseException excP)
+        {
+        throw new ExceptionParseur(Date.class, chaine);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 private static boolean  chaineEstIntervalle(String chaine)
     {
     return ((chaine.matches(regexIntervalleEntier)) & (chaine.charAt(0) == '[') & (chaine.charAt(chaine.length()-1) == ']') );

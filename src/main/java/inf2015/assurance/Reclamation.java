@@ -4,6 +4,8 @@ package inf2015.assurance;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Reclamation {
 
@@ -56,7 +58,14 @@ private void validerNoSoin(EnregistrementJSON_Reclamation ejsonr) throws Excepti
 
 private void validerDateSoin(EnregistrementJSON_Reclamation ejsonr) throws ExceptionDonneeInvalide
     {
-        //TODO
+    try
+        {
+        this.dateSoin = ParseurNombres.parseChainePourDate(ejsonr.date);
+        }
+    catch (ExceptionParseur excP)
+        {
+        throw new ExceptionDonneeInvalide(EnumCodeErreur.DATE_FORMATINVALIDE, ejsonr.date);
+        }
     }
 
 

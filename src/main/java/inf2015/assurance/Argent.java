@@ -1,6 +1,9 @@
 package inf2015.assurance;
 
+import java.text.ParseException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**Class Argent
@@ -42,20 +45,31 @@ public Argent(String montantString) throws ExceptionParseur, ExceptionArgent
         {
         throw new ExceptionArgent(EnumCodeErreur.MONTANT_SIGNE_DOLLAR, montantString);
         }
-    
-    try {
-        Double montantDouble = Double.parseDouble(montantString); 
+    String montantStringSansSigneDollar = montantString.substring(0, montantString.length() - 1);
+    valider(montantStringSansSigneDollar);
+    }
+
+
+
+
+
+
+private void valider(String montantStringSansSigneDollar) throws ExceptionParseur, ExceptionArgent
+    {
+    try
+        {        
+        Double montantDouble = ParseurNombres.parseChainePourDouble(montantStringSansSigneDollar); 
         if ((montantDouble > Integer.MAX_VALUE/100)||(montantDouble < Integer.MIN_VALUE))
             {
             throw new ExceptionArgent(EnumCodeErreur.ARGENT_MONTANT_HORSBORNES, montantDouble.toString());
             }
         this.montant = montantDouble.intValue()*100;
-        }
-    catch (NumberFormatException excFN)
-        {
-        throw new ExceptionParseur(Double.class, montantString);
-        }
+        } 
+    catch (ParseException excP)
+    {
+    throw new ExceptionParseur(Double.class, montantStringSansSigneDollar);
     }
+}
 
 
 private boolean signeDollar(String chaine)
@@ -66,7 +80,7 @@ private boolean signeDollar(String chaine)
 
 public boolean estPositif()
     {
-    return (this.montant < 0);
+    return (this.montant > 0);
     }
 
 
@@ -106,7 +120,7 @@ public Argent soustraire (Argent valeurSoustraite)
 @Override
 public String toString()
     {
-    return this.montant/100+"."+this.montant%100+" $";
+    return this.montant/100+"."+String.format("%02d", this.montant%100)+"$";
     }
 
 @Override
