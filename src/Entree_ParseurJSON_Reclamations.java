@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.text.*;
 import java.util.*;
@@ -6,7 +5,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 import org.apache.commons.io.IOUtils;
 
 public class Entree_ParseurJSON_Reclamations {
@@ -39,7 +37,6 @@ public class Entree_ParseurJSON_Reclamations {
     private void lireFichier() throws IOException{     
         String jsonTxt = loadFileIntoString(this.fichierInput.getAbsolutePath(), "UTF-8");
         System.out.println(jsonTxt);
-        //test
     }
     
     
@@ -299,8 +296,6 @@ public class Entree_ParseurJSON_Reclamations {
             } catch (ParseException ex) {
                 throw new ExceptionDonneeInvalide(EnumErreurLecture.MONTANT_FORMAT_INVALIDE, strMontant);
             }
-
-
 
         }
     }
