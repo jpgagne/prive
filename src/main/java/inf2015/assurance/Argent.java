@@ -94,10 +94,6 @@ public Double floatValue()
     return new Double(this.montant.floatValue()/100);
     }
 
-public void multiplierPar(Double multiplicateur)
-    {
-    this.montant = this.montant*multiplicateur.intValue();
-    }
 
 public void multiplierPar(Integer multiplicateur)
     {

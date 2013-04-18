@@ -68,23 +68,23 @@ private void initialiser()
         
 private void calculerRemboursements()
     {
-        System.out.println("Calculer Remboursements ()");
-        total = new Argent(0);
-        for (Iterator<Reclamation> it = listeReclamations.iterator(); it.hasNext();)
+    System.out.println("Calculer Remboursements ()");
+    total = new Argent(0);
+    for (Iterator<Reclamation> it = listeReclamations.iterator(); it.hasNext();)
+        {
+        Reclamation reclamation = it.next();
+        System.out.print("Reclamation = "+reclamation+ " |  Remboursement= ");
+        Remboursement remboursement;
+        try {
+            remboursement = calculerRemboursement(reclamation);
+            this.listeRemboursements.add(remboursement);
+            this.total.additionner(remboursement.getMontant()) ;
+            } 
+        catch (ExceptionSoinNonCouvert excSNC) 
             {
-            Reclamation reclamation = it.next();
-            System.out.print("Reclamation = "+reclamation+ " |  Remboursement= ");
-            Remboursement remboursement;
-            try {
-                remboursement = calculerRemboursement(reclamation);
-                this.listeRemboursements.add(remboursement);
-                this.total.additionner(remboursement.getMontant()) ;
-                } 
-            catch (ExceptionSoinNonCouvert excSNC) 
-                {
-                // Rien. On continue sans approuver celle-ci.
-                }
+            // Rien. On continue sans approuver celle-ci.
             }
+        }
     }
 
 
@@ -121,8 +121,10 @@ private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
         
         System.out.println("Demandé: "+montantDemande);
         System.out.println("Pourcentage: "+couverture.getPourcentage());
-        montantDemande.multiplierPar(couverture.getPourcentage());
-
+        int intPourcentage = (int) Math.round(couverture.getPourcentage()*100);
+        montantDemande.multiplierPar(intPourcentage);
+        montantDemande.diviserPar(100);
+        System.out.println("remboursement potentiel: "+montantDemande);
     if ((couverture.aValeurMax()) &
             ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
         {
