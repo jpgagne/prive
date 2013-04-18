@@ -34,13 +34,13 @@ public ExceptionDonneeInvalide(String msg)
     {
         Traitement traitement = Traitement.getInstance();
         try {        
-            SortieXML sortieXML = new SortieXML(traitement.getPathSortant());
-            sortieXML.redigerDocumentSortie(this);
+            SortieJSON sortieJSON = new SortieJSON();
+            sortieJSON.redigerDocumentSortie(this);
             }
         catch (ExceptionIO ex)
             {
-
-        }
+                
+            }
     }
    
     

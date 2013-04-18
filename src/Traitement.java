@@ -1,138 +1,117 @@
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
-
 public class Traitement 
-{
-    
-private SortieXML sortieXML;
-private Entree_ParseurXML_Reclamations parseurXML_Entree;
+{  
+//private SortieXML sortieXML;
+//private Entree_ParseurXML_Reclamations parseurXML_Entree;
+private SortieJSON sortieJSON;
+private Entree_ParseurJSON_Reclamations parseurJSON_Entree;
+private File fichierEntrantReclamations;
+private File fichierSortantRemboursements;
+private String nomFichierEntrantReclamations;
+private String nomFichierSortantRemboursements;
+
+
 private Evaluateur evaluateur;
-private String pathEntrant;
-private String pathSortant;
 
 private static String pathFichierContrats = "data"+System.getProperty("file.separator") +"contrats.xml";
+//private static String pathFichierContratsJSON = "data"+System.getProperty("file.separator") +"contrats.json";
 private Map<Character, Contrat> mapContrats;
-private CategoriesSoin categoriesSoin;
 private ListeContrats listeContrats;
+private CategoriesSoin categoriesSoin;
 
 
+//<editor-fold defaultstate="collapsed" desc="Constructeur et gestion de l'instance singleton">
 private static Traitement instance = null;
-private Traitement() 
-{
 
-}
-
-public static Traitement getInstance()
-    {
-    if(instance == null)
-        {
-        instance = new Traitement();
- 
-        }
-    return instance;
-    }
-
-protected void execution(String pathEntrant, String pathSortant) throws ExceptionIO
+private Traitement()
     {
     this.categoriesSoin = CategoriesSoin.getInstance();
     this.listeContrats = ListeContrats.getInstance();
-    this.pathEntrant = pathEntrant;
-    this.pathSortant = pathSortant;
-    this.mapContrats = new HashMap<>();
-    try{
-        chargementDesContrats();
-        sortieXML  = new SortieXML(this.getPathSortant());
-        parseurXML_Entree = new Entree_ParseurXML_Reclamations(this.getPathEntrant());
-
-        evaluateur = parseurXML_Entree.parserFichierReclamations();
-//            try {
-//                evaluateur.setContrat(parseurXML_Entree.getTypeContrat());
-//            } catch (ExceptionContratInexistant excCI) {
-//                throw  new ExceptionDonneeInvalide(EnumErreurLecture.CONTRAT_INVALIDE);
-//            }
-        evaluateur.calculerRemboursements();
-
-        sortieXML.setDossier(parseurXML_Entree.getTypeContrat(), parseurXML_Entree.getNoClient());
-        sortieXML.setMoisTraite(parseurXML_Entree.getMoisTraite());
-        sortieXML.redigerDocumentSortie(evaluateur.listeRemboursements());
-        sortieXML.produireFichierSortie();
-        
-        System.out.println("Exécution terminée avec succès");
     }
+
+protected static Traitement getInstance()
+    {
+    if(instance == null)
+        {
+        instance = new Traitement();    
+        }
+    return instance;
+    }
+//</editor-fold>
+
+
+protected void execution (File fichierEntrantReclamations) throws ExceptionIO, FileNotFoundException
+    {
+    try{
+ 
+        this.fichierEntrantReclamations = fichierEntrantReclamations;
+        this.nomFichierEntrantReclamations = this.fichierEntrantReclamations.getName();
+        this.nomFichierSortantRemboursements = "data"+System.getProperty("file.separator") +"refunds-"+this.nomFichierEntrantReclamations;  
+        this.fichierSortantRemboursements = new File(nomFichierSortantRemboursements);
+        this.listeContrats = ListeContrats.getInstance();
+        //sortieXML = new SortieXML();
+        sortieJSON = new SortieJSON();
+        
+//        this.parseurXML_Entree = new Entree_ParseurXML_Reclamations(fichierEntrantReclamations);
+//        this.evaluateur = parseurXML_Entree.parserFichierReclamations();
+//        this.evaluateur.calculerRemboursements();
+//        sortieXML.setDossier(parseurXML_Entree.getTypeContrat(), parseurXML_Entree.getNoClient());
+//        sortieXML.setMoisTraite(parseurXML_Entree.getMoisTraite());
+//        sortieXML.redigerDocumentSortie(evaluateur.listeRemboursements());
+//        sortieXML.produireFichierSortie();
+        
+        this.parseurJSON_Entree = new Entree_ParseurJSON_Reclamations(fichierEntrantReclamations);
+        this.evaluateur = parseurJSON_Entree.parserFichierReclamations();
+        this.evaluateur.calculerRemboursements();
+        sortieJSON.setDossier(parseurJSON_Entree.getTypeContrat(), parseurJSON_Entree.getNoClient());
+        sortieJSON.setMoisTraite(parseurJSON_Entree.getMoisTraite());
+        sortieJSON.redigerDocumentSortie(evaluateur.listeRemboursements());
+        sortieJSON.produireFichierSortie();
+
+        System.out.println("Exécution terminée avec succès");
+        }
+
+
     catch (ExceptionDonneeInvalide excDI)
         {
         System.out.println("ERREUR - L'exécution se termine avec échec par données invalides"); 
         if (excDI.getMessage().length() > 0)
-        {
-        System.out.println(excDI.getMessage() + "\n");
-        }
-        
- 
-
-        }
-   catch ( ExceptionUsage excU)
-    {
-    System.out.println("ERREUR - L'exécution se termine avec échec d'usage");  
-    if (excU.getMessage().length() > 0)
-        {
-        System.out.println(excU.getMessage() + "\n");
-        }
-    sortieXML.redigerDocumentSortie(excU);
-
-    }
-
-    }
-
-
-
-private void chargementDesContrats() throws ExceptionDonneeInvalide, ExceptionUsage
-    {
-    mapContrats = new HashMap<>();
-    Entree_ParseurXML_Contrats entree_ParseurXML_Contrats = new Entree_ParseurXML_Contrats(pathFichierContrats);
-   // System.out.println("ANTE PARSE CONTRAT");
-    try {
-        this.mapContrats = entree_ParseurXML_Contrats.parserFichierContrats();
-        } catch (ExceptionSoinNonCouvert excSNC) {
-            throw new ExceptionDonneeInvalide(excSNC.getMessage());
-        }
-    //System.out.println("POST PARSE CONTRAT");
-    //System.out.println(" Nb contrats charges: "+this.mapContrats.size());
-    }
-
-protected boolean contratPresent(Character carTypeContrat)
-    {
-    return (this.mapContrats.containsKey(carTypeContrat));
-    }
-
-
-protected Map<Character, Contrat> getContrats()
-{
-    return  this.mapContrats;
-}
-
-
-protected Contrat getContrat(Character carTypeContrat) throws ExceptionContratInexistant
-{
-    if (this.contratPresent(carTypeContrat))
             {
-                return this.mapContrats.get(carTypeContrat);
+            System.out.println(excDI.getMessage() + "\n");
             }
-    throw new ExceptionContratInexistant(carTypeContrat);
-}
-
-    /**
-     * @return the pathEntrant
-     */
-    public String getPathEntrant() {
-        return pathEntrant;
+        }
+    catch (ExceptionUsage excU)
+        {
+        System.out.println("ERREUR - L'exécution se termine avec échec d'usage");  
+        if (excU.getMessage().length() > 0)
+            {
+            System.out.println(excU.getMessage() + "\n");
+            }
+        //sortieXML.redigerDocumentSortie(excU);
+        }
     }
 
-    /**
-     * @return the pathSortant
-     */
-    public String getPathSortant() {
-        return pathSortant;
+
+
+
+protected String getNomFichierEntrantContrats()
+    {
+    return this.pathFichierContrats;
     }
+
+protected String getNomFichierSortant()
+    {
+    return this.nomFichierSortantRemboursements;
+    }
+
+protected File getFichierSortant()
+    {
+    return this.fichierSortantRemboursements;
+    }
+
+
 
 }

@@ -1,4 +1,6 @@
 
+import java.io.File;
+
 public class ReclamationsAssurance
 {
 
@@ -17,7 +19,7 @@ public static void main(String args[])
         
         Traitement traitement;
         traitement =  Traitement.getInstance();
-        traitement.execution(args[0], args[1]);
+        //traitement.execution(args[0], args[1]);
         }
 
     catch (ExceptionIO excIO)

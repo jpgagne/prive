@@ -42,12 +42,4 @@ protected Double getMontant()
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
 }
