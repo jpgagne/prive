@@ -34,8 +34,11 @@ public ExceptionSpecifique(EnumCodeErreur codeErreur, String message)
     }
 
 
-public void afficherException()
+public final void afficherException()
     {
+
+    Sortie_JSON sortie_JSON = Sortie_JSON.getInstance();
+    sortie_JSON.produireSortie(this);
     System.out.println("*****************************************");
     System.out.println("EXCEPTION: "+this.getClass().getName());
     System.out.println("CODE: "+ this.codeErreur);

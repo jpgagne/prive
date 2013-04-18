@@ -2,7 +2,10 @@ package inf2015.assurance;
 
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
 
 
 public class Evaluateur 
@@ -69,6 +72,8 @@ private void calculerRemboursements()
             // Rien. On continue sans approuver celle-ci.
             }
         }
+    Sortie_JSON sortie_JSON = Sortie_JSON.getInstance();
+    sortie_JSON.produireSortie(this);
     }
 
 
@@ -93,7 +98,7 @@ Argent montantRembourse = onPaieCombien(montantReclame, couverture, beneficiaire
 
 
 
-Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), montantRembourse );
+Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), montantRembourse, reclamation.getCode() );
 System.out.println(nouveauRemboursement);
 return nouveauRemboursement;
     
@@ -112,6 +117,11 @@ private Argent onPaieCombien(Argent montantDemande, Couverture couverture, Benef
 
 
 //<editor-fold defaultstate="collapsed" desc="getters">
+
+public ArrayList<Remboursement> getRemboursements()
+{
+    return this.listeRemboursements;
+}
 public Argent getTotal()
 {
     return total;

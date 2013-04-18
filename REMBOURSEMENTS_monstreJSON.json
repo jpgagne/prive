@@ -1,0 +1,50 @@
+{
+  "codeErreur" : "TYPEBENEFICIAIRE_INVALIDE",
+  "cause" : null,
+  "message" : "H5000",
+  "localizedMessage" : "H5000",
+  "stackTrace" : [ {
+    "methodName" : "trouverType",
+    "className" : "inf2015.assurance.CategoriesBeneficiaire",
+    "fileName" : "CategoriesBeneficiaire.java",
+    "lineNumber" : 74,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "validerCodeTypeBeneficiaire",
+    "className" : "inf2015.assurance.Reclamation",
+    "fileName" : "Reclamation.java",
+    "lineNumber" : 96,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "validerReclamation",
+    "className" : "inf2015.assurance.Reclamation",
+    "fileName" : "Reclamation.java",
+    "lineNumber" : 33,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "<init>",
+    "className" : "inf2015.assurance.Reclamation",
+    "fileName" : "Reclamation.java",
+    "lineNumber" : 21,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "validerListeReclamations",
+    "className" : "inf2015.assurance.Entree_ParseurJSON_Reclamations",
+    "fileName" : "Entree_ParseurJSON_Reclamations.java",
+    "lineNumber" : 199,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "<init>",
+    "className" : "inf2015.assurance.Entree_ParseurJSON_Reclamations",
+    "fileName" : "Entree_ParseurJSON_Reclamations.java",
+    "lineNumber" : 64,
+    "nativeMethod" : false
+  }, {
+    "methodName" : "main",
+    "className" : "inf2015.assurance.ReclamationsAssuranceEnSerie",
+    "fileName" : "ReclamationsAssuranceEnSerie.java",
+    "lineNumber" : 46,
+    "nativeMethod" : false
+  } ],
+  "suppressed" : [ ]
+}

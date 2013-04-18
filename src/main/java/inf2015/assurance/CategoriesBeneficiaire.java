@@ -2,7 +2,6 @@ package inf2015.assurance;
 
 
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class CategoriesBeneficiaire 
@@ -39,7 +38,7 @@ private void chargerMapBeneficiaires()
     this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.ENFANT, beneficiaire);
     beneficiaire = new Beneficiaire("h*", EnumCodetypeBeneficiaire.PERSONNE_A_CHARGE, "Personne à charge", 50 );
     this.mapBeneficiaires.put(EnumCodetypeBeneficiaire.PERSONNE_A_CHARGE, beneficiaire);
-    System.out.println(mapBeneficiaires.size()+" BENEFICIAIRES RECONNUS");
+
     }
 
 

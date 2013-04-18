@@ -13,7 +13,7 @@ private Integer noSoin;
 private Date dateSoin;
 private Argent montantReclame;
 private EnumCodetypeBeneficiaire codeTypeBeneficiaire;
-
+private String code;
 
 
 Reclamation (EnregistrementJSON_Reclamation entreeReclamationJSON) throws ExceptionDonneeInvalide
@@ -93,6 +93,7 @@ private void validerMontantReclame(EnregistrementJSON_Reclamation ejsonr) throws
 private void validerCodeTypeBeneficiaire(EnregistrementJSON_Reclamation ejsonr) throws ExceptionDonneeInvalide
     {
     CategoriesBeneficiaire categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
+    this.code = ejsonr.code;
     this.codeTypeBeneficiaire = categoriesBeneficiaire.trouverType(ejsonr.code);
     }
 //</editor-fold>
@@ -130,7 +131,10 @@ public EnumCodetypeBeneficiaire getCodeTypeBeneficiaire()
     return this.codeTypeBeneficiaire;
 }
 
-
+public String getCode()
+{
+    return this.code;
+}
 public Integer getNoSoin()
 {
     return this.noSoin;

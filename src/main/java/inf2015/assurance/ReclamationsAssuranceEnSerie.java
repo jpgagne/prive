@@ -14,6 +14,9 @@ public static void main(String args[])
             {
             throw new ExceptionIO("NB arguments = " + intNbArgs + " / doit être = 0");
             }
+        File fichierSortie;
+        Sortie_JSON sortie_JSON = Sortie_JSON.getInstance();
+        
      Entree_ParseurJSON_Reclamations epjsonr;
         CategoriesContrat categoriesContrat = CategoriesContrat.getInstance();
         categoriesContrat.chargerContrats();
@@ -36,6 +39,10 @@ public static void main(String args[])
             if (strNomFichierEntree.endsWith(".json") || strNomFichierEntree.endsWith(".JSON"))
                 {
                     System.out.println("Fichier "+fichierTrouve.getName()+" Ouvert");
+                    String nomFichierSortie = "REMBOURSEMENTS_"+fichierTrouve.getName();
+                    fichierSortie = new File(nomFichierSortie);
+                    sortie_JSON.assignerFichierSortie(fichierSortie);
+                    sortie_JSON.assignerFichierSortie(fichierSortie);
                 epjsonr = new Entree_ParseurJSON_Reclamations(fichierTrouve);
                 }
             } 
