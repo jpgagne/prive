@@ -2,10 +2,7 @@ package inf2015.assurance;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
+import java.util.*;
 
 
 public class Evaluateur 
@@ -13,7 +10,7 @@ public class Evaluateur
     
 private ArrayList<Reclamation> listeReclamations;
 private ArrayList<Remboursement> listeRemboursements;
-    
+
 private Argent total;
 private Date moisTraite;
 private Character carTypeContrat;
@@ -85,10 +82,18 @@ System.out.println(reclamation);
 Argent montantReclame = reclamation.getMontantReclame();
 
 Couverture couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
+Argent maxMensuel = couverture.getValeurMax();
+CategoriesSoin categoriesSoin = CategoriesSoin.getInstance();
+Soin soin = categoriesSoin.trouverSoin(reclamation.getNoSoin());
 CategoriesBeneficiaire categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
 Beneficiaire beneficiaire = categoriesBeneficiaire.trouverBeneficiaire(reclamation.getCodeTypeBeneficiaire());
 System.out.println(beneficiaire);
-Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture, beneficiaire ));
+Argent montantRembourse = onPaieCombien(montantReclame, couverture, beneficiaire );
+
+
+
+
+Remboursement nouveauRemboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), montantRembourse );
 System.out.println(nouveauRemboursement);
 return nouveauRemboursement;
     
@@ -100,16 +105,10 @@ private Argent onPaieCombien(Argent montantDemande, Couverture couverture, Benef
     montantDemande.multiplierPar(intPourcentage);
     montantDemande.multiplierPar(beneficiaire.getPourcentage());
     montantDemande.diviserPar(10000);
-    if ((couverture.aValeurMax()) &
-        ( montantDemande.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
-        {
-        return  couverture.getValeurMax();
-        }
-    else
-        {
-        return montantDemande;
-        }     
+    return  beneficiaire.ajouterATotalMensuel(couverture.getSoin(), montantDemande, couverture.getValeurMax());
     }
+      
+    
 
 
 //<editor-fold defaultstate="collapsed" desc="getters">
