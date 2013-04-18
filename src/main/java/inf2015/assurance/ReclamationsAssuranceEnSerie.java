@@ -15,7 +15,8 @@ public static void main(String args[])
             throw new ExceptionIO("NB arguments = " + intNbArgs + " / doit être = 0");
             }
      Entree_ParseurJSON_Reclamations epjsonr;
-        
+        CategoriesContrat categoriesContrat = CategoriesContrat.getInstance();
+        categoriesContrat.chargerContrats();
 
     File repertoire = new File(pathFichiersReclamation);
     File[] listeDesFichiers = repertoire.listFiles(); 
