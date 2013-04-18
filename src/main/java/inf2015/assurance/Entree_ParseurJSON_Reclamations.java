@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -53,18 +56,37 @@ Entree_ParseurJSON_Reclamations(File fichierInput)
     this.categoriesContrat = CategoriesContrat.getInstance();
     this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
     this.fichierInput = fichierInput;
-    
+    parserFichier();
     }
 
 //</editor-fold>
  
-
-
-private ArrayList<EnregistrementJSON_Reclamation> lireLesReclamations() throws ExceptionDonneeInvalide
+private ValeurEntreeJSON parserFichier()
 {
+    ObjectMapper mapper = new ObjectMapper();
+
+ValeurEntreeJSON vejson = new ValeurEntreeJSON();
+        try {
+            mapper.writeValue(fichierInput, vejson);
+        } catch (JsonGenerationException ex) {
+            System.out.println("FUCK 1");
+        } catch (JsonMappingException ex) {
+               System.out.println("FUCK 2");
+               System.out.println(ex.getMessage());
+        }
+        catch (IOException ex) {
+                System.out.println("FUCK 3");
+        } 
+        
+        return vejson;
+        
+}
+
+private ArrayList<Reclamation> lireLesReclamations() throws ExceptionDonneeInvalide
+    {
     EnregistrementJSON_Reclamation nouvelleEntreeReclamationJSON;
     Reclamation nouvelleReclamation;
-    ArrayList<EnregistrementJSON_Reclamation> listeReclamation = new ArrayList<EnregistrementJSON_Reclamation>();
+    ArrayList<Reclamation> listeReclamation = new ArrayList<Reclamation>();
     
 
     
@@ -74,36 +96,62 @@ private ArrayList<EnregistrementJSON_Reclamation> lireLesReclamations() throws E
     JSONArray reclamations = root.getJSONArray(JSON_KEY_RECLAMATIONS);
     
     
+
+    int documentCount = reclamations.size();
+    for (int i = 0; i < documentCount; i++) {
+        JSONObject reclamation = reclamations.getJSONObject(i);
+    //    nouvelleReclamation = validerReclamation(reclamation);
+     //   listeReclamation.add(nouvelleReclamation);
+    }
+    return listeReclamation;
+    }
+        
+        
+
+private void validerDossier(JSONObject objetDossier)
+{
     
-        int documentCount = reclamations.size();
-        for (int i = 0; i < documentCount; i++) {
-            JSONObject reclamation = reclamations.getJSONObject(i);
-            nouvelleReclamation = validerReclamation(reclamation);
-           nope  listeReclamation.add(nouvelleEntreeReclamationJSON);
-        }
 }
-        
-        
-        private Reclamation validerReclamation(JSONObject reclamationLue)
-        {
-    ObjectMapper mapper = new ObjectMapper();
-        try {
-             
-            
-            listeReclamation = mapper.readValue(this.fichierInput,new TypeReference<List<EnregistrementJSON_Reclamation>>(){});
-            nouvelleEntreeReclamationJSON = mapper.readValue(fichierInput, EnregistrementJSON_Reclamation.class);
-        }  catch (JsonParseException ex) {
-            throw new ExceptionDonneeInvalide(ex.getMessage());
-        } catch (JsonMappingException ex) {
-            throw new ExceptionDonneeInvalide(ex.getMessage());
-        } catch (IOException ex) {
-            throw new ExceptionDonneeInvalide(ex.getMessage());
-        }
+
+private void validerMois(JSONObject objetMois)
+{
     
-    nouvelleReclamation = new Reclamation(nouvelleEntreeReclamationJSON);  
-    
-    return nouvelleReclamation;
-    
+}
+//private Reclamation validerReclamation(JSONObject reclamationLue)
+//{
+
+
+//
+//
+//JSONObject objetSoin;
+//JSONObject objetCode;
+//JSONObject objetDate;
+//JSONObject objetMontant;
+//
+//    
+//
+//objetSoin = reclamationLue.getJSONObject(JSON_KEY_SOIN);
+//objetCode = reclamationLue.getJSONObject(JSON_KEY_CODE);
+//objetDate = reclamationLue.getJSONObject(JSON_KEY_DATE);
+//objetMontant = reclamationLue.getJSONObject(JSON_KEY_MONTANT);
+//
+//        try {
+//             
+//            
+//            listeReclamation = mapper.readValue(this.fichierInput,new TypeReference<List<EnregistrementJSON_Reclamation>>(){});
+//            nouvelleEntreeReclamationJSON = mapper.readValue(fichierInput, EnregistrementJSON_Reclamation.class);
+//        }  catch (JsonParseException ex) {
+//            throw new ExceptionDonneeInvalide(ex.getMessage());
+//        } catch (JsonMappingException ex) {
+//            throw new ExceptionDonneeInvalide(ex.getMessage());
+//        } catch (IOException ex) {
+//            throw new ExceptionDonneeInvalide(ex.getMessage());
+//        }
+//    
+//    nouvelleReclamation = new Reclamation(nouvelleEntreeReclamationJSON);  
+//    
+//    return nouvelleReclamation;
+//    
 }
 
 
@@ -140,24 +188,4 @@ private ArrayList<EnregistrementJSON_Reclamation> lireLesReclamations() throws E
 
 //</editor-fold>
 
-//<editor-fold defaultstate="collapsed" desc="accesseurs">
 
-
-//protected char getTypeContrat()
-//    {
-//    return typeContrat;
-//    }
-//
-//protected Integer getNoClient()
-//    {
-//    return noClient;
-//    }
-//
-//protected Date getMoisTraite()
-//    {
-//    return moisTraite;
-//    }
-
-
-//</editor-fold>
-}
