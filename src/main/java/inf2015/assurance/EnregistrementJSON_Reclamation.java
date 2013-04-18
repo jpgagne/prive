@@ -16,7 +16,7 @@ public String montant;
     @Override
 public String toString()
 {
-    return soin+"-"+code+"-"+date+"-"+montant;
+    return soin+"*"+code+"*"+date+"*"+montant;
     
 }
     

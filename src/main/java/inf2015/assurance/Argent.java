@@ -2,8 +2,6 @@ package inf2015.assurance;
 
 import java.text.ParseException;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**Class Argent
@@ -34,9 +32,13 @@ public Argent(Integer montantCentimes)
     this.montant = montantCentimes;
     }
 
-private Argent(Double montantDouble)
+public Argent(Double montantDouble)
     {
-         
+        if ((montantDouble > Integer.MAX_VALUE)||(montant < Integer.MIN_VALUE))
+        {
+        terminerLeProgrammeAbruptement(montant);
+        }
+    this.montant = montantDouble.intValue();
     }
 
 public Argent(String montantString) throws ExceptionParseur, ExceptionArgent
@@ -48,9 +50,6 @@ public Argent(String montantString) throws ExceptionParseur, ExceptionArgent
     String montantStringSansSigneDollar = montantString.substring(0, montantString.length() - 1);
     valider(montantStringSansSigneDollar);
     }
-
-
-
 
 
 
@@ -95,6 +94,10 @@ public Double floatValue()
     return new Double(this.montant.floatValue()/100);
     }
 
+public Argent multiplierPar(Double multiplicateur)
+    {
+    return new Argent(this.montant*multiplicateur);
+    }
 
 public Argent multiplierPar(Integer multiplicateur)
     {
@@ -126,7 +129,18 @@ public String toString()
 @Override
 public int compareTo(Argent o)
     {
-    return  this.getMontantCentimes().compareTo(o.getMontantCentimes());
+       return this.getMontantCentimes().compareTo(o.getMontantCentimes());
+    
+//    if (this.getMontantCentimes() > o.getMontantCentimes()) 
+//        {
+//        return 1;
+//        } 
+//    else  if (this.getMontantCentimes() < o.getMontantCentimes()) 
+//        {
+//        return -1;
+//        } 
+//    return 0;
+    
     }
 
 @Override

@@ -58,58 +58,54 @@ protected Soin getSoinParInteger(Integer noSoinInteger) throws ExceptionSoinNonC
 
 private void chargerSoins()
 {
-    setSoins= new HashSet<Soin>();
-    
-    Soin nouveauSoin = new Soin(0, "Massothérapie"); 
+setSoins= new HashSet<Soin>();
 
-   setSoins.add( nouveauSoin);
-    nouveauSoin = new Soin(100, "Ostéopathie"); 
+Soin nouveauSoin = new Soin(0, "Massothérapie"); 
 
-   setSoins.add( nouveauSoin);
-   
-   nouveauSoin = new Soin(150, "Kinésithérapie");
-   setSoins.add(nouveauSoin);
+ajouterSoin ( nouveauSoin);
+nouveauSoin = new Soin(100, "Ostéopathie"); 
 
-   nouveauSoin = new Soin(175, "Médecin généraliste privé");
-   setSoins.add(nouveauSoin);
-   
-    nouveauSoin = new Soin(200, "Psychologie individuelle"); 
+ajouterSoin ( nouveauSoin);
 
-   setSoins.add( nouveauSoin);
+nouveauSoin = new Soin(150, "Kinésithérapie");
+ajouterSoin (nouveauSoin);
 
-    nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
+nouveauSoin = new Soin(175, "Médecin généraliste privé");
+ajouterSoin (nouveauSoin);
 
-   setSoins.add( nouveauSoin);
+nouveauSoin = new Soin(200, "Psychologie individuelle"); 
 
-    nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
+ajouterSoin ( nouveauSoin);
 
-   setSoins.add( nouveauSoin);
+nouveauSoin = new Soin(new Intervalle(300, 399), "Soins dentaires"); 
 
-    nouveauSoin = new Soin(500, "Chiropratie"); 
-  
-   setSoins.add( nouveauSoin);
+ajouterSoin ( nouveauSoin);
 
-    nouveauSoin = new Soin(600, "Physiothérapie"); 
+nouveauSoin = new Soin(400, "Naturopathie, acuponcture"); 
 
-   setSoins.add( nouveauSoin);
+ajouterSoin ( nouveauSoin);
 
-    nouveauSoin = new Soin(700, "Orthophonie, ergothérapie"); 
+nouveauSoin = new Soin(500, "Chiropratie"); 
 
-   setSoins.add( nouveauSoin);
-    
-    System.out.println("taille du ThreeSet: " +setSoins.size());
+ajouterSoin ( nouveauSoin);
+
+nouveauSoin = new Soin(600, "Physiothérapie"); 
+
+ajouterSoin ( nouveauSoin);
+
+nouveauSoin = new Soin(700, "Orthophonie, ergothérapie"); 
+
+ajouterSoin ( nouveauSoin);
+
+
 }
 
 
 
-
-
-private void ajouterSoin(Intervalle intervalleNoSoin, Soin nouveauSoin)
-{
+private void ajouterSoin (Soin nouveauSoin)
+    {
     this.setSoins.add(nouveauSoin);
-}
-
-
+    }
 
 
 protected boolean soinExisteInteger (Integer integerNumeroSoin)

@@ -7,14 +7,14 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.apache.commons.lang.StringUtils;
 public class ParseurNombres
 {
 
 final static String regexIntervalleEntier = ".\\d{1,3}..\\d{1,3}.";
 final static String regexNombreEntier = "\\d{1,3}";
-final static String formatDateSimple = "yyyy-MM";
-
+final static String formatDateJour = "yyyy-MM-dd";
+final static String formatDateMois = "yyyy-MM";
 
 private ParseurNombres()
 {
@@ -40,7 +40,7 @@ public static Intervalle parseChainePourIntervalle(String chaine) throws Excepti
         {
         return parseIntervalle(chaine);
         }
-    throw new ExceptionParseur(chaine);
+    throw new ExceptionParseur(Intervalle.class, chaine);
     }
 
 public static Integer parseChainePourInteger(String chaine) throws ExceptionParseur
@@ -53,16 +53,31 @@ public static Integer parseChainePourInteger(String chaine) throws ExceptionPars
         {
         throw new ExceptionParseur(chaine+ " Est un intervalle, doit etre unaire");
         }
-    throw new ExceptionParseur(chaine);
+    throw new ExceptionParseur(Integer.class, chaine);
     }
 
 
-public static Date parseChainePourDate(String chaine) throws ExceptionParseur 
+public static Date parseChainePourDateJour(String chaine) throws ExceptionParseur 
     {
-    SimpleDateFormat formatter = new SimpleDateFormat(formatDateSimple);
+
+    SimpleDateFormat formatter = new SimpleDateFormat(formatDateJour);
     try
         {
-        Date date = (Date)formatter.parse(chaine);
+        Date date = formatter.parse(chaine);
+        return date;
+        }
+    catch (ParseException excP)
+        {
+        throw new ExceptionParseur(Date.class, chaine);
+        }
+    }
+public static Date parseChainePourDateMois(String chaine) throws ExceptionParseur 
+    {
+ 
+    SimpleDateFormat formatter = new SimpleDateFormat(formatDateMois);
+    try
+        {
+        Date date = formatter.parse(chaine);
         return date;
         }
     catch (ParseException excP)
@@ -78,11 +93,6 @@ public static Date parseChainePourDate(String chaine) throws ExceptionParseur
 
 
 
-
-
-
-
-
 private static boolean  chaineEstIntervalle(String chaine)
     {
     return ((chaine.matches(regexIntervalleEntier)) & (chaine.charAt(0) == '[') & (chaine.charAt(chaine.length()-1) == ']') );
@@ -90,7 +100,7 @@ private static boolean  chaineEstIntervalle(String chaine)
 
 private static boolean chaineEstNombreEntier(String chaine)
     {
-    return (chaine.matches(regexNombreEntier));
+    return StringUtils.isNumeric(chaine);
     }
 
 
@@ -98,7 +108,7 @@ private static Integer parseNombreEntier (String chaine) throws ExceptionParseur
     {
     if (!chaineEstNombreEntier(chaine)) 
             {
-            throw new ExceptionParseur(chaine);
+            throw new ExceptionParseur(Integer.class, chaine);
             }
     return Integer.parseInt(chaine);
     }
@@ -114,7 +124,7 @@ private static Intervalle parseIntervalle(String chaine) throws ExceptionParseur
     {
     if (!chaineEstIntervalle(chaine) )
         {
-        throw new ExceptionParseur(chaine);
+        throw new ExceptionParseur(Intervalle.class, chaine);
         }
     Pattern patternNombre = Pattern.compile(regexNombreEntier);   
     Matcher matcheur = patternNombre.matcher(chaine);
@@ -129,12 +139,12 @@ private static Intervalle parseIntervalle(String chaine) throws ExceptionParseur
             }
         else
             {
-            throw new ExceptionParseur(chaine);
+            throw new ExceptionParseur(Intervalle.class, chaine);
             }
         }
     else
         {
-        throw new ExceptionParseur(chaine);
+        throw new ExceptionParseur(Intervalle.class, chaine);
         }
     
     try {
@@ -145,7 +155,7 @@ private static Intervalle parseIntervalle(String chaine) throws ExceptionParseur
         }
     catch (NumberFormatException excNF)
         {
-        throw new ExceptionParseur(chaine);
+        throw new ExceptionParseur(Intervalle.class, chaine);
         }
     }
    

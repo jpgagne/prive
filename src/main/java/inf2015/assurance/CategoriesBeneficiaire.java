@@ -10,7 +10,7 @@ public class CategoriesBeneficiaire
 {
 
 private Set<String> setPatternsCategoriesBeneficiaire;
-private String[] patterns = { "A", "C", "E/d", "H/d"};
+private String[] patterns = { "A", "C", "E\\d", "H\\d"};
 
 
 private static CategoriesBeneficiaire instance = null;

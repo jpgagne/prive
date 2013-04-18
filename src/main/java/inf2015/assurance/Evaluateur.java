@@ -1,0 +1,152 @@
+package inf2015.assurance;
+
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
+public class Evaluateur 
+{
+    
+private ArrayList<Reclamation> listeReclamations;
+private ArrayList<Remboursement> listeRemboursements;
+    
+private Argent total;
+private Date moisTraite;
+private Character carTypeContrat;
+private Integer noClient;
+private Contrat contrat;
+
+
+private CategoriesSoin categoriesSoin;
+private CategoriesContrat categoriesContrat;
+private CategoriesBeneficiaire categoriesBeneficiaire;
+
+private Evaluateur()
+{
+}
+
+Evaluateur( Integer noClient, char charContrat, Date moisTraite, ArrayList<Reclamation> listeReclamations)
+    {
+    this.carTypeContrat = charContrat;
+    this.noClient = noClient;
+    this.moisTraite = moisTraite; 
+    this.listeReclamations = listeReclamations;
+    this.initialiser();
+    this.calculerRemboursements();
+    }
+
+private void initialiser()
+    {
+    this.categoriesSoin = CategoriesSoin.getInstance();
+    this.categoriesContrat = CategoriesContrat.getInstance();
+    this.categoriesBeneficiaire = CategoriesBeneficiaire.getInstance();
+    try {
+        this.contrat = categoriesContrat.trouverContrat(carTypeContrat);
+        }
+    catch (ExceptionContratInexistant excCI) 
+        {
+            // Rien. C'est déjà validé à cette étape.
+        }
+    this.listeRemboursements = new ArrayList<Remboursement>();
+    SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.FRENCH);
+    System.out.println("Nouvel evaluateur cree pour" + System.getProperty("line.separator")
+                        + "   client: "+ noClient+ System.getProperty("line.separator")
+                        + "   contrat: "+ contrat.getTypeContrat()+ System.getProperty("line.separator")
+                        + "   mois: "+formatDate.format(moisTraite));
+    }
+
+
+        
+        
+        
+private void calculerRemboursements()
+    {
+        System.out.println("Calculer Remboursements ()");
+        total = new Argent(0);
+        for (Iterator<Reclamation> it = listeReclamations.iterator(); it.hasNext();)
+            {
+            Reclamation reclamation = it.next();
+            System.out.print("Reclamation = "+reclamation+ " |  Remboursement= ");
+            Remboursement remboursement;
+            try {
+                remboursement = calculerRemboursement(reclamation);
+                this.listeRemboursements.add(remboursement);
+                this.total = getTotal().additionner(remboursement.getMontant()) ;
+                } 
+            catch (ExceptionSoinNonCouvert excSNC) 
+                {
+                // Rien. On continue sans approuver celle-ci.
+                }
+            }
+    }
+
+
+
+
+private Remboursement calculerRemboursement(Reclamation reclamation) throws ExceptionSoinNonCouvert  
+    {
+        
+        System.out.println("calculerRemboursement()");
+        System.out.print(" CONTRAT = " + this.contrat.getTypeContrat());
+        System.out.println (reclamation);
+    Remboursement remboursement;
+    
+    Argent montantReclame = reclamation.getMontantReclame();
+    
+    Couverture couverture;
+     
+            couverture = this.contrat.trouverCouvertureParNoSoin(reclamation.getNoSoin());
+            remboursement = new Remboursement(reclamation.getNoSoin(), reclamation.getDateSoin(), onPaieCombien(montantReclame, couverture));
+         System.out.println("NOUVEAU REMBOURSEMENT: "+remboursement);
+         return remboursement;
+        
+
+    
+   
+    
+    }
+
+
+
+private Argent onPaieCombien(Argent montantDemande, Couverture couverture)
+    {       
+    Argent montantRemboursable =  montantDemande.multiplierPar(couverture.getPourcentage());
+
+    if ((couverture.aValeurMax()) &
+            ( montantRemboursable.getMontantCentimes() >=  couverture.getValeurMax().getMontantCentimes()))
+        {
+        return  couverture.getValeurMax();
+        }
+    else
+        {
+        return montantRemboursable;
+        }     
+    }
+
+
+
+
+    public Argent getTotal() {
+        return total;
+    }
+
+    public Date getMoisTraite() {
+        return moisTraite;
+    }
+
+    public Contrat getContrat() {
+        return contrat;
+    }
+
+    public Integer getNoClient() {
+        return noClient;
+    }
+
+
+}

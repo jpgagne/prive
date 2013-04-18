@@ -52,6 +52,10 @@ public static void main(String args[])
             System.out.println(excIO.getMessage() + "\n");
             }
         }
+    catch (ExceptionSpecifique excSpec)
+        {
+        System.out.println("Execution terminee avec erreur");
+        excSpec.afficherException();
+        }
     }
-
 }

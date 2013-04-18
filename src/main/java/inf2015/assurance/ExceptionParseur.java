@@ -6,9 +6,16 @@ public class ExceptionParseur extends ExceptionSpecifique
 {
 private String chaineParsee = null;
 private Class typeAttendu = null;
-
+public static final String messageChaineInconnue = "CHAINE NON SPECIFIEE OU TROP LONGUE";
 
 //<editor-fold defaultstate="collapsed" desc="constructeurs">
+
+public ExceptionParseur()
+    {
+    super(EnumCodeErreur.ERREUR_PARSEUR, messageChaineInconnue);
+    this.chaineParsee = messageChaineInconnue;
+    }
+
 
 public ExceptionParseur(String chaineParsee)
     {
@@ -28,6 +35,12 @@ public ExceptionParseur(Class type, String chaineParsee)
     this.chaineParsee = chaineParsee;
     this.typeAttendu = type;
     }
+
+public ExceptionParseur (EnumCodeErreur codeErreur, String message)
+{
+    super(codeErreur, message);
+    
+}
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="getters">

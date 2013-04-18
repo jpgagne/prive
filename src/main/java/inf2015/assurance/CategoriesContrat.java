@@ -20,6 +20,11 @@ private static CategoriesContrat instance = null;
 private CategoriesContrat() 
     {
     chargerContrats();
+    this.ajouterContrat(new Contrat('A'));
+    this.ajouterContrat(new Contrat('B'));
+    this.ajouterContrat(new Contrat('C'));
+    this.ajouterContrat(new Contrat('D'));
+    this.ajouterContrat(new Contrat('E'));
     }
 
 

@@ -4,8 +4,6 @@ package inf2015.assurance;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Reclamation {
 
@@ -60,7 +58,7 @@ private void validerDateSoin(EnregistrementJSON_Reclamation ejsonr) throws Excep
     {
     try
         {
-        this.dateSoin = ParseurNombres.parseChainePourDate(ejsonr.date);
+        this.dateSoin = ParseurNombres.parseChainePourDateJour(ejsonr.date);
         }
     catch (ExceptionParseur excP)
         {

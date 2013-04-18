@@ -1,22 +1,19 @@
 package inf2015.assurance;
 
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-
 public class Couverture
 
 {
     private Soin soin;
     private Double pourcentage;
-    private Double valeurMax;
+    private Argent valeurMax;
     private  boolean aValeurMax;
 
 public Couverture(Soin soin, Double pourcentage, Double valeurMax)
     {
     this.soin = soin;
     this.pourcentage = pourcentage;
-    this.valeurMax = valeurMax;
+    this.valeurMax = new Argent(valeurMax);
     this.aValeurMax = Boolean.TRUE;
     }
 
@@ -24,7 +21,7 @@ public Couverture(Soin soin, Double pourcentage)
     {
     this.soin = soin;
     this.pourcentage = pourcentage;
-    this.valeurMax = -1.0;
+    this.valeurMax = new Argent(-1);
     this.aValeurMax = Boolean.FALSE;
     }
 
@@ -35,7 +32,7 @@ public Couverture(Soin soin, Double pourcentage)
         return this.aValeurMax;
     }
     
-    protected Double getValeurMax()
+    protected Argent getValeurMax()
     {
         return this.valeurMax;
     }
